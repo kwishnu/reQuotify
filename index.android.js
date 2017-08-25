@@ -1,0 +1,1 @@
+require('react-native').AppRegistry.registerComponent('reQuotify', () => require('./app/nav/nav.js'));
