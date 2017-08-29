@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { StyleSheet, Text, View, Image, TouchableHighlight, TouchableOpacity, ListView, BackHandler, AsyncStorage, ActivityIndicator, Alert, Vibration, AppState } from 'react-native';
 import moment from 'moment';
+import * as Animatable from 'react-native-animatable';
+import { createAnimatableComponent } from 'react-native-animatable';
+const AnimatableListView = createAnimatableComponent(ListView);
 //import PushNotification from 'react-native-push-notification';
 import SectionHeader from '../components/SectionHeader';
 import Button from '../components/Button';
@@ -651,10 +654,10 @@ class Home extends Component{
         Vibration.vibrate(34);
         BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBackButton);
         if(type == 'mypack' || type == 'solved'){
-            let strSolvedOrNot = (type == 'solved')?'Move to My Collections':'Move to Completed';
+            let strSolvedOrNot = (type == 'solved')?'Move to My Quotations':'Move to Completed';
             let sendToCompleted = (type == 'solved')?'false':'true';
-            let strOpenOrClose = (parseInt(this.state.homeData[index].num_solved, 10) < parseInt(this.state.homeData[index].num_verses, 10))?'Open all quotes':'Open first only';
-            let openOrClose = (strOpenOrClose == 'Open all verses')? true:false;
+            let strOpenOrClose = (parseInt(this.state.homeData[index].num_solved, 10) < parseInt(this.state.homeData[index].num_quotes, 10))?'Open all quotes':'Open first only';
+            let openOrClose = (strOpenOrClose == 'Open all quotes')? true:false;
 
             this.setState({ shouldShowDialog: true,
                             showFullDialog: true,
@@ -689,7 +692,7 @@ class Home extends Component{
                 break;
             case 2://open all or first only
                 if(this.state.openClose){
-                    this.state.homeData[this.state.indexSelected].num_solved = this.state.homeData[this.state.indexSelected].num_verses;
+                    this.state.homeData[this.state.indexSelected].num_solved = this.state.homeData[this.state.indexSelected].num_quotes;
                 }else{
                     this.state.homeData[this.state.indexSelected].num_solved = '0';
                 }
@@ -765,7 +768,11 @@ class Home extends Component{
                             </View>
                         </View>
                         <View style={ container_styles.verses_container }>
-                             <ListView  showsVerticalScrollIndicator ={false}
+                             <AnimatableListView
+                                 animation="bounceInUp"
+                                 duration={2000}
+                                 delay={0}
+                                 showsVerticalScrollIndicator ={false}
                                         contentContainerStyle={ container_styles.listview }
                                         dataSource={this.state.dataSource}
                                         renderRow={(rowData) =>
