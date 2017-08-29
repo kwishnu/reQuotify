@@ -347,7 +347,7 @@ const intro_styles = StyleSheet.create({
         marginTop: 6,
         alignItems: 'center',
         justifyContent: 'center',
-        width: width,
+        width: width
     },
     footer: {
         flex: 3,
@@ -356,18 +356,18 @@ const intro_styles = StyleSheet.create({
         justifyContent: 'flex-start',
         width: width,
         borderTopWidth: 6,
-        paddingHorizontal: normalize(height*0.01),
+        paddingHorizontal: normalize(height*0.01)
     },
     footer_text: {
         fontSize: normalizeFont(configs.LETTER_SIZE*0.14),
         fontWeight: 'bold',
-        color: '#ffffff',
+        color: '#ffffff'
     },
     hint_container: {
         alignItems: 'center',
         justifyContent: 'center',
         width: normalize(height*0.12),
-        height: normalize(height*0.085),
+        height: normalize(height*0.085)
     },
     hint_button: {
         height: height/23,
@@ -375,17 +375,17 @@ const intro_styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#486bdd',
-        borderRadius: 15,
+        borderRadius: 15
     },
     hint_text: {
         fontSize: normalizeFont(configs.LETTER_SIZE*0.094),
         color: '#ffffff',
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     tile_row: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'space-around'
     },
     next_arrow: {
         position: 'absolute',
@@ -393,7 +393,7 @@ const intro_styles = StyleSheet.create({
         justifyContent: 'center',
         width: width,
         height: height*.18,
-        top: height*.6,
+        top: height*.6
     }
 });
 
