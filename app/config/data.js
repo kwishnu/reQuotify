@@ -39,28 +39,28 @@ module.exports = [
                 name: 'Inspiration',
                 product_id: 'rv.verse.collection.inspiration',
                 show: 'true',
-                num_verses: '50',
+                num_quotes: '50',
                 color: '#85c613'
                 },
                 {
                 name: 'Love',
                 product_id: 'rv.verse.collection.love',
                 show: 'true',
-                num_verses: '50',
+                num_quotes: '50',
                 color: '#831d1d'
                 },
                 {
                 name: 'Hope',
                 product_id: 'rv.verse.collection.hope',
                 show: 'true',
-                num_verses: '50',
+                num_quotes: '50',
                 color: '#70f1ec'
                 },
 				{
 				name: 'Strength',
 				product_id: 'rv.verse.collection.strength',
 				show: 'true',
-				num_verses: '50',
+				num_quotes: '50',
 				color: '#7385a5'
 				}
             ]
@@ -76,14 +76,14 @@ module.exports = [
                 product_id: 'rv.verse.book.genesis',
                 show: 'true',
                 color: '#77c019',
-                num_verses: '100'
+                num_quotes: '100'
                 },
                 {
                 name: 'Psalms',
                 product_id: 'rv.verse.book.psalms',
                 show: 'true',
                 color: '#7260b2',
-                num_verses: '100'
+                num_quotes: '100'
                 }
             ]
     },
@@ -98,14 +98,14 @@ module.exports = [
                 product_id: 'rv.verse.book.matthew',
                 show: 'true',
                 color: '#1780ec',
-                num_verses: '50'
+                num_quotes: '50'
                 },
 				{
                 name: 'John',
                 product_id: 'rv.verse.book.john',
                 show: 'true',
                 color: '#107088',
-                num_verses: '50',
+                num_quotes: '50',
                 num_chapters: '21'
                 },
                 {
@@ -113,7 +113,7 @@ module.exports = [
                 product_id: 'rv.verse.book.revelation',
                 show: 'true',
                 color: '#6d920a',
-                num_verses: '50'
+                num_quotes: '50'
                 }
             ]
     },
@@ -129,7 +129,7 @@ module.exports = [
                 show: 'true',
                 price: '$1.99',
                 color: '#860840',
-                num_verses: ['50', '50', '50']
+                num_quotes: ['50', '50', '50']
                 },
                 {
                 name: ['Hope', 'Strength', 'Inspiration'],
@@ -137,7 +137,7 @@ module.exports = [
                 show: 'true',
                 price: '$1.99',
                 color: '#234074',
-                num_verses: ['50', '50', '50']
+                num_quotes: ['50', '50', '50']
                 },
                 {
                 name: ['Genesis', 'Psalms', '1000 Hints'],
@@ -145,7 +145,7 @@ module.exports = [
                 show: 'true',
                 price: '$2.99',
                 color: '#4ab919',
-                num_verses: ['100', '100', '']
+                num_quotes: ['100', '100', '']
                 },
                 {
                 name: ['Matthew', 'Revelation', '500 Hints'],
@@ -153,7 +153,7 @@ module.exports = [
                 show: 'true',
                 price: '$1.99',
                 color: '#536ac0',
-                num_verses: ['50', '50', '']
+                num_quotes: ['50', '50', '']
                 }
             ]
     },
@@ -167,7 +167,7 @@ module.exports = [
                 name: 'Inspiration',
                 product_id: 'rv.verse.collection.inspiration',
                 show: 'true',
-                num_verses: '50',
+                num_quotes: '50',
                 color: '#85c613'
                 },
                 {
@@ -176,7 +176,7 @@ module.exports = [
                 show: 'true',
                 price: '$1.99',
                 color: '#860840',
-                num_verses: ['50', '50', '50']
+                num_quotes: ['50', '50', '50']
                 },
                 {
                 name: ['Genesis', 'Psalms', '1000 Hints'],
@@ -184,20 +184,20 @@ module.exports = [
                 show: 'true',
                 price: '$2.99',
                 color: '#4ab919',
-                num_verses: ['100', '100', '']
+                num_quotes: ['100', '100', '']
                 },
 				{
                 name: 'John',
                 product_id: 'rv.verse.book.john',
                 show: 'true',
                 color: '#107088',
-                num_verses: '50'
+                num_quotes: '50'
                 },
                 {
                 name: 'Love',
                 product_id: 'rv.verse.collection.love',
                 show: 'true',
-                num_verses: '50',
+                num_quotes: '50',
                 color: '#831d1d'
                 },
                 {
@@ -206,14 +206,14 @@ module.exports = [
                 show: 'true',
                 price: '$1.99',
                 color: '#536ac0',
-                num_verses: ['50', '50', '']
+                num_quotes: ['50', '50', '']
                 },
                 {
                 name: 'Revelation',
                 product_id: 'rv.verse.book.revelation',
                 show: 'true',
                 color: '#6d920a',
-                num_verses: '50'
+                num_quotes: '50'
                 }
             ]
     },
@@ -241,7 +241,7 @@ module.exports = [
 		index: '13',
 		type: 'daily',
 		show: 'true',
-		num_verses: '1',
+		num_quotes: '1',
 		num_solved: '0',
         product_id: '',
 		bg_color: '#055105',
@@ -254,7 +254,7 @@ module.exports = [
 		index: '14',
 		type: 'daily',
 		show: 'true',
-		num_verses: '3',
+		num_quotes: '3',
 		num_solved: '0',
         product_id: '',
 		bg_color: '#795959',
@@ -269,7 +269,7 @@ module.exports = [
 		index: '15',
 		type: 'daily',
 		show: 'false',
-		num_verses: '30',
+		num_quotes: '30',
 		num_solved: '0',
         product_id: '',
 		bg_color: '#eea805',
@@ -311,7 +311,7 @@ module.exports = [
 		index: '16',
 		type: 'mypack',
 		show: 'true',
-		num_verses: '30',
+		num_quotes: '30',
 		num_solved: '0',
 		solved: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         product_id: '0.0.collection.0',
@@ -354,7 +354,7 @@ module.exports = [
 		index: '17',
 		type: 'mypack',
 		show: 'false',
-		num_verses: '0',
+		num_quotes: '0',
 		num_solved: '0',
 		solved: [],
         product_id: '0.0.favorites.0',

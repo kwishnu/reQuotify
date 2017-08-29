@@ -77,14 +77,15 @@ class Favorites extends Component{
             title: this.props.title,
             isOpen: false,
             dataSource: this.props.dataSource,
-//            dataSource: ds.cloneWithRows(Array.from(new Array(parseInt(this.props.homeData[this.props.dataElement].num_verses, 10)), (x,i) => i)),
+//            dataSource: ds.cloneWithRows(Array.from(new Array(parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10)), (x,i) => i)),
             bgColor: this.props.bgColor,
             headerColor: '',
             titleColor: '',
             isLoading: true,
             shouldShowDialog: false,
             selected: '',
-            questionOpacity: 1
+            questionOpacity: 1,
+            infoString: ''
         };
         this.handleHardwareBackButton = this.handleHardwareBackButton.bind(this);
     }
@@ -187,7 +188,7 @@ class Favorites extends Component{
                 if (titleIndex > -1){
                     homeData[18 + i].title = '*' + homeData[levels[i]].data[titleIndex].name;
                     homeData[18 + i].product_id = homeData[levels[i]].data[titleIndex].product_id;
-                    homeData[18 + i].num_verses = homeData[levels[i]].data[titleIndex].num_verses;
+                    homeData[18 + i].num_quotes = homeData[levels[i]].data[titleIndex].num_quotes;
                     homeData[18 + i].bg_color = homeData[levels[i]].data[titleIndex].color;
                 }else{
                     homeData[18 + i].show = 'false';
@@ -312,7 +313,7 @@ class Favorites extends Component{
     bg(num){
          let strToReturn='';
          let onThis = parseInt(this.props.homeData[this.props.dataElement].num_solved, 10);
-         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_verses, 10);
+         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10);
          if (onThis == numPuzzles){
             strToReturn = (this.props.homeData[this.props.dataElement].solved[num] == 0)?'#00FF00':'#079707';
             return {
@@ -333,7 +334,7 @@ class Favorites extends Component{
     getUnderlay(num){
          let strToReturn='';
          let onThis = parseInt(this.props.homeData[this.props.dataElement].num_solved, 10);
-         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_verses, 10);
+         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10);
          if (onThis == numPuzzles){
             strToReturn = (this.props.homeData[this.props.dataElement].solved[num] == 0)?'#00FF00':'#079707';
             return strToReturn;
@@ -351,7 +352,7 @@ class Favorites extends Component{
     getBorder(num){
          let strToReturn='';
          let onThis = parseInt(this.props.homeData[this.props.dataElement].num_solved, 10);
-         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_verses, 10);
+         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10);
          if (onThis == numPuzzles){
             strToReturn = (this.props.homeData[this.props.dataElement].solved[num] == 0)?'#00FF00':'#00a700';
             return {borderColor: strToReturn};
@@ -436,7 +437,7 @@ class Favorites extends Component{
         let bool = (this.state.homeData[17].verses.length > 1)?'true':'false';
         dataArray[17].show = bool;
         dataArray[17].verses.length = 0;
-        dataArray[17].num_verses = (parseInt(dataArray[17].num_verses, 10) - 1) + '';
+        dataArray[17].num_quotes = (parseInt(dataArray[17].num_quotes, 10) - 1) + '';
         let newArray = [];
         for (let a=0; a<this.state.dataSource.length; a++){
             if (this.state.dataSource[a].substr(0, 1) != item){
@@ -516,7 +517,9 @@ class Favorites extends Component{
                                 </View>
                             </View>
                             <View style={{flex: 8}}>
-                                <ListView  showsVerticalScrollIndicator ={false}
+                                <ListView
+                                    showsVerticalScrollIndicator ={false}
+                                    enableEmptySections ={true}
                                     initialListSize ={100}
                                     contentContainerStyle={ collection_styles.listview }
                                     dataSource={rows}

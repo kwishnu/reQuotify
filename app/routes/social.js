@@ -96,7 +96,7 @@ module.exports = class Social extends Component {
         );
       }else{
         FabricTwitterKit.composeTweet({
-            body: 'All should check out \'reVersify\' in the App Store or Google Play...I\'m really enjoying it!'
+            body: 'All should check out \'reQuotify\' in the App Store or Google Play...I\'m really enjoying it!'
         }, (completed, cancelled, error) => {
             console.log('completed: ' + completed + ' cancelled: ' + cancelled + ' error: ' + error);
         });
@@ -110,7 +110,7 @@ module.exports = class Social extends Component {
         const likeText = (this.props.which == 'FB')?'Like us on Facebook':'Follow us on Twitter';
         const shareText = (this.props.which == 'FB')?'Share something about us on Facebook...':'Tweet something about us...';
         const text1 = (this.props.which == 'FB')?'Like us on Facebook so you can follow ':'Follow us on Twitter to keep up on ';
-        const text2 = 'reVersify News: learn of new reVersify Verse Collections and other games we release!';
+        const text2 = 'reQuotify News: learn of new reQuotify Collections and other games we release!';
         const text = text1 + text2;
         return (
                 <View style={[social_styles.container, {borderColor: this.props.color}]}>

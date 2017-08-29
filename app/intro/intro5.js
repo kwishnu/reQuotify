@@ -186,7 +186,7 @@ class Intro5 extends Component {
                 }
                 { this.state.showText &&
                 <View style={styles.thatsit}>
-                    <Text style={styles.large_text}>That's it - enjoy reVersify!</Text>
+                    <Text style={styles.large_text}>That's it - enjoy reQuotify!</Text>
                 </View>
                 }
                 { this.state.showText &&

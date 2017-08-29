@@ -149,7 +149,7 @@ module.exports = class Store extends Component {
                 <View style={ store_styles.purchase_row }>
                     <View style={[store_styles.purchase_text_container, {backgroundColor: data.color}]}>
                         <Text style={[store_styles.launcher_text, {color: invertColor(data.color, true)}]}>{data.name}</Text>
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_verses + ' Verse Puzzles'}</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_quotes + ' Verse Puzzles'}</Text>
                         {productIDArray[2] == 'book' &&
                         <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Complete Text</Text>
                         }
@@ -166,19 +166,19 @@ module.exports = class Store extends Component {
                 <View style={ store_styles.purchase_row }>
                     <View style={[store_styles.purchase_text_container, {backgroundColor: data.color}]}>
                         <Text style={[store_styles.launcher_text, {color: invertColor(data.color, true)}]}>{data.name[0]}</Text>
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_verses[0] + ' Verse Puzzles'}</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_quotes[0] + ' Verse Puzzles'}</Text>
                         {productIDArray[0] == 'b' &&
                         <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Complete Text</Text>
                         }
                             <View style={store_styles.divider}/>
                         <Text style={[store_styles.launcher_text, {color: invertColor(data.color, true)}]}>{data.name[1]}</Text>
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_verses[1] + ' Verse Puzzles'}</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_quotes[1] + ' Verse Puzzles'}</Text>
                         {productIDArray[2] == 'b' &&
                         <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Complete Text</Text>
                         }
                             <View style={store_styles.divider}/>
                         <Text style={[store_styles.launcher_text, {color: invertColor(data.color, true)}]}>{data.name[2]}</Text>
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{this.getRowThreeText(data.product_id, data.num_verses[2])}</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{this.getRowThreeText(data.product_id, data.num_quotes[2])}</Text>
                         {productIDArray[4] == 'b' &&
                         <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Complete Text</Text>
                         }
@@ -194,10 +194,10 @@ module.exports = class Store extends Component {
             )
         }
     }
-    getRowThreeText(id, numVerses){
+    getRowThreeText(id, numQuotes){
         let splitID = id.split('.');
         console.log(id);
-        let returnText = (splitID[4] == 'h')?'reVersify Hints':numVerses + ' Verse Puzzles';
+        let returnText = (splitID[4] == 'h')?'reQuotify Hints':numQuotes + ' Quote Puzzles';
         return returnText;
     }
     startPurchase(itemID){

@@ -74,7 +74,7 @@ class Book extends Component{
             title: this.props.title,
             isOpen: false,
             dataSource: this.props.homeData[this.props.dataElement].verses,
-//            dataSource: ds.cloneWithRows(Array.from(new Array(parseInt(this.props.homeData[this.props.dataElement].num_verses, 10)), (x,i) => i)),
+//            dataSource: ds.cloneWithRows(Array.from(new Array(parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10)), (x,i) => i)),
             bgColor: this.props.bgColor,
             headerColor: '',
             titleColor: '',
@@ -175,7 +175,7 @@ class Book extends Component{
                 if (titleIndex > -1){
                     homeData[18 + i].title = '*' + homeData[levels[i]].data[titleIndex].name;
                     homeData[18 + i].product_id = homeData[levels[i]].data[titleIndex].product_id;
-                    homeData[18 + i].num_verses = homeData[levels[i]].data[titleIndex].num_verses;
+                    homeData[18 + i].num_quotes = homeData[levels[i]].data[titleIndex].num_quotes;
                     homeData[18 + i].bg_color = homeData[levels[i]].data[titleIndex].color;
                 }else{
                     homeData[18 + i].show = 'false';
@@ -306,7 +306,7 @@ class Book extends Component{
     getUnderlay(num){
          let strToReturn='';
          let onThis = parseInt(this.props.homeData[this.props.dataElement].num_solved, 10);
-         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_verses, 10);
+         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10);
          if (onThis == numPuzzles){
             strToReturn = (this.props.homeData[this.props.dataElement].solved[num] == 0)?'#00FF00':'#079707';
             return strToReturn;
@@ -324,7 +324,7 @@ class Book extends Component{
     getBorder(num){
          let strToReturn='';
          let onThis = parseInt(this.props.homeData[this.props.dataElement].num_solved, 10);
-         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_verses, 10);
+         let numPuzzles = parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10);
          if (onThis == numPuzzles){
             strToReturn = (this.props.homeData[this.props.dataElement].solved[num] == 0)?'#00FF00':'#00a700';
             return {borderColor: strToReturn};
