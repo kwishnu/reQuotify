@@ -4,6 +4,9 @@ import moment from 'moment';
 import FabricTwitterKit from 'react-native-fabric-twitterkit';
 import Button from '../components/Button';
 import Overlay from '../components/Overlay';
+import AnimationCell from '../components/Cell';
+import * as Animatable from 'react-native-animatable';
+
 import Tile from '../components/Tile';
 import DropdownMenu from '../components/DropdownMenu';
 import configs from '../config/configs';
@@ -188,12 +191,17 @@ class Game extends Component {
             hasInfiniteHints: false,
             entireVerse: '',
             openedAll: false,
-            shouldShowOverlay: false
+            shouldShowOverlay: false,
+            shouldShowGuesses: false,
+            name1: '',
+            name2: '',
+            name3: ''
         }
         this.handleHardwareBackButton = this.handleHardwareBackButton.bind(this);
     }
     componentDidMount() {
-        console.log('here');
+                    setTimeout(()=>{ this.setState({ shouldShowGuesses: true, name1: 'Shakespeare', name2: 'Milton', name3: 'Voltaire' }) }, 1000);
+
         if (this.props.dataElement == 17)this.setState({showFavorites: false});
         if (this.props.fromWhere == 'book')this.setState({showBible: true});
         let reverseTiles = this.props.reverse;
@@ -203,8 +211,9 @@ class Game extends Component {
         BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBackButton);
         AppState.addEventListener('change', this.handleAppStateChange);
         homeData = this.props.homeData;
-        if (homeData[this.props.dataElement].num_solved == homeData[this.props.dataElement].num_verses)this.setState({openedAll: true});
+        if (homeData[this.props.dataElement].num_solved == homeData[this.props.dataElement].num_quotes)this.setState({openedAll: true});
         let verseArray = this.props.homeData[this.props.dataElement].verses[this.props.index].split('**');
+        console.log(this.props.homeData[this.props.dataElement].verses[this.props.index]);
         dsArray = this.props.daily_solvedArray;
         let numHints = parseInt(verseArray[0], 10);
         let chapterVerse = verseArray[1];
@@ -459,7 +468,7 @@ class Game extends Component {
         let lineLength = 0;
         for (let word=0; word<verseArray.length; word++){
             letterTotal += (verseArray[word].length + 1);
-            lineLength = (whichRow < 3)?23:32;
+            lineLength = (whichRow < 3)?24:30;
             if (letterTotal > lineLength){
                 layout[whichRow + 1].push(verseArray[word]);
                 letterTotal = verseArray[word].length + 1;
@@ -670,7 +679,7 @@ class Game extends Component {
             return;
         }
         let newIndex = String(parseInt(this.state.index, 10) + 1);
-        let onLastVerse = (this.props.fromWhere == 'home' || newIndex == parseInt(this.props.homeData[this.props.dataElement].num_verses, 10))?true:false;
+        let onLastVerse = (this.props.fromWhere == 'home' || newIndex == parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10))?true:false;
         if(this.props.fromWhere == 'home' || onLastVerse){
             this.closeGame('home');
             return;
@@ -761,7 +770,7 @@ class Game extends Component {
             if (titleIndex > -1){
                 homeData[18 + i].title = '*' + homeData[levels[i]].data[titleIndex].name;
                 homeData[18 + i].product_id = homeData[levels[i]].data[titleIndex].product_id;
-                homeData[18 + i].num_verses = homeData[levels[i]].data[titleIndex].num_verses;
+                homeData[18 + i].num_quotes = homeData[levels[i]].data[titleIndex].num_quotes;
                 homeData[18 + i].bg_color = homeData[levels[i]].data[titleIndex].color;
             }else{
                 homeData[18 + i].show = 'false';
@@ -874,7 +883,7 @@ class Game extends Component {
     endOfGame(){
         var newNumSolved = '';
         if(this.state.useSounds == true){fanfare.play();}
-        let onLastVerseInPack=(this.props.fromWhere == 'home' || parseInt(this.state.index, 10) + 1 == parseInt(this.props.homeData[this.props.dataElement].num_verses, 10))?true:false;
+        let onLastVerseInPack=(this.props.fromWhere == 'home' || parseInt(this.state.index, 10) + 1 == parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10))?true:false;
         if (onLastVerseInPack){
             this.setState({ arrowImage: require('../images/arrowbackward.png') });
         }else{
@@ -887,7 +896,7 @@ class Game extends Component {
             newNumSolved = (parseInt(homeData[this.props.dataElement].num_solved, 10) + 1).toString();
             if(!this.state.openedAll)homeData[this.props.dataElement].num_solved = newNumSolved;
             homeData[this.props.dataElement].solved[this.state.index] = 1;
-            let onLastVerse=(parseInt(this.state.index, 10) + 1 == parseInt(homeData[this.props.dataElement].num_verses, 10))?true:false;
+            let onLastVerse=(parseInt(this.state.index, 10) + 1 == parseInt(homeData[this.props.dataElement].num_quotes, 10))?true:false;
             let notSolvedYet = homeData[this.props.dataElement].solved.some(hasAZero);
             if(onLastVerse && !notSolvedYet && !this.state.openedAll)homeData[this.props.dataElement].type = 'solved';
             try {
@@ -958,7 +967,7 @@ class Game extends Component {
         }
         if (numSolved % 15 == 0 && numSolved < 50 && !this.state.hasRated){
             let dismissText = (numSolved < 46)?'Maybe later...':'Never';
-            Alert.alert( 'Enjoying reVersify?',  `It seems you're enjoying the app, which makes us very happy! Would you care to take a moment to rate us in the App Store?'`,
+            Alert.alert( 'Enjoying reQuotify?',  `It seems you're enjoying the app, which makes us very happy! Would you care to take a moment to rate us in the App Store?'`,
                 [
                     {text: 'Give Rating', onPress: () => this.rateApp()},
                     {text: dismissText, style: 'cancel'},
@@ -1321,8 +1330,8 @@ class Game extends Component {
         if (this.state.isPremium || this.state.numFavorites < 3){
             let newNumFavorites = this.state.numFavorites + 1;
             this.setState({numFavorites: newNumFavorites});
-            let num = (parseInt(homeData[17].num_verses, 10) + 1) + '';
-            homeData[17].num_verses = num;
+            let num = (parseInt(homeData[17].num_quotes, 10) + 1) + '';
+            homeData[17].num_quotes = num;
             homeData[17].verses.push(this.props.homeData[this.props.dataElement].verses[this.props.index]);
             homeData[17].show = 'true';
             try {
@@ -1384,7 +1393,16 @@ class Game extends Component {
        this.setState({shouldShowOverlay: false});
 
     }
+    guessQuoted(which){
 
+        setTimeout(() => {
+            this.refs.top.bounceOutRight(1000);
+            this.refs.middle.bounceOutLeft(1000);
+            this.refs.bottom.bounceOutRight(1000);
+        }, 1000);
+
+
+    }
 
     render() {
         const rotateX = this.flip.interpolate({
@@ -1550,10 +1568,42 @@ class Game extends Component {
                         }
                     </View>
                     {this.state.shouldShowDropdown &&
-                    <DropdownMenu onPress={(num)=>{ this.onDropdownSelect(num); }} item1={this.state.soundString} item2={'Reset Verse'} item3={'How to Play'}/>
+                        <DropdownMenu onPress={(num)=>{ this.onDropdownSelect(num); }} item1={this.state.soundString} item2={'Reset Verse'} item3={'How to Play'}/>
                     }
                     {this.state.shouldShowOverlay &&
-                            <Overlay onPress={()=>{ this.dismissOverlay(); }} margin={0.16} text={`Mute game sounds and reset the Verse with this menu`} />
+                        <Overlay onPress={()=>{ this.dismissOverlay(); }} margin={0.16} text={`Mute game sounds and reset the Quote with this menu`} />
+                    }
+                    {this.state.shouldShowGuesses &&
+                    <View style={{position: 'absolute', top: height*.4, left: width*.05, width: width*.9, height: height*.6}}>
+                        <Animatable.View
+                            style={[game_styles.guess_cell, {top: height*0}]}
+                            ref="top"
+                            animation={'bounceInLeft'}
+                            duration={1000}
+                            onStartShouldSetResponder={() => {this.guessQuoted('top');}}
+
+                        >
+                          <Text style={game_styles.name}>{this.state.name1}</Text>
+                        </Animatable.View>
+                        <Animatable.View
+                            style={[game_styles.guess_cell, {top: height*.1}]}
+                            ref="middle"
+                            animation={'bounceInRight'}
+                            duration={1100}
+                            onStartShouldSetResponder={() => {this.guessQuoted('middle');}}
+                        >
+                          <Text style={game_styles.name}>{this.state.name2}</Text>
+                        </Animatable.View>
+                        <Animatable.View
+                            style={[game_styles.guess_cell, {top: height*.2}]}
+                            ref="bottom"
+                            animation={'bounceInLeft'}
+                            duration={600}
+                            onStartShouldSetResponder={() => {this.guessQuoted('bottom');}}
+                        >
+                          <Text style={game_styles.name}>{this.state.name3}</Text>
+                        </Animatable.View>
+                    </View>
                     }
                 </View>
             );
@@ -1599,28 +1649,28 @@ const game_styles = StyleSheet.create({
     parchment: {
         position: 'absolute',
         top: 0,
-        left: (width-(height*.47))/2,
+        left: (width-(height*.52))/2,
         height: height*.30,
-        width: height*.47
+        width: height*.52
     },
     letter: {
         position: 'absolute',
-        top: height*.052,
-        left: (width-(height*.478))/2 + height*.058,
-        width: height*.08,
-        height: height*.083,
+        top: height*.06,
+        left: (width-(height*.478))/2 + height*.05,
+        width: height*.11,
+        height: height*.075,
     },
     verse_container: {
         flex: 1,
         position: 'absolute',
         top: height*.05,
-        left: (width-(height*.478))/2 + height*.063,
+        left: (width-(height*.478))/2 + height*.051,
         width: width*.75,
         height: height*.25,
     },
     first_line: {
         flex: 1,
-        paddingLeft: height*.075,
+        paddingLeft: height*.11,
     },
     line: {
         flex: 1,
@@ -1628,7 +1678,7 @@ const game_styles = StyleSheet.create({
     verse_text: {
         fontSize: normalizeFont(configs.LETTER_SIZE*0.085),
         color: '#000000',
-        fontFamily: 'Book Antiqua',
+        fontFamily: 'Segoe Print'//'Book Antiqua',
     },
     verse_panel_container: {
         flex: 2,
@@ -1707,6 +1757,23 @@ const game_styles = StyleSheet.create({
         width: 60,
         height: 60,
         margin: 3
+    },
+    name: {
+        color: '#ffffff',
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    guess_cell: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        left: 0,
+        width: width*.9,
+        height: height*.08,
+        backgroundColor: '#555555',
+        borderWidth: 2,
+        borderColor: '#222222'
     }
 });
 
