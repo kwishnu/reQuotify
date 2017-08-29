@@ -280,7 +280,6 @@ class SplashScreen extends Component {
                         pTitle = this.makeTitle(idSplit[gg + 1]);
                         switch (idSplit[gg]){
                             case 'b':
-                        console.log('hi: ' + idSplit[gg]);
                                 packID = 'rv.verse.book.' + idSplit[gg + 1];
                                 break;
                             case 'c':
@@ -302,8 +301,6 @@ class SplashScreen extends Component {
                 return false;
             }).then((collectionArray) => {
                 if (collectionArray){
-
-                console.log(JSON.stringify(collectionArray));
                     var appDataArray = this.state.pData;
                     var indexNum = this.state.pData.length;
                     for (var collectionIndex = 0; collectionIndex < collectionArray.length; collectionIndex++){
@@ -341,7 +338,6 @@ class SplashScreen extends Component {
                                 qData = row.data;
                             }
                             if((parseInt(row.qnum, 10) >= sNum) && (parseInt(row.qnum, 10) < (sNum + 31))){//daily quotes here
-                            console.log(row.qnum + ' ' + row.quote);
                                 quoteStringArray.unshift(row.quote);
                             }
                         });
@@ -355,7 +351,7 @@ class SplashScreen extends Component {
                         for (let addExtra=22; addExtra<dataArray.length; addExtra++){//add any extra packs onto data array
                             qData.push(dataArray[addExtra]);
                         }
-                        qData[17].num_verses = dataArray[17].num_verses;//update Favorites and premium status...
+                        qData[17].num_quotes = dataArray[17].num_quotes;//update Favorites and premium status...
                         qData[17].show = dataArray[17].show;
                         qData[17].verses = dataArray[17].verses;
                         qData[14].show = dataArray[14].show;
