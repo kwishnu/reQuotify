@@ -215,7 +215,6 @@ class Intro2 extends Component {
                 }
                 <View style={intro_styles.game}>
                 </View>
-                { this.state.showFooter &&
                 <View style={[intro_styles.footer, this.footerBorder(this.state.bgColor), this.headerFooterColor(this.state.bgColor)]}>
                         <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width}}>
                             <View style={{padding: height*.015}} onStartShouldSetResponder={()=>this.goSomewhere()}>
@@ -231,6 +230,7 @@ class Intro2 extends Component {
                             </View>
                         </View>
                 </View>
+                 { this.state.showTiles &&
                     <View style={intro_styles.tiles_container}>
                        <View style={intro_styles.tile_row} >
                             <Tile opac={0} ref={(a) => { this.a = a; }}  text={ 'nthebegi' } nextFrag={ 'nthebegi' } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
