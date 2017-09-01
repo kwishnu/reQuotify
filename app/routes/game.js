@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, BackHandler, AsyncStorage, Animated, ActivityIndicator, Alert, Platform, Linking, AppState, NetInfo } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, BackHandler, AsyncStorage, Animated, ActivityIndicator, Alert, Platform, Linking, AppState, NetInfo, TextInput } from 'react-native';
 import moment from 'moment';
 import FabricTwitterKit from 'react-native-fabric-twitterkit';
 import Button from '../components/Button';
@@ -12,6 +12,7 @@ import DropdownMenu from '../components/DropdownMenu';
 import configs from '../config/configs';
 import colors from '../config/colors';
 import { normalize, normalizeFont, getArrowSize, getArrowMargin }  from '../config/pixelRatio';
+const UIManager = require('NativeModules').UIManager;
 const deepCopy = require('../config/deepCopy.js');
 const bonuses = require('../config/bonuses.js');
 const styles = require('../styles/styles');
@@ -60,7 +61,7 @@ const blat = new Sound('block.mp3', Sound.MAIN_BUNDLE, (error) => {
     window.alert('Sound file not found');
   }
 });
-const fanfare = new Sound('aah.mp3', Sound.MAIN_BUNDLE, (error) => {
+const fanfare = new Sound('gliss.mp3', Sound.MAIN_BUNDLE, (error) => {
   if (error) {
     window.alert('Sound file not found');
   }
@@ -193,15 +194,21 @@ class Game extends Component {
             openedAll: false,
             shouldShowOverlay: false,
             shouldShowGuesses: false,
+            shouldShowGuessHeader: false,
             name1: '',
             name2: '',
-            name3: ''
+            name3: '',
+            bg1Color: colors.medium_gray,
+            bg2Color: colors.medium_gray,
+            bg3Color: colors.medium_gray,
+            closeQuoteX: 0,
+            closeQuoteY: 0,
+            showCloseQuote: false,
+            textInputText: 'testing'
         }
         this.handleHardwareBackButton = this.handleHardwareBackButton.bind(this);
     }
     componentDidMount() {
-                    setTimeout(()=>{ this.setState({ shouldShowGuesses: true, name1: 'Shakespeare', name2: 'Milton', name3: 'Voltaire' }) }, 1000);
-
         if (this.props.dataElement == 17)this.setState({showFavorites: false});
         if (this.props.fromWhere == 'book')this.setState({showBible: true});
         let reverseTiles = this.props.reverse;
@@ -212,7 +219,8 @@ class Game extends Component {
         AppState.addEventListener('change', this.handleAppStateChange);
         homeData = this.props.homeData;
         if (homeData[this.props.dataElement].num_solved == homeData[this.props.dataElement].num_quotes)this.setState({openedAll: true});
-        let verseArray = this.props.homeData[this.props.dataElement].verses[this.props.index].split('**');
+        let verseArray = `2**Shakespeare**Be, or not to be...that really is what it all boils down to`.split('**');
+//        let verseArray = this.props.homeData[this.props.dataElement].verses[this.props.index].split('**');
         console.log(this.props.homeData[this.props.dataElement].verses[this.props.index]);
         dsArray = this.props.daily_solvedArray;
         let numHints = parseInt(verseArray[0], 10);
@@ -477,7 +485,9 @@ class Game extends Component {
                 layout[whichRow].push(verseArray[word]);
             }
         }
-        this.setState({wordsArray: layout});
+        console.log('last line length: ' + layout[whichRow].join(' ').length);
+        let lastLine = layout[whichRow].join(' ');
+        this.setState({wordsArray: layout, textInputText: lastLine});
     }
     getRowBools(length){
         return new Promise(
@@ -880,16 +890,19 @@ class Game extends Component {
             this.setState({playedFirst: true});
         }
     }
+    giveQuotedQuiz(){
+        if(this.state.useSounds == true){fanfare.play();}
+
+    }
     endOfGame(){
         var newNumSolved = '';
-        if(this.state.useSounds == true){fanfare.play();}
         let onLastVerseInPack=(this.props.fromWhere == 'home' || parseInt(this.state.index, 10) + 1 == parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10))?true:false;
         if (onLastVerseInPack){
             this.setState({ arrowImage: require('../images/arrowbackward.png') });
         }else{
             this.setState({ arrowImage: require('../images/arrowforward.png') });
         }
-        if (this.props.fromWhere != 'book' && !this.state.showingVerse)this.flipPanel(false);
+        if (this.props.fromWhere != 'book' && !this.state.showingVerse)this.showGuessCells();
         this.setState({doneWithVerse: true, showHintButton: false, showNextArrow: true});
         this.showButtonPanel();
         if(this.props.fromWhere == 'collection' || this.props.fromWhere == 'book'){
@@ -965,7 +978,7 @@ class Game extends Component {
                 window.alert('AsyncStorage error: ' + error.message);
             }
         }
-        if (numSolved % 15 == 0 && numSolved < 50 && !this.state.hasRated){
+        if (numSolved % 15 == 0 && numSolved < 50 && !this.state.hasRated){//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ move this... ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             let dismissText = (numSolved < 46)?'Maybe later...':'Never';
             Alert.alert( 'Enjoying reQuotify?',  `It seems you're enjoying the app, which makes us very happy! Would you care to take a moment to rate us in the App Store?'`,
                 [
@@ -1146,6 +1159,8 @@ class Game extends Component {
         }
     }
     giveHint(frag){
+                    this.refs.closequote.bounceInUp(1000);
+return;
         let hints = this.state.numHints;
         let hasInfinite = this.state.hasInfiniteHints;
         let hasPaid = this.state.hasPaidForHints;
@@ -1249,18 +1264,18 @@ class Game extends Component {
             ).start()
         });
     }
-    flipPanel(fromBook){
+    flipPanel(){
         this.flip.setValue(0);
         let chapterVerseStr = '';
         let pBgC ='';
         let pBC = '';
         let bool = false;
-        let pText = (fromBook == true)?this.props.title:this.state.chapterVerse;
+//        let pText = (fromBook == true)?this.props.title:this.state.chapterVerse;
         if(!this.state.showingVerse){
             pBgC = '#555555';
             pBC = '#000000';
             bool = true;
-            this.setState({panelText:  pText,
+            this.setState({panelText:  this.state.chapterVerse,
                                        panelBgColor: pBgC,
                                        panelBorderColor: pBC,
                                        showingVerse: bool
@@ -1393,16 +1408,80 @@ class Game extends Component {
        this.setState({shouldShowOverlay: false});
 
     }
-    guessQuoted(which){
-
+    showGuessCells(){
+        this.setState({ shouldShowGuessHeader: true });
+        setTimeout(()=>{ this.setState({ shouldShowGuesses: true, name1: 'Shakespeare', name2: 'Milton', name3: 'Voltaire' }) }, 1500);
+    }
+    guessQuoted(whichCell, guess){
+        if (guess == 'Shakespeare'){
+            switch (whichCell){
+                case 'top':
+                    this.setState({bg1Color: 'green', name2: 'That\'s right!', name3: 'Double Solved Points'});
+                    break;
+                case 'middle':
+                    this.setState({bg2Color: 'green', name1: 'That\'s right!', name3: 'Double Solved Points'});
+                    break;
+                case 'bottom':
+                    this.setState({bg3Color: 'green', name1: 'That\'s right!', name2: 'Double Solved Points'});
+            }
+        }else{
+            switch (whichCell){
+                case 'top':
+                    this.setState({bg1Color: 'red'});
+                    if (this.state.name2 == 'Shakespeare'){
+                        this.setState({bg2Color: 'green'});
+                    }else{
+                        this.setState({bg3Color: 'green'});
+                    }
+                    break;
+                case 'middle':
+                    this.setState({bg2Color: 'red'});
+                    if (this.state.name1 == 'Shakespeare'){
+                        this.setState({bg1Color: 'green'});
+                    }else{
+                        this.setState({bg3Color: 'green'});
+                    }
+                    break;
+                case 'bottom':
+                    this.setState({bg3Color: 'red'});
+                    if (this.state.name1 == 'Shakespeare'){
+                        this.setState({bg1Color: 'green'});
+                    }else{
+                        this.setState({bg2Color: 'green'});
+                    }
+            }
+        }
         setTimeout(() => {
+            this.refs.header.bounceOutUp(1000);
             this.refs.top.bounceOutRight(1000);
             this.refs.middle.bounceOutLeft(1000);
             this.refs.bottom.bounceOutRight(1000);
-        }, 1000);
+        }, 2500);
 
+        setTimeout(() => {
+            this.flipPanel();
+        }, 3000);
 
     }
+    setCloseQuoteX(event){
+        var dims = {x, y, width, height} = event.nativeEvent.layout;
+        let xOffset = dims.width + height*.15;
+        this.refs.entireScreen.measure( (fx, fy, width, screenHeight, px, py) => {
+            xOffset = (this.state.numberOfRows < 4)? xOffset + screenHeight*.11:xOffset;
+            setTimeout(() => {
+                this.setState({
+                    closeQuoteX: xOffset, showCloseQuote: true
+                });
+            }, 2000);
+        });
+    }
+    setCloseQuoteY(event){
+        var d = {x, y, width, height} = event.nativeEvent.layout;
+        let yOffset = this.state.numberOfRows * d.height + height*.25;
+        this.setState({closeQuoteY: yOffset});
+        console.log('yOffset = ' + yOffset + ', height = ' + height + ', height*.15 = ' + height*.15);
+    }
+
 
     render() {
         const rotateX = this.flip.interpolate({
@@ -1426,7 +1505,7 @@ class Game extends Component {
             );
         }else{
             return (
-                <View style={{flex: 1}}>
+                <View ref='entireScreen' style={{flex: 1}}>
                     <View style={[game_styles.container, {backgroundColor: this.state.bgColor}]}>
                         <View style={[game_styles.header, this.headerBorder(this.state.bgColor), this.headerFooterColor(this.state.bgColor)]}>
                             <Button style={[game_styles.button, {marginLeft: getArrowMargin()}]} onPress={() => this.closeGame(this.props.fromWhere)}>
@@ -1438,10 +1517,25 @@ class Game extends Component {
                             </Button>
                         </View>
                         <View style={game_styles.tablet}>
+                                <Text style={game_styles.dummy_text_container} onLayout={(event) => this.setCloseQuoteX(event)} >
+                                    <Text style={game_styles.dummy_text}>{this.state.textInputText}</Text>
+                                </Text>
                                 <Image style={game_styles.parchment} source={require('../images/parchment.png')} resizeMode='stretch' />
                                 <Image style={game_styles.letter} source={this.state.letterImage} />
                                 <View style={game_styles.verse_container}>
-                                    <View style={game_styles.first_line}>
+                                    {this.state.showCloseQuote &&
+                                    <View style={[game_styles.close_quote_container,{top: this.state.closeQuoteY, left: this.state.closeQuoteX}]}>
+                                        <Animatable.Image
+                                            style={game_styles.close_quote}
+                                            resizeMode='stretch'
+                                            source={require('../images/closequote.png')}
+                                            ref='closequote'
+                                            animation={'bounceInUp'}
+                                            duration={900}
+                                        />
+                                    </View>
+                                    }
+                                    <View  style={game_styles.first_line}>
                                         <Text style={game_styles.verse_text} >{ this.state.line0Text }</Text>
                                     </View>
                                     <View style={game_styles.first_line}>
@@ -1450,7 +1544,7 @@ class Game extends Component {
                                     <View style={game_styles.first_line}>
                                         <Text style={game_styles.verse_text} >{ this.state.line2Text }</Text>
                                     </View>
-                                    <View style={game_styles.line}>
+                                    <View style={game_styles.line}  onLayout={(event) => this.setCloseQuoteY(event)} >
                                         <Text style={game_styles.verse_text} >{ this.state.line3Text }</Text>
                                     </View>
                                     <View style={game_styles.line}>
@@ -1465,10 +1559,9 @@ class Game extends Component {
                                     <View style={game_styles.line}>
                                         <Text style={game_styles.verse_text} >{ this.state.line7Text }</Text>
                                     </View>
-                                    <View style={game_styles.line}></View>
                                 </View>
                         </View>
-                        <View style={game_styles.verse_panel_container} onStartShouldSetResponder={ ()=> {let bool=(this.props.fromWhere == 'book')?true:false; this.flipPanel(bool);}}>
+                        <View style={game_styles.verse_panel_container}>
                             <Animated.View style={[imageStyle, game_styles.verse_panel, {backgroundColor: this.state.panelBgColor, borderColor: this.state.panelBorderColor}]}>
                                         <Text style={game_styles.panel_text} >{this.state.panelText}</Text>
                             </Animated.View>
@@ -1573,33 +1666,44 @@ class Game extends Component {
                     {this.state.shouldShowOverlay &&
                         <Overlay onPress={()=>{ this.dismissOverlay(); }} margin={0.16} text={`Mute game sounds and reset the Quote with this menu`} />
                     }
+                    {this.state.shouldShowGuessHeader &&
+                    <View style={{position: 'absolute', top: height*.34, left: 0, width: width, height: height*.2}}>
+                        <Animatable.Image source={ require('../images/nicejob.png') }
+                            style={game_styles.guess_header}
+                            ref='header'
+                            animation={'bounceInDown'}
+                            duration={900}
+                        >
+                        </Animatable.Image>
+                    </View>
+                    }
                     {this.state.shouldShowGuesses &&
-                    <View style={{position: 'absolute', top: height*.4, left: width*.05, width: width*.9, height: height*.6}}>
+                    <View style={{position: 'absolute', top: height*.5, left: width*.05, width: width*.9, height: height*.6}}>
                         <Animatable.View
-                            style={[game_styles.guess_cell, {top: height*0}]}
-                            ref="top"
+                            style={[game_styles.guess_cell, {top: height*.0, backgroundColor: this.state.bg1Color}]}
+                            ref='top'
                             animation={'bounceInLeft'}
-                            duration={1000}
-                            onStartShouldSetResponder={() => {this.guessQuoted('top');}}
+                            duration={700}
+                            onStartShouldSetResponder={() => {this.guessQuoted('top', this.state.name1);}}
 
                         >
                           <Text style={game_styles.name}>{this.state.name1}</Text>
                         </Animatable.View>
                         <Animatable.View
-                            style={[game_styles.guess_cell, {top: height*.1}]}
-                            ref="middle"
+                            style={[game_styles.guess_cell, {top: height*.1, backgroundColor: this.state.bg2Color}]}
+                            ref='middle'
                             animation={'bounceInRight'}
-                            duration={1100}
-                            onStartShouldSetResponder={() => {this.guessQuoted('middle');}}
+                            duration={800}
+                            onStartShouldSetResponder={() => {this.guessQuoted('middle', this.state.name2);}}
                         >
                           <Text style={game_styles.name}>{this.state.name2}</Text>
                         </Animatable.View>
                         <Animatable.View
-                            style={[game_styles.guess_cell, {top: height*.2}]}
-                            ref="bottom"
+                            style={[game_styles.guess_cell, {top: height*.2, backgroundColor: this.state.bg3Color}]}
+                            ref='bottom'
                             animation={'bounceInLeft'}
                             duration={600}
-                            onStartShouldSetResponder={() => {this.guessQuoted('bottom');}}
+                            onStartShouldSetResponder={() => {this.guessQuoted('bottom', this.state.name3);}}
                         >
                           <Text style={game_styles.name}>{this.state.name3}</Text>
                         </Animatable.View>
@@ -1620,7 +1724,7 @@ const game_styles = StyleSheet.create({
     loading: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     header: {
         flex: 2,
@@ -1629,7 +1733,7 @@ const game_styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 6,
         width: width,
-        borderBottomWidth: 6,
+        borderBottomWidth: 6
     },
     button: {
         alignItems: 'center',
@@ -1644,7 +1748,7 @@ const game_styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 6,
-        width: width,
+        width: width
     },
     parchment: {
         position: 'absolute',
@@ -1658,19 +1762,29 @@ const game_styles = StyleSheet.create({
         top: height*.06,
         left: (width-(height*.478))/2 + height*.05,
         width: height*.11,
-        height: height*.075,
+        height: height*.075
+    },
+    close_quote_container: {
+        position: 'absolute',
+        width: height*.046,
+        height: height*.026
+    },
+    close_quote: {
+        width: height*.046,
+        height: height*.026,
+
     },
     verse_container: {
         flex: 1,
         position: 'absolute',
         top: height*.05,
         left: (width-(height*.478))/2 + height*.051,
-        width: width*.75,
-        height: height*.25,
+        width: height*.5,
+        height: height*.25
     },
     first_line: {
         flex: 1,
-        paddingLeft: height*.11,
+        paddingLeft: height*.11
     },
     line: {
         flex: 1,
@@ -1678,7 +1792,7 @@ const game_styles = StyleSheet.create({
     verse_text: {
         fontSize: normalizeFont(configs.LETTER_SIZE*0.085),
         color: '#000000',
-        fontFamily: 'Segoe Print'//'Book Antiqua',
+        fontFamily: 'Segoe Print',//'Book Antiqua',
     },
     verse_panel_container: {
         flex: 2,
@@ -1763,6 +1877,16 @@ const game_styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
     },
+    guess_header: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        left: (width - height*.3)/2,
+        width: height*.3,
+        height: height*.145
+    },
     guess_cell: {
         flex: 1,
         alignItems: 'center',
@@ -1770,10 +1894,37 @@ const game_styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         width: width*.9,
-        height: height*.08,
-        backgroundColor: '#555555',
+        height: height*.086,
         borderWidth: 2,
-        borderColor: '#222222'
+        borderColor: '#000000',
+        borderRadius: 7,
+        shadowColor: '#000000',
+        shadowOffset: {
+          width: 0,
+          height: 3
+        },
+        shadowRadius: 5,
+        shadowOpacity: 1.0,
+        elevation: 5
+    },
+    dummy_text: {
+        flex: 1,
+        height: 26,
+        fontSize: normalizeFont(configs.LETTER_SIZE*0.085),
+        fontFamily: 'Segoe Print',//'Book Antiqua',
+                        borderColor: 'red',
+                        borderWidth: 2,
+                        alignSelf: 'flex-start'
+
+
+    },
+    dummy_text_container: {
+        alignSelf: 'flex-start',
+        position: 'absolute',
+        top: height*2,
+        left: height*2,
+        backgroundColor: 'transparent'
+
     }
 });
 
