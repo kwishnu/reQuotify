@@ -740,7 +740,38 @@ class Home extends Component{
 //            id: '777',
 //        });
     }
+    renderRow = (rowData) => {
+        if (rowData.index == '13' && !solvedTodayOrNot){
+            return(
+                 <Animatable.View
+                     animation={'tada'}
+                     duration={1200}
+                     delay={500}
+                     iterationCount={2}
+                 >
+                     <TouchableHighlight onPress={() => this.onSelect(rowData.index, rowData.title, rowData.bg_color, rowData.product_id)}
+                                         onLongPress={()=> this.showDialog(rowData.index, rowData.type, rowData.product_id)}
+                                         style={[container_styles.launcher, this.bg(rowData.bg_color), this.lightBorder(rowData.bg_color, rowData.type)]}
+                                         underlayColor={rowData.bg_color} >
+                         <Text style={[container_styles.launcher_text, this.getTextColor(rowData.bg_color, rowData.index)]}>{this.getTitle(rowData.title)}</Text>
+                     </TouchableHighlight>
+                 </Animatable.View>
+            )
+        }else{
+            return(
+                 <View>
+                     <TouchableHighlight onPress={() => this.onSelect(rowData.index, rowData.title, rowData.bg_color, rowData.product_id)}
+                                         onLongPress={()=> this.showDialog(rowData.index, rowData.type, rowData.product_id)}
+                                         style={[container_styles.launcher, this.bg(rowData.bg_color), this.lightBorder(rowData.bg_color, rowData.type)]}
+                                         underlayColor={rowData.bg_color} >
+                         <Text style={[container_styles.launcher_text, this.getTextColor(rowData.bg_color, rowData.index)]}>{this.getTitle(rowData.title)}</Text>
+                     </TouchableHighlight>
+                 </View>
 
+
+            )
+        }
+    }
 
     render() {
         const menu = <Menu onItemSelected={this.onMenuItemSelected} data = {this.props.homeData} />;
@@ -768,28 +799,16 @@ class Home extends Component{
                             </View>
                         </View>
                         <View style={ container_styles.verses_container }>
-                             <AnimatableListView
-                                 animation="bounceInUp"
-                                 duration={2000}
-                                 delay={0}
-                                 showsVerticalScrollIndicator ={false}
-                                        contentContainerStyle={ container_styles.listview }
-                                        dataSource={this.state.dataSource}
-                                        renderRow={(rowData) =>
-                                             <View>
-                                                 <TouchableHighlight onPress={() => this.onSelect(rowData.index, rowData.title, rowData.bg_color, rowData.product_id)}
-                                                                     onLongPress={()=> this.showDialog(rowData.index, rowData.type, rowData.product_id)}
-                                                                     style={[container_styles.launcher, this.bg(rowData.bg_color), this.lightBorder(rowData.bg_color, rowData.type)]}
-                                                                     underlayColor={rowData.bg_color} >
-                                                     <Text style={[container_styles.launcher_text, this.getTextColor(rowData.bg_color, rowData.index)]}>{this.getTitle(rowData.title)}</Text>
-                                                 </TouchableHighlight>
-                                             </View>
-                                         }
-                                         renderSectionHeader={(sectionData) => <SectionHeader {...sectionData} />}
-                             />
+                            <ListView
+                                showsVerticalScrollIndicator ={false}
+                                contentContainerStyle={ container_styles.listview }
+                                dataSource={this.state.dataSource}
+                                renderSectionHeader={(sectionData) => <SectionHeader {...sectionData} />}
+                                renderRow={this.renderRow}
+                            />
                         </View>
                         {this.state.shouldShowDialog &&
-                                <Dialog item2Color={this.state.item2Color} showFull={this.state.showFullDialog} onPress={(num)=>{ this.onDialogSelect(num); }} item1={this.state.strWhereToSend} item2={this.state.strOpenAll} item3={'Hide from Contents'} item4={'Show hidden collections'} />
+                        <Dialog item2Color={this.state.item2Color} showFull={this.state.showFullDialog} onPress={(num)=>{ this.onDialogSelect(num); }} item1={this.state.strWhereToSend} item2={this.state.strOpenAll} item3={'Hide from Contents'} item4={'Show hidden collections'} />
                         }
                      </View>
                 </SideMenu>
