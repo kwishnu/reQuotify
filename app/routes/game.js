@@ -6,7 +6,6 @@ import Button from '../components/Button';
 import Overlay from '../components/Overlay';
 import AnimationCell from '../components/Cell';
 import * as Animatable from 'react-native-animatable';
-
 import Tile from '../components/Tile';
 import DropdownMenu from '../components/DropdownMenu';
 import configs from '../config/configs';
@@ -17,6 +16,8 @@ const deepCopy = require('../config/deepCopy.js');
 const bonuses = require('../config/bonuses.js');
 const styles = require('../styles/styles');
 const {width, height} = require('Dimensions').get('window');
+const scrHeight = height;
+const scrWidth = width;
 const KEY_Sound = 'soundKey';
 const KEY_Verses = 'versesKey';
 const KEY_solvedTP = 'solvedTP';
@@ -201,10 +202,12 @@ class Game extends Component {
             bg1Color: colors.medium_gray,
             bg2Color: colors.medium_gray,
             bg3Color: colors.medium_gray,
+            openQuoteX: 0,
             closeQuoteX: 0,
             closeQuoteY: 0,
             showCloseQuote: false,
-            textInputText: 'testing'
+            dummyText: '',
+            numLines: 0
         }
         this.handleHardwareBackButton = this.handleHardwareBackButton.bind(this);
     }
@@ -219,7 +222,7 @@ class Game extends Component {
         AppState.addEventListener('change', this.handleAppStateChange);
         homeData = this.props.homeData;
         if (homeData[this.props.dataElement].num_solved == homeData[this.props.dataElement].num_quotes)this.setState({openedAll: true});
-        let verseArray = `2**Shakespeare**Be, or not to be...that really is what it all boils down to`.split('**');
+        let verseArray = `2**Shakespeare**Lqqqq, or not to am...that really is what it all boils down to`.split('**');
 //        let verseArray = this.props.homeData[this.props.dataElement].verses[this.props.index].split('**');
         console.log(this.props.homeData[this.props.dataElement].verses[this.props.index]);
         dsArray = this.props.daily_solvedArray;
@@ -231,85 +234,85 @@ class Game extends Component {
         verseStr = verseStr.substring(1);
         switch(initial){
             case 'A': case 'a':
-                this.setState({ letterImage: require('../images/letters/a.png') });
+                this.setState({ letterImage: require('../images/letters/a.png'), openQuoteX: 0 });
                 break;
             case 'B': case 'b':
-                this.setState({ letterImage: require('../images/letters/b.png') });
+                this.setState({ letterImage: require('../images/letters/b.png'), openQuoteX: 0 });
                 break;
             case 'C': case 'c':
-                this.setState({ letterImage: require('../images/letters/c.png') });
+                this.setState({ letterImage: require('../images/letters/c.png'), openQuoteX: 0 });
                 break;
             case 'D': case 'd':
-                this.setState({ letterImage: require('../images/letters/d.png') });
+                this.setState({ letterImage: require('../images/letters/d.png'), openQuoteX: -height*.015 });
                 break;
             case 'E': case 'e':
-                this.setState({ letterImage: require('../images/letters/e.png') });
+                this.setState({ letterImage: require('../images/letters/e.png'), openQuoteX: 0 });
                 break;
             case 'F': case 'f':
-                this.setState({ letterImage: require('../images/letters/f.png') });
+                this.setState({ letterImage: require('../images/letters/f.png'), openQuoteX: height*.01 });
                 break;
             case 'G': case 'g':
-                this.setState({ letterImage: require('../images/letters/g.png') });
+                this.setState({ letterImage: require('../images/letters/g.png'), openQuoteX: height*.01 });
                 break;
             case 'H': case 'h':
-                this.setState({ letterImage: require('../images/letters/h.png') });
+                this.setState({ letterImage: require('../images/letters/h.png'), openQuoteX: -height*.01 });
                 break;
             case 'I': case 'i':
-                this.setState({ letterImage: require('../images/letters/i.png') });
+                this.setState({ letterImage: require('../images/letters/i.png'), openQuoteX: height*.01 });
                 break;
             case 'J': case 'j':
-                this.setState({ letterImage: require('../images/letters/j.png') });
+                this.setState({ letterImage: require('../images/letters/j.png'), openQuoteX: height*.005 });
                 break;
             case 'K': case 'k':
-                this.setState({ letterImage: require('../images/letters/k.png') });
+                this.setState({ letterImage: require('../images/letters/k.png'), openQuoteX: 0 });
                 break;
             case 'L': case 'l':
-                this.setState({ letterImage: require('../images/letters/l.png') });
+                this.setState({ letterImage: require('../images/letters/l.png'), openQuoteX: height*.01 });
                 break;
             case 'M': case 'm':
-                this.setState({ letterImage: require('../images/letters/m.png') });
+                this.setState({ letterImage: require('../images/letters/m.png'), openQuoteX: 0 });
                 break;
             case 'N': case 'n':
-                this.setState({ letterImage: require('../images/letters/n.png') });
+                this.setState({ letterImage: require('../images/letters/n.png'), openQuoteX: 0 });
                 break;
             case 'O': case 'o':
-                this.setState({ letterImage: require('../images/letters/o.png') });
+                this.setState({ letterImage: require('../images/letters/o.png'), openQuoteX: 0 });
                 break;
             case 'P': case 'p':
-                this.setState({ letterImage: require('../images/letters/p.png') });
+                this.setState({ letterImage: require('../images/letters/p.png'), openQuoteX: 0 });
                 break;
             case 'Q': case 'q':
-                this.setState({ letterImage: require('../images/letters/q.png') });
+                this.setState({ letterImage: require('../images/letters/q.png'), openQuoteX: 0 });
                 break;
             case 'R': case 'r':
-                this.setState({ letterImage: require('../images/letters/r.png') });
+                this.setState({ letterImage: require('../images/letters/r.png'), openQuoteX: 0 });
                 break;
             case 'S': case 's':
-                this.setState({ letterImage: require('../images/letters/s.png') });
+                this.setState({ letterImage: require('../images/letters/s.png'), openQuoteX: 0 });
                 break;
             case 'T': case 't':
-                this.setState({ letterImage: require('../images/letters/t.png') });
+                this.setState({ letterImage: require('../images/letters/t.png'), openQuoteX: 0 });
                 break;
             case 'U': case 'u':
-                this.setState({ letterImage: require('../images/letters/u.png') });
+                this.setState({ letterImage: require('../images/letters/u.png'), openQuoteX: 0 });
                 break;
             case 'V': case 'v':
-                this.setState({ letterImage: require('../images/letters/v.png') });
+                this.setState({ letterImage: require('../images/letters/v.png'), openQuoteX: 0 });
                 break;
             case 'W': case 'w':
-                this.setState({ letterImage: require('../images/letters/w.png') });
+                this.setState({ letterImage: require('../images/letters/w.png'), openQuoteX: 0 });
                 break;
             case 'X': case 'x':
-                this.setState({ letterImage: require('../images/letters/x.png') });
+                this.setState({ letterImage: require('../images/letters/x.png'), openQuoteX: 0 });
                 break;
             case 'Y': case 'y':
-                this.setState({ letterImage: require('../images/letters/y.png') });
+                this.setState({ letterImage: require('../images/letters/y.png'), openQuoteX: 0 });
                 break;
             case 'Z': case 'z':
-                this.setState({ letterImage: require('../images/letters/z.png') });
+                this.setState({ letterImage: require('../images/letters/z.png'), openQuoteX: 0 });
                 break;
             default:
-                this.setState({ letterImage: require('../images/letters/i.png') });
+                this.setState({ letterImage: require('../images/letters/i.png'), openQuoteX: 0 });
         }
         this.populateArrays(verseStr, numHints, reverseTiles).then((values) => {
             if(values){
@@ -419,9 +422,15 @@ class Game extends Component {
                 this.setState({playedFirst: true});
             }
         }).then(() =>
-            {setTimeout(()=>{ this.setState({ isLoading: false });
+            {
+            setTimeout(()=>{
+                this.setState({ isLoading: false });
                 if (this.props.fromWhere == 'book')this.flipPanel(true);
-            }, 250); })
+            }, 250);
+            setTimeout(()=>{
+                this.refs.openquote.rubberBand(2000);
+            }, 1000);
+            })
     }
     componentWillUnmount () {
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackButton);
@@ -474,6 +483,7 @@ class Game extends Component {
         let whichRow = 0;
         let letterTotal = 0;
         let lineLength = 0;
+        let rows = 0;
         for (let word=0; word<verseArray.length; word++){
             letterTotal += (verseArray[word].length + 1);
             lineLength = (whichRow < 3)?24:30;
@@ -485,9 +495,13 @@ class Game extends Component {
                 layout[whichRow].push(verseArray[word]);
             }
         }
+        for (let check = 0; check < layout.length; check++){
+        console.log(layout[check].length);
+            if (layout[check].length > 0)rows += 1;
+        }
         console.log('last line length: ' + layout[whichRow].join(' ').length);
         let lastLine = layout[whichRow].join(' ');
-        this.setState({wordsArray: layout, textInputText: lastLine});
+        this.setState({wordsArray: layout, dummyText: lastLine, numLines: rows});
     }
     getRowBools(length){
         return new Promise(
@@ -638,7 +652,7 @@ class Game extends Component {
                     f2.push('');
                 }
                 let returnObject={ hints: num, length: fragments.length, frag0: f2[0], frag1: f2[1], frag2: f2[2], frag3: f2[3], frag4: f2[4], frag5: f2[5], frag6: f2[6], frag7: f2[7], frag8: f2[8], frag9: f2[9], frag10: f2[10], frag11: f2[11], frag12: f2[12],
-                                   frag13: f2[13], frag14: f2[14], frag15: f2[15], frag16: f2[16], frag17: f2[17], frag18: f2[18],frag19: f2[19], frag20: f2[20], frag21: f2[21], frag22: f2[22], frag23: f2[23],
+                                   frag13: f2[13], frag14: f2[14], frag15: f2[15], frag16: f2[16], frag17: f2[17], frag18: f2[18], frag19: f2[19], frag20: f2[20], frag21: f2[21], frag22: f2[22], frag23: f2[23],
                                    fragmentOrder: fragments, nextFrag: fragments[0]
                                  }
                 if (haveFinished){
@@ -857,7 +871,10 @@ class Game extends Component {
                     if (onWord + 1 == this.state.wordsArray[onLine].length){//at the end of a line
                         addSpace = false;
                         if (onLine == 7 || this.state.wordsArray[onLine + 1].length == 0){//finished verse
-                            this.endOfGame();
+                            this.setState({doneWithVerse: true, showHintButton: false});
+                            setTimeout(() => {
+                                this.giveQuotedQuiz();
+                            }, 500);
                             break;
                         }
                         onWord = 0;
@@ -890,10 +907,6 @@ class Game extends Component {
             this.setState({playedFirst: true});
         }
     }
-    giveQuotedQuiz(){
-        if(this.state.useSounds == true){fanfare.play();}
-
-    }
     endOfGame(){
         var newNumSolved = '';
         let onLastVerseInPack=(this.props.fromWhere == 'home' || parseInt(this.state.index, 10) + 1 == parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10))?true:false;
@@ -902,8 +915,7 @@ class Game extends Component {
         }else{
             this.setState({ arrowImage: require('../images/arrowforward.png') });
         }
-        if (this.props.fromWhere != 'book' && !this.state.showingVerse)this.showGuessCells();
-        this.setState({doneWithVerse: true, showHintButton: false, showNextArrow: true});
+        this.setState({showNextArrow: true});
         this.showButtonPanel();
         if(this.props.fromWhere == 'collection' || this.props.fromWhere == 'book'){
             newNumSolved = (parseInt(homeData[this.props.dataElement].num_solved, 10) + 1).toString();
@@ -1159,8 +1171,6 @@ class Game extends Component {
         }
     }
     giveHint(frag){
-                    this.refs.closequote.bounceInUp(1000);
-return;
         let hints = this.state.numHints;
         let hasInfinite = this.state.hasInfiniteHints;
         let hasPaid = this.state.hasPaidForHints;
@@ -1251,11 +1261,11 @@ return;
             Animated.timing(this.opac, {
                 toValue: 1,
                 duration: 200,
-                delay: 1000
+                delay: 500
             }),
             Animated.timing(this.grow, {
                     toValue: 1.1,
-                    delay: 1000
+                    delay: 500
             })
         ]).start(()=>{
             Animated.spring(
@@ -1408,9 +1418,18 @@ return;
        this.setState({shouldShowOverlay: false});
 
     }
-    showGuessCells(){
-        this.setState({ shouldShowGuessHeader: true });
-        setTimeout(()=>{ this.setState({ shouldShowGuesses: true, name1: 'Shakespeare', name2: 'Milton', name3: 'Voltaire' }) }, 1500);
+    giveQuotedQuiz(){
+        if(this.state.useSounds == true){fanfare.play();}
+        this.setState({ showCloseQuote: true });
+        setTimeout(() => {
+            if(this.state.useSounds == true){swish.play();}
+            this.setState({ shouldShowGuessHeader: true });
+        }, 1000);
+        setTimeout(() => {
+            if(this.state.useSounds == true){swish.play();}
+            this.setState({ shouldShowGuesses: true, name1: 'Shakespeare', name2: 'Milton', name3: 'Voltaire' });
+        }, 2000);
+
     }
     guessQuoted(whichCell, guess){
         if (guess == 'Shakespeare'){
@@ -1452,34 +1471,36 @@ return;
             }
         }
         setTimeout(() => {
-            this.refs.header.bounceOutUp(1000);
-            this.refs.top.bounceOutRight(1000);
-            this.refs.middle.bounceOutLeft(1000);
-            this.refs.bottom.bounceOutRight(1000);
-        }, 2500);
-
+            this.refs.header.bounceOutUp(850);
+            this.refs.top.bounceOutRight(850);
+            this.refs.middle.bounceOutLeft(850);
+            this.refs.bottom.bounceOutRight(850);
+        }, 1500);
         setTimeout(() => {
-            this.flipPanel();
-        }, 3000);
+            if (this.props.fromWhere != 'book' && !this.state.showingVerse)this.flipPanel();
+        }, 2000);
+        setTimeout(() => {
+            this.endOfGame();
+        }, 3500);
 
     }
     setCloseQuoteX(event){
-        var dims = {x, y, width, height} = event.nativeEvent.layout;
+        let dims = {x, y, width, height} = event.nativeEvent.layout;
         let xOffset = dims.width + height*.15;
-        this.refs.entireScreen.measure( (fx, fy, width, screenHeight, px, py) => {
-            xOffset = (this.state.numberOfRows < 4)? xOffset + screenHeight*.11:xOffset;
-            setTimeout(() => {
-                this.setState({
-                    closeQuoteX: xOffset, showCloseQuote: true
-                });
-            }, 2000);
-        });
+            console.log('xOffset = ' + xOffset + ' rows = ' + this.state.numLines);
+//        this.refs.entireScreen.measure( (fx, fy, width, screenHeight, px, py) => {
+            xOffset = (this.state.numLines < 4)? xOffset + scrHeight*.11:xOffset;
+            this.setState({
+                closeQuoteX: xOffset//, showCloseQuote: true
+            });
+            console.log('xOffset = ' + xOffset);
+//        });
     }
     setCloseQuoteY(event){
-        var d = {x, y, width, height} = event.nativeEvent.layout;
-        let yOffset = this.state.numberOfRows * d.height + height*.25;
+        let d = {x, y, width, height} = event.nativeEvent.layout;
+        let yOffset = (this.state.numLines - 1) * d.height + height*.25;
         this.setState({closeQuoteY: yOffset});
-        console.log('yOffset = ' + yOffset + ', height = ' + height + ', height*.15 = ' + height*.15);
+        console.log('yOffset = ' + yOffset);
     }
 
 
@@ -1506,6 +1527,9 @@ return;
         }else{
             return (
                 <View ref='entireScreen' style={{flex: 1}}>
+                    <Text style={game_styles.dummy_text_container} onLayout={(event) => this.setCloseQuoteX(event)} >
+                        <Text style={game_styles.dummy_text}>{this.state.dummyText}</Text>
+                    </Text>
                     <View style={[game_styles.container, {backgroundColor: this.state.bgColor}]}>
                         <View style={[game_styles.header, this.headerBorder(this.state.bgColor), this.headerFooterColor(this.state.bgColor)]}>
                             <Button style={[game_styles.button, {marginLeft: getArrowMargin()}]} onPress={() => this.closeGame(this.props.fromWhere)}>
@@ -1517,49 +1541,56 @@ return;
                             </Button>
                         </View>
                         <View style={game_styles.tablet}>
-                                <Text style={game_styles.dummy_text_container} onLayout={(event) => this.setCloseQuoteX(event)} >
-                                    <Text style={game_styles.dummy_text}>{this.state.textInputText}</Text>
-                                </Text>
-                                <Image style={game_styles.parchment} source={require('../images/parchment.png')} resizeMode='stretch' />
-                                <Image style={game_styles.letter} source={this.state.letterImage} />
-                                <View style={game_styles.verse_container}>
-                                    {this.state.showCloseQuote &&
-                                    <View style={[game_styles.close_quote_container,{top: this.state.closeQuoteY, left: this.state.closeQuoteX}]}>
-                                        <Animatable.Image
-                                            style={game_styles.close_quote}
-                                            resizeMode='stretch'
-                                            source={require('../images/closequote.png')}
-                                            ref='closequote'
-                                            animation={'bounceInUp'}
-                                            duration={900}
-                                        />
-                                    </View>
-                                    }
-                                    <View  style={game_styles.first_line}>
-                                        <Text style={game_styles.verse_text} >{ this.state.line0Text }</Text>
-                                    </View>
-                                    <View style={game_styles.first_line}>
-                                        <Text style={game_styles.verse_text} >{ this.state.line1Text }</Text>
-                                    </View>
-                                    <View style={game_styles.first_line}>
-                                        <Text style={game_styles.verse_text} >{ this.state.line2Text }</Text>
-                                    </View>
-                                    <View style={game_styles.line}  onLayout={(event) => this.setCloseQuoteY(event)} >
-                                        <Text style={game_styles.verse_text} >{ this.state.line3Text }</Text>
-                                    </View>
-                                    <View style={game_styles.line}>
-                                        <Text style={game_styles.verse_text} >{ this.state.line4Text }</Text>
-                                    </View>
-                                    <View style={game_styles.line}>
-                                        <Text style={game_styles.verse_text} >{ this.state.line5Text }</Text>
-                                    </View>
-                                    <View style={game_styles.line}>
-                                        <Text style={game_styles.verse_text} >{ this.state.line6Text }</Text>
-                                    </View>
-                                    <View style={game_styles.line}>
-                                        <Text style={game_styles.verse_text} >{ this.state.line7Text }</Text>
-                                    </View>
+                            <Image style={game_styles.parchment} source={require('../images/parchment.png')} resizeMode='stretch' />
+                            <Image style={game_styles.letter} source={this.state.letterImage} />
+                            <View style={game_styles.verse_container}>
+                                <View style={game_styles.first_line}>
+                                    <Text style={game_styles.verse_text} >{ this.state.line0Text }</Text>
                                 </View>
+                                <View style={game_styles.first_line}>
+                                    <Text style={game_styles.verse_text} >{ this.state.line1Text }</Text>
+                                </View>
+                                <View style={game_styles.first_line}>
+                                    <Text style={game_styles.verse_text} >{ this.state.line2Text }</Text>
+                                </View>
+                                <View style={game_styles.line} onLayout={(event) => this.setCloseQuoteY(event)}>
+                                    <Text style={game_styles.verse_text} >{ this.state.line3Text }</Text>
+                                </View>
+                                <View style={game_styles.line}>
+                                    <Text style={game_styles.verse_text} >{ this.state.line4Text }</Text>
+                                </View>
+                                <View style={game_styles.line}>
+                                    <Text style={game_styles.verse_text} >{ this.state.line5Text }</Text>
+                                </View>
+                                <View style={game_styles.line}>
+                                    <Text style={game_styles.verse_text} >{ this.state.line6Text }</Text>
+                                </View>
+                                <View style={game_styles.line}>
+                                    <Text style={game_styles.verse_text} >{ this.state.line7Text }</Text>
+                                </View>
+                                <View style={[game_styles.open_quote_container,{left: this.state.openQuoteX}]}>
+                                    <Animatable.Image
+                                        style={game_styles.open_quote}
+                                        resizeMode='stretch'
+                                        source={require('../images/openquote.png')}
+                                        ref='openquote'
+                                        animation={'tada'}
+                                        duration={900}
+                                    />
+                                </View>
+                                {this.state.showCloseQuote &&
+                                <View style={[game_styles.close_quote_container,{top: this.state.closeQuoteY, left: this.state.closeQuoteX}]}>
+                                    <Animatable.Image
+                                        style={game_styles.close_quote}
+                                        resizeMode='stretch'
+                                        source={require('../images/closequote.png')}
+                                        ref='closequote'
+                                        animation={'bounceInRight'}
+                                        duration={900}
+                                    />
+                                </View>
+                                }
+                            </View>
                         </View>
                         <View style={game_styles.verse_panel_container}>
                             <Animated.View style={[imageStyle, game_styles.verse_panel, {backgroundColor: this.state.panelBgColor, borderColor: this.state.panelBorderColor}]}>
@@ -1567,64 +1598,64 @@ return;
                             </Animated.View>
                         </View>
                         <View style={game_styles.game}>
-                                <View style={game_styles.tile_row} >
-                                    <Tile ref={(a) => { this.a = a; }} opac={ this.state.frag0Opacity } text={ this.state.frag0 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    <Tile ref={(b) => { this.b = b; }} opac={ this.state.frag1Opacity } text={ this.state.frag1 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    <Tile ref={(c) => { this.c = c; }} opac={ this.state.frag2Opacity } text={ this.state.frag2 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                </View>
+                            <View style={game_styles.tile_row} >
+                                <Tile ref={(a) => { this.a = a; }} opac={ this.state.frag0Opacity } text={ this.state.frag0 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(b) => { this.b = b; }} opac={ this.state.frag1Opacity } text={ this.state.frag1 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(c) => { this.c = c; }} opac={ this.state.frag2Opacity } text={ this.state.frag2 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            </View>
                             { this.state.rows2 &&
-                                <View style={game_styles.tile_row} >
-                                    <Tile ref={(d) => { this.d = d; }} opac={ this.state.frag3Opacity } text={ this.state.frag3 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    <Tile ref={(e) => { this.e = e; }} opac={ this.state.frag4Opacity } text={ this.state.frag4 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    <Tile ref={(f) => { this.f = f; }} opac={ this.state.frag5Opacity } text={ this.state.frag5 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                </View>
+                            <View style={game_styles.tile_row} >
+                                <Tile ref={(d) => { this.d = d; }} opac={ this.state.frag3Opacity } text={ this.state.frag3 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(e) => { this.e = e; }} opac={ this.state.frag4Opacity } text={ this.state.frag4 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(f) => { this.f = f; }} opac={ this.state.frag5Opacity } text={ this.state.frag5 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            </View>
                             }
                             { this.state.rows3 &&
-                                <View style={game_styles.tile_row} >
-                                    <Tile ref={(g) => { this.g = g; }} opac={ this.state.frag6Opacity } text={ this.state.frag6 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    <Tile ref={(h) => { this.h = h; }} opac={ this.state.frag7Opacity } text={ this.state.frag7 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    <Tile ref={(i) => { this.i = i; }} opac={ this.state.frag8Opacity } text={ this.state.frag8 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                </View>
+                            <View style={game_styles.tile_row} >
+                                <Tile ref={(g) => { this.g = g; }} opac={ this.state.frag6Opacity } text={ this.state.frag6 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(h) => { this.h = h; }} opac={ this.state.frag7Opacity } text={ this.state.frag7 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(i) => { this.i = i; }} opac={ this.state.frag8Opacity } text={ this.state.frag8 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            </View>
                             }
                             { this.state.rows4 &&
-                                    <View style={game_styles.tile_row} >
-                                        <Tile ref={(j) => { this.j = j; }} opac={ this.state.frag9Opacity } text={ this.state.frag9 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(k) => { this.k = k; }} opac={ this.state.frag10Opacity } text={ this.state.frag10 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(l) => { this.l = l; }} opac={ this.state.frag11Opacity } text={ this.state.frag11 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    </View>
+                            <View style={game_styles.tile_row} >
+                                <Tile ref={(j) => { this.j = j; }} opac={ this.state.frag9Opacity } text={ this.state.frag9 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(k) => { this.k = k; }} opac={ this.state.frag10Opacity } text={ this.state.frag10 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(l) => { this.l = l; }} opac={ this.state.frag11Opacity } text={ this.state.frag11 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            </View>
                             }
                             { this.state.rows5 &&
-                                    <View style={game_styles.tile_row} >
-                                        <Tile ref={(m) => { this.m = m; }} opac={ this.state.frag12Opacity } text={ this.state.frag12 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(n) => { this.n = n; }} opac={ this.state.frag13Opacity } text={ this.state.frag13 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(o) => { this.o = o; }} opac={ this.state.frag14Opacity } text={ this.state.frag14 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    </View>
+                            <View style={game_styles.tile_row} >
+                                <Tile ref={(m) => { this.m = m; }} opac={ this.state.frag12Opacity } text={ this.state.frag12 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(n) => { this.n = n; }} opac={ this.state.frag13Opacity } text={ this.state.frag13 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(o) => { this.o = o; }} opac={ this.state.frag14Opacity } text={ this.state.frag14 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            </View>
                             }
                             { this.state.rows6 &&
-                                    <View style={game_styles.tile_row} >
-                                        <Tile ref={(p) => { this.p = p; }} opac={ this.state.frag15Opacity } text={ this.state.frag15 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(q) => { this.q = q; }} opac={ this.state.frag16Opacity } text={ this.state.frag16 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(r) => { this.r = r; }} opac={ this.state.frag17Opacity } text={ this.state.frag17 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    </View>
+                            <View style={game_styles.tile_row} >
+                                <Tile ref={(p) => { this.p = p; }} opac={ this.state.frag15Opacity } text={ this.state.frag15 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(q) => { this.q = q; }} opac={ this.state.frag16Opacity } text={ this.state.frag16 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(r) => { this.r = r; }} opac={ this.state.frag17Opacity } text={ this.state.frag17 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            </View>
                             }
                             { this.state.rows7 &&
-                                    <View style={game_styles.tile_row} >
-                                        <Tile ref={(s) => { this.s = s; }} opac={ this.state.frag18Opacity } text={ this.state.frag18 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(t) => { this.t = t; }} opac={ this.state.frag19Opacity } text={ this.state.frag19 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(u) => { this.u = u; }} opac={ this.state.frag20Opacity } text={ this.state.frag20 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    </View>
+                            <View style={game_styles.tile_row} >
+                                <Tile ref={(s) => { this.s = s; }} opac={ this.state.frag18Opacity } text={ this.state.frag18 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(t) => { this.t = t; }} opac={ this.state.frag19Opacity } text={ this.state.frag19 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(u) => { this.u = u; }} opac={ this.state.frag20Opacity } text={ this.state.frag20 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            </View>
                             }
                             { this.state.rows8 &&
-                                    <View style={game_styles.tile_row} >
-                                        <Tile ref={(v) => { this.v = v; }} opac={ this.state.frag21Opacity } text={ this.state.frag21 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(w) => { this.w = w; }} opac={ this.state.frag22Opacity } text={ this.state.frag22 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                        <Tile ref={(x) => { this.x = x; }} opac={ this.state.frag23Opacity } text={ this.state.frag23 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                                    </View>
+                            <View style={game_styles.tile_row} >
+                                <Tile ref={(v) => { this.v = v; }} opac={ this.state.frag21Opacity } text={ this.state.frag21 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(w) => { this.w = w; }} opac={ this.state.frag22Opacity } text={ this.state.frag22 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                                <Tile ref={(x) => { this.x = x; }} opac={ this.state.frag23Opacity } text={ this.state.frag23 } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            </View>
                             }
                         </View>
                         <View style={[game_styles.footer, this.footerBorder(this.state.bgColor), this.headerFooterColor(this.state.bgColor)]}>
-                        { this.state.showHintButton &&
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width}}>
+                            { this.state.showHintButton &&
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between', width: scrWidth}}>
                                 <View style={game_styles.hint_container}>
                                 </View>
                                 <View style={game_styles.hint_container} onStartShouldSetResponder={() => { this.giveHint(this.state.nextFrag) }}>
@@ -1636,8 +1667,8 @@ return;
                                     <Text style={[game_styles.hint_text, {opacity: this.state.hintNumOpacity}]}>{ this.state.numHints }</Text>
                                 </View>
                             </View>
-                         }
-                         </View>
+                            }
+                        </View>
                         { this.state.showButtons &&
                         <View style={game_styles.after_buttons}>
                             { this.state.showFB &&
@@ -1659,56 +1690,55 @@ return;
                             <Image source={this.state.arrowImage}/>
                         </View>
                         }
+                        {this.state.shouldShowGuessHeader &&
+                        <View style={{position: 'absolute', top: scrHeight*.34, left: 0, width: scrWidth, height: scrHeight*.2}}>
+                            <Animatable.Image source={ require('../images/nicejob.png') }
+                                style={game_styles.guess_header}
+                                ref='header'
+                                animation={'bounceInDown'}
+                                duration={900}
+                            >
+                            </Animatable.Image>
+                        </View>
+                        }
+                        {this.state.shouldShowDropdown &&
+                            <DropdownMenu onPress={(num)=>{ this.onDropdownSelect(num); }} item1={this.state.soundString} item2={'Reset Verse'} item3={'How to Play'}/>
+                        }
+                        {this.state.shouldShowOverlay &&
+                            <Overlay onPress={()=>{ this.dismissOverlay(); }} margin={0.16} text={`Mute game sounds and reset the Quote with this menu`} />
+                        }
+                        {this.state.shouldShowGuesses &&
+                        <View style={{position: 'absolute', top: scrHeight*.5, left: width*.05, width: scrWidth*.9, height: scrHeight*.6}}>
+                            <Animatable.View
+                                style={[game_styles.guess_cell, {top: 0, backgroundColor: this.state.bg1Color}]}
+                                ref='top'
+                                animation={'bounceInLeft'}
+                                duration={700}
+                                onStartShouldSetResponder={() => {this.guessQuoted('top', this.state.name1);}}
+                            >
+                              <Text style={game_styles.name}>{this.state.name1}</Text>
+                            </Animatable.View>
+                            <Animatable.View
+                                style={[game_styles.guess_cell, {top: scrHeight*.1, backgroundColor: this.state.bg2Color}]}
+                                ref='middle'
+                                animation={'bounceInRight'}
+                                duration={800}
+                                onStartShouldSetResponder={() => {this.guessQuoted('middle', this.state.name2);}}
+                            >
+                              <Text style={game_styles.name}>{this.state.name2}</Text>
+                            </Animatable.View>
+                            <Animatable.View
+                                style={[game_styles.guess_cell, {top: scrHeight*.2, backgroundColor: this.state.bg3Color}]}
+                                ref='bottom'
+                                animation={'bounceInLeft'}
+                                duration={600}
+                                onStartShouldSetResponder={() => {this.guessQuoted('bottom', this.state.name3);}}
+                            >
+                              <Text style={game_styles.name}>{this.state.name3}</Text>
+                            </Animatable.View>
+                        </View>
+                        }
                     </View>
-                    {this.state.shouldShowDropdown &&
-                        <DropdownMenu onPress={(num)=>{ this.onDropdownSelect(num); }} item1={this.state.soundString} item2={'Reset Verse'} item3={'How to Play'}/>
-                    }
-                    {this.state.shouldShowOverlay &&
-                        <Overlay onPress={()=>{ this.dismissOverlay(); }} margin={0.16} text={`Mute game sounds and reset the Quote with this menu`} />
-                    }
-                    {this.state.shouldShowGuessHeader &&
-                    <View style={{position: 'absolute', top: height*.34, left: 0, width: width, height: height*.2}}>
-                        <Animatable.Image source={ require('../images/nicejob.png') }
-                            style={game_styles.guess_header}
-                            ref='header'
-                            animation={'bounceInDown'}
-                            duration={900}
-                        >
-                        </Animatable.Image>
-                    </View>
-                    }
-                    {this.state.shouldShowGuesses &&
-                    <View style={{position: 'absolute', top: height*.5, left: width*.05, width: width*.9, height: height*.6}}>
-                        <Animatable.View
-                            style={[game_styles.guess_cell, {top: height*.0, backgroundColor: this.state.bg1Color}]}
-                            ref='top'
-                            animation={'bounceInLeft'}
-                            duration={700}
-                            onStartShouldSetResponder={() => {this.guessQuoted('top', this.state.name1);}}
-
-                        >
-                          <Text style={game_styles.name}>{this.state.name1}</Text>
-                        </Animatable.View>
-                        <Animatable.View
-                            style={[game_styles.guess_cell, {top: height*.1, backgroundColor: this.state.bg2Color}]}
-                            ref='middle'
-                            animation={'bounceInRight'}
-                            duration={800}
-                            onStartShouldSetResponder={() => {this.guessQuoted('middle', this.state.name2);}}
-                        >
-                          <Text style={game_styles.name}>{this.state.name2}</Text>
-                        </Animatable.View>
-                        <Animatable.View
-                            style={[game_styles.guess_cell, {top: height*.2, backgroundColor: this.state.bg3Color}]}
-                            ref='bottom'
-                            animation={'bounceInLeft'}
-                            duration={600}
-                            onStartShouldSetResponder={() => {this.guessQuoted('bottom', this.state.name3);}}
-                        >
-                          <Text style={game_styles.name}>{this.state.name3}</Text>
-                        </Animatable.View>
-                    </View>
-                    }
                 </View>
             );
         }
@@ -1764,15 +1794,24 @@ const game_styles = StyleSheet.create({
         width: height*.11,
         height: height*.075
     },
+    open_quote_container: {
+        position: 'absolute',
+        top: height*.01,
+        width: height*.046,
+        height: height*.026
+    },
     close_quote_container: {
         position: 'absolute',
         width: height*.046,
         height: height*.026
     },
+    open_quote: {
+        width: height*.045,
+        height: height*.025,
+    },
     close_quote: {
-        width: height*.046,
-        height: height*.026,
-
+        width: height*.045,
+        height: height*.025,
     },
     verse_container: {
         flex: 1,
@@ -1856,7 +1895,7 @@ const game_styles = StyleSheet.create({
         justifyContent: 'center',
         width: width,
         top: height*.52,
-        height: height/5.5,
+        height: height*.18,
     },
     after_buttons: {
         position: 'absolute',
@@ -1865,7 +1904,7 @@ const game_styles = StyleSheet.create({
         justifyContent: 'center',
         width: width,
         top: height*.7,
-        height: height/4,
+        height: height*.25,
     },
     button_image: {
         width: 60,
@@ -1893,8 +1932,8 @@ const game_styles = StyleSheet.create({
         justifyContent: 'center',
         position: 'absolute',
         left: 0,
-        width: width*.9,
-        height: height*.086,
+        width: scrWidth*.9,
+        height: scrHeight*.086,
         borderWidth: 2,
         borderColor: '#000000',
         borderRadius: 7,
