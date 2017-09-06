@@ -289,7 +289,7 @@ class Home extends Component{
             window.alert('home.js: ' + error.message);
         });
         if (this.props.connectionBool == false){
-            Alert.alert('No Server Connection', 'Sorry, unable to load Daily Verses');
+            Alert.alert('No Server Connection', 'Sorry, unable to load Daily Quotations');
         }
         AsyncStorage.getItem(KEY_Notifs).then((notifs) => {//remove notification from notification center if launched by that...
             if (notifs !== null && notifs !== '0') {
@@ -595,10 +595,10 @@ class Home extends Component{
                 });
                 return;
             case 'Last Three Days':
-                gripeText = 'Purchase any item in the app and always have access here to the previous 30 Daily Verses!';
+                gripeText = 'Purchase any item in the app and always have access here to the previous 30 Daily Quotations!';
             case 'Last Thirty Days':  //fallthrough
                 theDestination = 'daily';
-                theTitle = 'Daily Verses';
+                theTitle = 'Daily Quotations';
                 this.props.navigator.replace({
                     id: theDestination,
                     passProps: {
