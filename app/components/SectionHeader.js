@@ -29,9 +29,10 @@ const SectionHeader = (props) => (
     <Text style={styles.text}>{props.sectionTitle}</Text>
     {!props.hasConnection && props.sectionTitle == 'Daily Quotations' &&
         <Image  source={ require('../images/sync.png') }
-                style={ { width: normalize(height*.04),
-                height: normalize(height*.04),
-                marginLeft: normalize(height*.02) } }
+                style={{width: normalize(height*.04),
+                        height: normalize(height*.04),
+                        marginLeft: normalize(height*.02)
+                }}
                 onStartShouldSetResponder={() => {
                     props.nav.replace({
                         id: 'splash',
