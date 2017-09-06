@@ -803,7 +803,7 @@ class Home extends Component{
                                 showsVerticalScrollIndicator ={false}
                                 contentContainerStyle={ container_styles.listview }
                                 dataSource={this.state.dataSource}
-                                renderSectionHeader={(sectionData) => <SectionHeader {...sectionData} />}
+                                renderSectionHeader={(sectionData) => <SectionHeader {...sectionData} hasConnection={this.props.connectionBool} nav={this.props.navigator} />}
                                 renderRow={this.renderRow}
                             />
                         </View>
