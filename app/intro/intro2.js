@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, BackHandler, Alert } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import Button from '../components/Button';
 import Tile from '../components/Tile';
 import GrayTile from '../components/GrayTile';
@@ -43,10 +44,10 @@ class Intro2 extends Component {
             bgColor: colors.pale_bg,
             panelBgColor: colors.pale_bg,
             panelBorderColor: invertColor(colors.pale_bg, true),
-            line0Text: 'n the beginning God',
+            line0Text: 'journey of a thou',
             line1Text: '',
             showNextArrow: false,
-            letterImage: require('../images/letters/i.png'),
+            letterImage: require('../images/letters/a.png'),
             arrowImage: require('../images/arrowforward.png'),
             showText1: false,
             showText2: false,
@@ -62,7 +63,6 @@ class Intro2 extends Component {
         this.setPanelColors();
         BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBackButton);
         homeData = this.props.homeData;
-        this.setState({ letterImage: require('../images/letters/i.png') });
     }
     componentWillUnmount () {
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackButton);
@@ -94,8 +94,8 @@ class Intro2 extends Component {
                             showText1: false,
                             showText2: false,
                             showTiles: true,
-                            nextFrag: 'creat',
-                            line0Text: 'n the beginning God',
+                            nextFrag: 'sandmil',
+                            line0Text: 'journey of a thou',
                             line1Text: '',
                             showNextArrow: false,
 
@@ -128,8 +128,8 @@ class Intro2 extends Component {
         setTimeout(()=>{this.setState({showText2: true})}, 1700);
     }
     onDrop(text) {
-        if (text == 'creat'){
-            this.setState({line1Text: 'creat'});
+        if (text == 'sandmil'){
+            this.setState({line0Text: 'journey of a thousand', line1Text: 'mil'});
             setTimeout(() => {this.setState({ showText1: false, showText2: false, showTiles: false, showFooter: false })}, 800);
             setTimeout(() => {this.setState({ showNextArrow: true, showFooter: true, showText1: true, text1text: 'Great!', showText2: true, text2text: 'Next up...' })}, 802);
         }
@@ -169,7 +169,7 @@ class Intro2 extends Component {
                                 <View style={intro_styles.first_line}>
                                     <Text style={intro_styles.verse_text} >{ this.state.line0Text }</Text>
                                 </View>
-                                <View style={intro_styles.first_line}>
+                                <View style={intro_styles.second_line}>
                                     <Text style={intro_styles.verse_text} >{ this.state.line1Text }</Text>
                                 </View>
                                 <View style={intro_styles.first_line}>
@@ -226,17 +226,17 @@ class Intro2 extends Component {
                  { this.state.showTiles &&
                     <View style={intro_styles.tiles_container}>
                        <View style={intro_styles.tile_row} >
-                            <Tile opac={0} ref={(a) => { this.a = a; }}  text={ 'nthebegi' } nextFrag={ 'nthebegi' } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                            <GrayTile ref={(b) => { this.b = b; }} text={ 'sandt' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                            <GrayTile ref={(c) => { this.c = c; }} text={ 'edtheh' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <Tile opac={0} ref={(a) => { this.a = a; }}  text={ 'journe' } nextFrag={ 'journe' } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <GrayTile ref={(b) => { this.b = b; }} text={ 'asing' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <GrayTile ref={(c) => { this.c = c; }} text={ 'esmustb' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
                         </View>
                         <View style={intro_styles.tile_row} >
-                            <Tile ref={(d) => { this.d = d; }} text={ 'taerc' } nextFrag={ 'creat' } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                            <GrayTile ref={(e) => { this.e = e; }} text={ 'eaven' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                            <Tile opac={0} ref={(f) => { this.f = f; }} text={ 'ninggod' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <Tile ref={(d) => { this.d = d; }} text={ 'limdnas' } nextFrag={ 'sandmil' } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <GrayTile ref={(e) => { this.e = e; }} text={ 'eginwith' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <Tile opac={0} ref={(f) => { this.f = f; }} text={ 'yofathou' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
                         </View>
                         <View style={intro_styles.tile_row} >
-                            <GrayTile ref={(g) => { this.g = g; }} text={ 'heearth' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <GrayTile ref={(g) => { this.g = g; }} text={ 'lestep' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
                         </View>
                     </View>
                 }
@@ -294,6 +294,16 @@ const intro_styles = StyleSheet.create({
         top: height*.6,
         left: 0
     },
+    open_quote_container: {
+        position: 'absolute',
+        top: 0,
+        width: height*.046,
+        height: height*.026
+    },
+    open_quote: {
+        width: height*.045,
+        height: height*.025,
+    },
     text1: {
         position: 'absolute',
         alignItems: 'center',
@@ -314,10 +324,10 @@ const intro_styles = StyleSheet.create({
     },
     letter: {
         position: 'absolute',
-        top: height*.052,
-        left: (width-(height*.478))/2 + height*.058,
-        width: height*.08,
-        height: height*.083,
+        top: height*.06,
+        left: (width-(height*.478))/2 + height*.051,
+        width: height*.11,
+        height: height*.08
     },
     verse_container: {
         flex: 1,
@@ -329,7 +339,11 @@ const intro_styles = StyleSheet.create({
     },
     first_line: {
         flex: 1,
-        paddingLeft: height*.075,
+        paddingLeft: height*.086,
+    },
+    second_line: {
+        flex: 1,
+        paddingLeft: height*.094,
     },
     line: {
         flex: 1,

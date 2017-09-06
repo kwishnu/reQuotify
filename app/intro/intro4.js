@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, BackHandler, Alert, Animated } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import Button from '../components/Button';
 import Tile from '../components/Tile';
 import GrayTile from '../components/GrayTile';
@@ -7,6 +8,8 @@ import configs from '../config/configs';
 import colors from '../config/colors';
 import { normalize, normalizeFont, getArrowSize, getArrowMargin }  from '../config/pixelRatio';
 const {width, height} = require('Dimensions').get('window');
+const scrHeight = height;
+const scrWidth = width;
 let homeData = {};
 shadeColor = (color, percent) => {
     percent = percent/100;
@@ -48,19 +51,30 @@ class Intro2 extends Component {
             panelBorderColor: invertColor(colors.pale_bg, true),
             showingVerse: false,
             panelText: '',
-            line0Text: 'n the beginning God',
-            line1Text: 'created the heavens and',
-            line2Text: 'the earth.',
+            line0Text: 'journey of a thousand',
+            line1Text: 'miles must begin with',
+            line2Text: 'a single step.',
             showNextArrow: false,
-            letterImage: require('../images/letters/i.png'),
+            letterImage: require('../images/letters/a.png'),
             arrowImage: require('../images/arrowforward.png'),
             scaleXY: new Animated.Value(0),
             showText1: false,
             showText2: false,
             showTiles: false,
-            text2text: 'Change this in \'Settings\' if you\'d like to always see the Chapter and Verse.',
+            text2text: 'And finally...',
+            text1text: '',
             played: false,
-            showFooter: true
+            showFooter: true,
+            closeQuoteX: 0,
+            closeQuoteY: 0,
+            showCloseQuote: false,
+            dummyText: '',
+            name1: '',
+            name2: '',
+            name3: '',
+            bg1Color: colors.medium_gray,
+            bg2Color: colors.medium_gray,
+            bg3Color: colors.medium_gray
         }
         this.handleHardwareBackButton = this.handleHardwareBackButton.bind(this);
     }
@@ -69,7 +83,6 @@ class Intro2 extends Component {
         this.setPanelColors();
         BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBackButton);
         homeData = this.props.homeData;
-        this.setState({ letterImage: require('../images/letters/i.png') });
     }
     componentWillUnmount () {
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackButton);
@@ -89,8 +102,8 @@ class Intro2 extends Component {
     }
     start(){
         setTimeout(()=>{
-            Alert.alert('Showing Chapter and Verse', 'The panel under the Bible page hides the Chapter and Verse until the puzzle is completed--but you can show it earlier if you\'d like...',
-            [{text: 'OK', onPress: () => this.giveDirections()}], { onDismiss: () => {this.giveDirections()} }
+            Alert.alert('Who said it?', `After you've solved the quote, take a quiz about who is being quoted...`,
+            [{text: 'OK', onPress: () => this.giveQuotedQuiz()}], { onDismiss: () => {this.giveDirections()} }
             );
         }, 500);
     }
@@ -101,6 +114,12 @@ class Intro2 extends Component {
                             showNextArrow: false,
                             panelText: '',
                             showingVerse: false,
+                            showCloseQuote: false,
+                            shouldShowGuesses: false,
+                            shouldShowGuessHeader: false,
+                            bg1Color: colors.medium_gray,
+                            bg2Color: colors.medium_gray,
+                            bg3Color: colors.medium_gray
             });
             this.setPanelColors();
         }, 500);
@@ -126,19 +145,66 @@ class Intro2 extends Component {
         let darkerBorder = shadeColor(colors.pale_bg, -50);
         this.setState({panelBgColor: darkerPanel, panelBorderColor: darkerBorder});
     }
-    giveDirections(){
-        setTimeout(()=>{this.flipPanel()}, 200);
-        setTimeout(()=>{this.setState({showText1: true})}, 1200);
-        setTimeout(()=>{this.setState({showText2: true})}, 3200);
-        setTimeout(()=>{this.setState({showNextArrow: true})}, 5300);
+    giveQuotedQuiz(){
+        this.setState({ showCloseQuote: true });
+        setTimeout(() => {
+            this.setState({ shouldShowGuessHeader: true });
+        }, 1000);
+        setTimeout(() => {
+            this.setState({ shouldShowGuesses: true, name1: 'Robert Frost', name2: 'Lao Tzu', name3: 'Joan Benoit Samuelson' });
+        }, 2000);
+
     }
-    onDrop(text) {
-        if (text == 'edtheh'){
-            this.setState({line1Text: 'created the h', played: true});
-            setTimeout(() => {this.playDropSound()}, 50);
-            setTimeout(() => {this.setState({ showText1: false, showText2: false, showTiles: false, showFooter: false })}, 800);
-            setTimeout(() => {this.setState({ showNextArrow: true, showFooter: true, showText2: true, text2text: 'One more' })}, 802);
+    guessQuoted(whichCell, guess){
+        if (guess == 'Lao Tzu'){
+            this.setState({bg2Color: 'green', name1: 'That\'s right!', name3: 'Double Solved Points', text1text: 'Nice one!'});
+        }else{
+            switch (whichCell){
+                case 'top':
+                    this.setState({bg1Color: 'red', text1text: 'Who knew, right?'});
+                    if (this.state.name2 == 'Lao Tzu'){
+                        this.setState({bg2Color: 'green'});
+                    }else{
+                        this.setState({bg3Color: 'green'});
+                    }
+                    break;
+                case 'bottom':
+                    this.setState({bg3Color: 'red', text1text: 'Who knew, right?'});
+                    if (this.state.name1 == 'Lao Tzu'){
+                        this.setState({bg1Color: 'green'});
+                    }else{
+                        this.setState({bg2Color: 'green'});
+                    }
+            }
         }
+        setTimeout(() => {
+            this.refs.header.bounceOutUp(850);
+            this.refs.top.bounceOutRight(850);
+            this.refs.middle.bounceOutLeft(850);
+            this.refs.bottom.bounceOutRight(850);
+        }, 1500);
+        setTimeout(() => {
+            this.flipPanel();
+        }, 2000);
+        setTimeout(() => {
+            this.giveDirections();
+        }, 1000);
+
+    }
+    setCloseQuoteX(event){
+        let dims = {x, y, width, height} = event.nativeEvent.layout;
+        let xOffset = dims.width + height*.15 + scrHeight*.09;
+        this.setState({
+            closeQuoteX: xOffset
+        });
+    }
+    setCloseQuoteY(event){
+        let d = {x, y, width, height} = event.nativeEvent.layout;
+        let yOffset = 2 * d.height + height*.25;
+        this.setState({closeQuoteY: yOffset});
+    }
+    giveDirections(){
+        setTimeout(()=>{this.setState({showText1: true, showText2: true, showNextArrow: true})}, 1200);
     }
     footerBorder(color) {
         let bgC = colors.pale_bg;
@@ -165,7 +231,7 @@ class Intro2 extends Component {
             pBgC = '#555555';
             pBC = '#000000';
             bool = true;
-            this.setState({panelText:  'Genesis 1:1',
+            this.setState({panelText:  'Lao Tzu',
                                        panelBgColor: pBgC,
                                        panelBorderColor: pBC,
                                        showingVerse: bool
@@ -196,6 +262,9 @@ class Intro2 extends Component {
         let imageStyle = {transform: [{rotateX}]};
         return (
             <View style={{flex: 1}}>
+                <Text style={intro_styles.dummy_text_container} onLayout={(event) => this.setCloseQuoteX(event)} >
+                    <Text style={intro_styles.dummy_text}>a single step.</Text>
+                </Text>
                 <View style={[intro_styles.container, {backgroundColor: this.state.bgColor}]}>
                     <View style={[intro_styles.header, this.headerBorder(this.state.bgColor), this.headerFooterColor(this.state.bgColor)]}>
                         <Button style={[intro_styles.button, {marginLeft: getArrowMargin()}]}>
@@ -212,13 +281,13 @@ class Intro2 extends Component {
                                     <View style={intro_styles.first_line}>
                                         <Text style={intro_styles.verse_text} >{ this.state.line0Text }</Text>
                                     </View>
-                                    <View style={intro_styles.first_line}>
+                                    <View style={intro_styles.second_line}>
                                         <Text style={intro_styles.verse_text} >{ this.state.line1Text }</Text>
                                     </View>
-                                    <View style={intro_styles.first_line}>
+                                    <View style={intro_styles.third_line}>
                                         <Text style={intro_styles.verse_text} >{ this.state.line2Text }</Text>
                                     </View>
-                                    <View style={intro_styles.line}>
+                                    <View style={intro_styles.line} onLayout={(event) => this.setCloseQuoteY(event)}>
                                         <Text style={intro_styles.verse_text} >{ this.state.line3Text }</Text>
                                     </View>
                                     <View style={intro_styles.line}>
@@ -233,7 +302,19 @@ class Intro2 extends Component {
                                     <View style={intro_styles.line}>
                                         <Text style={intro_styles.verse_text} >{ this.state.line7Text }</Text>
                                     </View>
-                                    <View style={intro_styles.line}></View>
+                                    {this.state.showCloseQuote &&
+                                    <View style={[intro_styles.close_quote_container,{top: this.state.closeQuoteY, left: this.state.closeQuoteX}]}>
+                                        <Animatable.Image
+                                            style={intro_styles.close_quote}
+                                            resizeMode='stretch'
+                                            source={require('../images/closequote.png')}
+                                            ref='closequote'
+                                            animation={'bounceInRight'}
+                                            duration={900}
+                                            delay={500}
+                                        />
+                                    </View>
+                                    }
                                 </View>
                     </View>
                     <View style={intro_styles.verse_panel_container} onStartShouldSetResponder={ ()=> {this.flipPanel()}}>
@@ -248,7 +329,7 @@ class Intro2 extends Component {
                     }
                     { this.state.showText1 &&
                     <View style={intro_styles.text1}>
-                        <Text style={intro_styles.instructions_text}>Tapping the panel will show or hide the Verse (try it!)</Text>
+                        <Text style={intro_styles.instructions_text}>{this.state.text1text}</Text>
                     </View>
                     }
                     { this.state.showText2 &&
@@ -266,6 +347,48 @@ class Intro2 extends Component {
                             <Text style={intro_styles.footer_text}></Text>
                         </View>
                     </View>
+                    {this.state.shouldShowGuessHeader &&
+                    <View style={{position: 'absolute', top: scrHeight*.34, left: 0, width: scrWidth, height: scrHeight*.2}}>
+                        <Animatable.Image source={ require('../images/nicejob.png') }
+                            style={intro_styles.guess_header}
+                            ref='header'
+                            animation={'bounceInDown'}
+                            duration={900}
+                        >
+                        </Animatable.Image>
+                    </View>
+                    }
+                    {this.state.shouldShowGuesses &&
+                    <View style={{position: 'absolute', top: scrHeight*.5, left: width*.05, width: scrWidth*.9, height: scrHeight*.6}}>
+                        <Animatable.View
+                            style={[intro_styles.guess_cell, {top: 0, backgroundColor: this.state.bg1Color}]}
+                            ref='top'
+                            animation={'bounceInLeft'}
+                            duration={700}
+                            onStartShouldSetResponder={() => {this.guessQuoted('top', this.state.name1);}}
+                        >
+                          <Text style={intro_styles.name}>{this.state.name1}</Text>
+                        </Animatable.View>
+                        <Animatable.View
+                            style={[intro_styles.guess_cell, {top: scrHeight*.1, backgroundColor: this.state.bg2Color}]}
+                            ref='middle'
+                            animation={'bounceInRight'}
+                            duration={800}
+                            onStartShouldSetResponder={() => {this.guessQuoted('middle', this.state.name2);}}
+                        >
+                          <Text style={intro_styles.name}>{this.state.name2}</Text>
+                        </Animatable.View>
+                        <Animatable.View
+                            style={[intro_styles.guess_cell, {top: scrHeight*.2, backgroundColor: this.state.bg3Color}]}
+                            ref='bottom'
+                            animation={'bounceInLeft'}
+                            duration={600}
+                            onStartShouldSetResponder={() => {this.guessQuoted('bottom', this.state.name3);}}
+                        >
+                          <Text style={intro_styles.name}>{this.state.name3}</Text>
+                        </Animatable.View>
+                    </View>
+                    }
                 </View>
             </View>
         );
@@ -314,6 +437,25 @@ const intro_styles = StyleSheet.create({
         height: height*.30,
         width: height*.47
     },
+    open_quote_container: {
+        position: 'absolute',
+        top: 0,
+        width: height*.046,
+        height: height*.026
+    },
+    open_quote: {
+        width: height*.045,
+        height: height*.025,
+    },
+    close_quote_container: {
+        position: 'absolute',
+        width: height*.046,
+        height: height*.026
+    },
+    close_quote: {
+        width: height*.045,
+        height: height*.025,
+    },
     text1: {
         position: 'absolute',
         alignItems: 'center',
@@ -334,10 +476,10 @@ const intro_styles = StyleSheet.create({
     },
     letter: {
         position: 'absolute',
-        top: height*.052,
-        left: (width-(height*.478))/2 + height*.058,
-        width: height*.08,
-        height: height*.083,
+        top: height*.06,
+        left: (width-(height*.478))/2 + height*.051,
+        width: height*.11,
+        height: height*.08
     },
     verse_container: {
         flex: 1,
@@ -349,7 +491,15 @@ const intro_styles = StyleSheet.create({
     },
     first_line: {
         flex: 1,
-        paddingLeft: height*.075,
+        paddingLeft: height*.086,
+    },
+    second_line: {
+        flex: 1,
+        paddingLeft: height*.094,
+    },
+    third_line: {
+        flex: 1,
+        paddingLeft: height*.105,
     },
     line: {
         flex: 1,
@@ -434,6 +584,55 @@ const intro_styles = StyleSheet.create({
         width: width,
         height: height/5.5,
         top: height*.58,
+    },
+    name: {
+        color: '#ffffff',
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    guess_header: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        left: (width - height*.3)/2,
+        width: height*.3,
+        height: height*.145
+    },
+    guess_cell: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        left: 0,
+        width: scrWidth*.9,
+        height: scrHeight*.086,
+        borderWidth: 2,
+        borderColor: '#000000',
+        borderRadius: 7,
+        shadowColor: '#000000',
+        shadowOffset: {
+          width: 0,
+          height: 3
+        },
+        shadowRadius: 5,
+        shadowOpacity: 1.0,
+        elevation: 5
+    },
+    dummy_text: {
+        flex: 1,
+        height: 26,
+        fontSize: normalizeFont(configs.LETTER_SIZE*0.085),
+        fontFamily: 'Segoe Print',//'Book Antiqua',
+        alignSelf: 'flex-start'
+    },
+    dummy_text_container: {
+        alignSelf: 'flex-start',
+        position: 'absolute',
+        top: height*2,
+        left: height*2,
+        backgroundColor: 'transparent'
     }
 });
 

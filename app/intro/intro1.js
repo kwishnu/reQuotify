@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, BackHandler, Alert } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import Button from '../components/Button';
 import Tile from '../components/Tile';
 import GrayTile from '../components/GrayTile';
@@ -45,7 +46,7 @@ class Intro1 extends Component {
             panelBorderColor: invertColor(colors.pale_bg, true),
             showNextArrow: false,
             line0Text: '',
-            letterImage: require('../images/letters/i.png'),
+            letterImage: require('../images/letters/a.png'),
             arrowImage: require('../images/arrowforward.png'),
             showText1: false,
             showText2: false,
@@ -61,7 +62,6 @@ class Intro1 extends Component {
         this.setPanelColors();
         BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBackButton);
         homeData = this.props.homeData;
-        this.setState({ letterImage: require('../images/letters/i.png') });
     }
     componentWillUnmount () {
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackButton);
@@ -72,7 +72,7 @@ class Intro1 extends Component {
     }
     start(){
         setTimeout(()=>{
-            Alert.alert('Solving Verse puzzles', 'Solve Verse puzzles by dropping the correct tiles onto the Bible page. \r\n\r\nThe first letter is already given...\r\ngive it a try!',
+            Alert.alert('Solving Puzzles', 'Solve reQuotify puzzles by dropping tiles onto the paper in the correct order. \r\n\r\nThe first letter is already given...\r\ngive it a try!',
             [{text: 'OK', onPress: () => this.giveDirections()}], { onDismiss: () => {this.giveDirections()} }
             );
         }, 500);
@@ -80,7 +80,7 @@ class Intro1 extends Component {
     reset(){
         setTimeout(()=>{
             this.setState({ text1text: 'Try moving the two tiles around a bit first...',
-                            text2text: '...then try dropping them onto the page!',
+                            text2text: '...then try dropping them onto the paper!',
                             showText1: false,
                             showText2: false,
                             showTiles: true,
@@ -119,17 +119,17 @@ class Intro1 extends Component {
 
     }
     giveDirections(){
-        setTimeout(()=>{this.a.showNextTile('nthebegi')}, 200);
-        setTimeout(()=>{this.f.showNextTile('ninggod')}, 850);
+        setTimeout(()=>{this.a.showNextTile('journe')}, 200);
+        setTimeout(()=>{this.f.showNextTile('yofathou')}, 850);
         setTimeout(()=>{this.setState({showText1: true})}, 1800);
         setTimeout(()=>{this.setState({showText2: true})}, 3500);
     }
     onDrop(text) {
-        if (this.state.line0Text == '' && text == 'nthebegi'){
-            this.setState({nextFrag: 'ninggod', line0Text: 'n the begi'});
+        if (this.state.line0Text == '' && text == 'journe'){
+            this.setState({nextFrag: 'yofathou', line0Text: 'journe'});
         }
-        if (this.state.line0Text == 'n the begi' && text == 'ninggod'){
-            this.setState({nextFrag: 'creat', line0Text: 'n the beginning God'});
+        if (this.state.line0Text == 'journe' && text == 'yofathou'){
+            this.setState({nextFrag: 'sandmil', line0Text: 'journey of a thou'});
             setTimeout(() => {this.setState({ showText1: false, showText2: false, showTiles: false, showFooter: false })}, 800);
             setTimeout(() => {this.setState({ showNextArrow: true, showFooter: true, showText1: true,text1text: 'Next learn about reversing tiles...'})}, 802);
         }
@@ -206,17 +206,17 @@ class Intro1 extends Component {
                  { this.state.showTiles &&
                     <View style={intro_styles.tiles_container}>
                        <View style={intro_styles.tile_row} >
-                            <Tile isIntro1={true} ref={(a) => { this.a = a; }} zIndex={1} text={ 'nthebegi' } nextFrag={ 'nthebegi' } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                            <GrayTile ref={(b) => { this.b = b; }} text={ 'sandt' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                            <GrayTile ref={(c) => { this.c = c; }} text={ 'edtheh' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <Tile isIntro1={true} ref={(a) => { this.a = a; }} zIndex={1} text={ 'journe' } nextFrag={ 'journe' } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <GrayTile ref={(b) => { this.b = b; }} text={ 'asing' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <GrayTile ref={(c) => { this.c = c; }} text={ 'esmustb' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
                         </View>
                         <View style={intro_styles.tile_row} >
-                            <GrayTile ref={(d) => { this.d = d; }} text={ 'taerc' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                            <GrayTile ref={(e) => { this.e = e; }} text={ 'eaven' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
-                            <Tile isIntro1={true} ref={(f) => { this.f = f; }} text={ 'ninggod' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <GrayTile ref={(d) => { this.d = d; }} text={ 'limdnas' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <GrayTile ref={(e) => { this.e = e; }} text={ 'eginwith' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <Tile isIntro1={true} ref={(f) => { this.f = f; }} text={ 'yofathou' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
                         </View>
                         <View style={intro_styles.tile_row} >
-                            <GrayTile ref={(g) => { this.g = g; }} text={ 'heearth' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
+                            <GrayTile ref={(g) => { this.g = g; }} text={ 'lestep' } nextFrag={ this.state.nextFrag } onDrop={ (text)=>{ this.onDrop(text); }} sounds={ this.state.useSounds }/>
                         </View>
                     </View>
                 }
@@ -274,6 +274,16 @@ const intro_styles = StyleSheet.create({
         top: height*.6,
         left: 0
     },
+    open_quote_container: {
+        position: 'absolute',
+        top: 0,
+        width: height*.046,
+        height: height*.026
+    },
+    open_quote: {
+        width: height*.045,
+        height: height*.025
+    },
     text1: {
         position: 'absolute',
         alignItems: 'center',
@@ -294,10 +304,10 @@ const intro_styles = StyleSheet.create({
     },
     letter: {
         position: 'absolute',
-        top: height*.052,
-        left: (width-(height*.478))/2 + height*.058,
-        width: height*.08,
-        height: height*.083,
+        top: height*.06,
+        left: (width-(height*.478))/2 + height*.051,
+        width: height*.11,
+        height: height*.08
     },
     verse_container: {
         flex: 1,
@@ -305,32 +315,32 @@ const intro_styles = StyleSheet.create({
         top: height*.05,
         left: (width-(height*.478))/2 + height*.063,
         width: width*.75,
-        height: height*.25,
+        height: height*.25
     },
     first_line: {
         flex: 1,
-        paddingLeft: height*.075,
+        paddingLeft: height*.086
     },
     line: {
-        flex: 1,
+        flex: 1
     },
     verse_text: {
         fontSize: normalizeFont(configs.LETTER_SIZE*0.09),
         color: '#000000',
-        fontFamily: 'Book Antiqua',
+        fontFamily: 'Book Antiqua'
     },
     verse_panel_container: {
         flex: 2,
         alignItems: 'center',
         justifyContent: 'center',
-        width: width,
+        width: width
     },
     verse_panel: {
         alignItems: 'center',
         justifyContent: 'center',
         width: height/3.5,
         height: height/20,
-        borderWidth: StyleSheet.hairlineWidth,
+        borderWidth: StyleSheet.hairlineWidth
     },
     panel_text: {
         fontSize: normalizeFont(configs.LETTER_SIZE*0.08),
@@ -338,8 +348,8 @@ const intro_styles = StyleSheet.create({
     },
     instructions_text: {
         fontSize: normalizeFont(configs.LETTER_SIZE*0.1),
-        color: '#000000',
-        textAlign: 'center',
+        color: '#222222',
+        textAlign: 'center'
 
     },
     game: {

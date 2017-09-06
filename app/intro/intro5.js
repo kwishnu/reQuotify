@@ -169,7 +169,7 @@ class Intro5 extends Component {
                 </View>
                 { this.state.showSocialText &&
                 <View style={styles.social_text}>
-                    <Text style={styles.text}>When you have completed the Verse you can share it on Social Media,</Text>
+                    <Text style={styles.text}>When you have completed the quote you can share it on Social Media,</Text>
                 </View>
                 }
                 { this.state.showFavorites &&
@@ -181,7 +181,7 @@ class Intro5 extends Component {
                 { this.state.showBible &&
                 <View style={styles.bible}>
                     <Animated.Image style={bibleStyle} source={require('../images/bible.png')}/>
-                    <Text style={styles.text}>or, if the Verse was part of a Bible Book Collection, see it in context in the Bible Reader...</Text>
+                    <Text style={styles.text}>or, if the quote was from an Author Collection, see it in context in the Reader...</Text>
                 </View>
                 }
                 { this.state.showText &&
