@@ -4,7 +4,6 @@ import moment from 'moment';
 import FabricTwitterKit from 'react-native-fabric-twitterkit';
 import Button from '../components/Button';
 import Overlay from '../components/Overlay';
-import AnimationCell from '../components/Cell';
 import * as Animatable from 'react-native-animatable';
 import Tile from '../components/Tile';
 import DropdownMenu from '../components/DropdownMenu';
@@ -122,6 +121,11 @@ invertColor = (hex, bw) => {
 class Game extends Component {
     constructor(props) {
         super(props);
+        this.hintAnimation =
+                setInterval(() => {
+                    this.refs.hintbutton.tada(1500);
+                }, 25000);
+
         this.flip = new Animated.Value(0);
         this.grow = new Animated.Value(0);
         this.opac = new Animated.Value(0);
@@ -202,12 +206,12 @@ class Game extends Component {
             bg1Color: colors.medium_gray,
             bg2Color: colors.medium_gray,
             bg3Color: colors.medium_gray,
-            openQuoteX: 0,
             closeQuoteX: 0,
             closeQuoteY: 0,
             showCloseQuote: false,
             dummyText: '',
-            numLines: 0
+            numLines: 0,
+            quoted: ''
         }
         this.handleHardwareBackButton = this.handleHardwareBackButton.bind(this);
     }
@@ -222,9 +226,8 @@ class Game extends Component {
         AppState.addEventListener('change', this.handleAppStateChange);
         homeData = this.props.homeData;
         if (homeData[this.props.dataElement].num_solved == homeData[this.props.dataElement].num_quotes)this.setState({openedAll: true});
-        let verseArray = `2**Shakespeare**Lqqqq, or not to am...that really is what it all boils down to`.split('**');
+        let verseArray = `2**Shakespeare**To be, or not to be...that really is what it all boils down to**Byron**Keats`.split('**');
 //        let verseArray = this.props.homeData[this.props.dataElement].verses[this.props.index].split('**');
-        console.log(this.props.homeData[this.props.dataElement].verses[this.props.index]);
         dsArray = this.props.daily_solvedArray;
         let numHints = parseInt(verseArray[0], 10);
         let chapterVerse = verseArray[1];
@@ -234,91 +237,117 @@ class Game extends Component {
         verseStr = verseStr.substring(1);
         switch(initial){
             case 'A': case 'a':
-                this.setState({ letterImage: require('../images/letters/a.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/a.png') });
                 break;
             case 'B': case 'b':
-                this.setState({ letterImage: require('../images/letters/b.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/b.png') });
                 break;
             case 'C': case 'c':
-                this.setState({ letterImage: require('../images/letters/c.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/c.png') });
                 break;
             case 'D': case 'd':
-                this.setState({ letterImage: require('../images/letters/d.png'), openQuoteX: -height*.015 });
+                this.setState({ letterImage: require('../images/letters/d.png') });
                 break;
             case 'E': case 'e':
-                this.setState({ letterImage: require('../images/letters/e.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/e.png') });
                 break;
             case 'F': case 'f':
-                this.setState({ letterImage: require('../images/letters/f.png'), openQuoteX: height*.01 });
+                this.setState({ letterImage: require('../images/letters/f.png') });
                 break;
             case 'G': case 'g':
-                this.setState({ letterImage: require('../images/letters/g.png'), openQuoteX: height*.01 });
+                this.setState({ letterImage: require('../images/letters/g.png') });
                 break;
             case 'H': case 'h':
-                this.setState({ letterImage: require('../images/letters/h.png'), openQuoteX: -height*.01 });
+                this.setState({ letterImage: require('../images/letters/h.png') });
                 break;
             case 'I': case 'i':
-                this.setState({ letterImage: require('../images/letters/i.png'), openQuoteX: height*.01 });
+                this.setState({ letterImage: require('../images/letters/i.png') });
                 break;
             case 'J': case 'j':
-                this.setState({ letterImage: require('../images/letters/j.png'), openQuoteX: height*.005 });
+                this.setState({ letterImage: require('../images/letters/j.png') });
                 break;
             case 'K': case 'k':
-                this.setState({ letterImage: require('../images/letters/k.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/k.png') });
                 break;
             case 'L': case 'l':
-                this.setState({ letterImage: require('../images/letters/l.png'), openQuoteX: height*.01 });
+                this.setState({ letterImage: require('../images/letters/l.png') });
                 break;
             case 'M': case 'm':
-                this.setState({ letterImage: require('../images/letters/m.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/m.png') });
                 break;
             case 'N': case 'n':
-                this.setState({ letterImage: require('../images/letters/n.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/n.png') });
                 break;
             case 'O': case 'o':
-                this.setState({ letterImage: require('../images/letters/o.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/o.png') });
                 break;
             case 'P': case 'p':
-                this.setState({ letterImage: require('../images/letters/p.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/p.png') });
                 break;
             case 'Q': case 'q':
-                this.setState({ letterImage: require('../images/letters/q.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/q.png') });
                 break;
             case 'R': case 'r':
-                this.setState({ letterImage: require('../images/letters/r.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/r.png') });
                 break;
             case 'S': case 's':
-                this.setState({ letterImage: require('../images/letters/s.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/s.png') });
                 break;
             case 'T': case 't':
-                this.setState({ letterImage: require('../images/letters/t.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/t.png') });
                 break;
             case 'U': case 'u':
-                this.setState({ letterImage: require('../images/letters/u.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/u.png') });
                 break;
             case 'V': case 'v':
-                this.setState({ letterImage: require('../images/letters/v.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/v.png') });
                 break;
             case 'W': case 'w':
-                this.setState({ letterImage: require('../images/letters/w.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/w.png') });
                 break;
             case 'X': case 'x':
-                this.setState({ letterImage: require('../images/letters/x.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/x.png') });
                 break;
             case 'Y': case 'y':
-                this.setState({ letterImage: require('../images/letters/y.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/y.png') });
                 break;
             case 'Z': case 'z':
-                this.setState({ letterImage: require('../images/letters/z.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/z.png') });
                 break;
             default:
-                this.setState({ letterImage: require('../images/letters/i.png'), openQuoteX: 0 });
+                this.setState({ letterImage: require('../images/letters/i.png') });
+        }
+        let rndNum = randomBetween(1, 3);
+        let topName = '';
+        let middleName = '';
+        let bottomName = '';
+        switch (rndNum){
+            case 1:
+                topName = verseArray[1];
+                middleName = verseArray[3];
+                bottomName = verseArray[4];
+                break;
+            case 2:
+                topName = verseArray[3];
+                middleName = verseArray[1];
+                bottomName = verseArray[4];
+                break;
+            case 3:
+                topName = verseArray[4];
+                middleName = verseArray[3];
+                bottomName = verseArray[1];
+                break;
+            default:
+                topName = verseArray[1];
+                middleName = verseArray[3];
+                bottomName = verseArray[4];
+                break;
         }
         this.populateArrays(verseStr, numHints, reverseTiles).then((values) => {
             if(values){
                 this.setState({ numHints: values.hints, fragmentOrder: values.fragmentOrder, nextFrag: values.nextFrag, frag0: values.frag0, frag1: values.frag1, frag2: values.frag2, frag3: values.frag3, frag4: values.frag4, frag5: values.frag5, frag6: values.frag6, frag7: values.frag7, frag8: values.frag8, frag9: values.frag9, frag10: values.frag10,
                                 frag11: values.frag11, frag12: values.frag12,  frag13: values.frag13, frag14: values.frag14, frag15: values.frag15, frag16: values.frag16, frag17: values.frag17, frag18: values.frag18, frag19: values.frag19, frag20: values.frag20, frag21: values.frag21, frag22: values.frag22, frag23: values.frag23,
-                                chapterVerse: chapterVerse, entireVerse: saveVerse
+                                chapterVerse: chapterVerse, entireVerse: saveVerse, quoted: verseArray[1], name1: topName, name2: middleName, name3: bottomName
                 })
                 this.assignWordsToRows(verseStr);
             }
@@ -429,10 +458,11 @@ class Game extends Component {
             }, 250);
             setTimeout(()=>{
                 this.refs.openquote.rubberBand(2000);
-            }, 1000);
+            }, 500);
             })
     }
     componentWillUnmount () {
+        clearInterval(this.hintAnimation);
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackButton);
         AppState.removeEventListener('change', this.handleAppStateChange);
     }
@@ -471,6 +501,9 @@ class Game extends Component {
                     } catch (error) {
                         window.alert('AsyncStorage error: ' + error.message);
                     }
+                    setTimeout(()=>{
+                        this.refs.openquote.rubberBand(2000);
+                    }, 750);
                 }
             });
         }
@@ -486,7 +519,7 @@ class Game extends Component {
         let rows = 0;
         for (let word=0; word<verseArray.length; word++){
             letterTotal += (verseArray[word].length + 1);
-            lineLength = (whichRow < 3)?24:30;
+            lineLength = (whichRow < 2)?22:28;
             if (letterTotal > lineLength){
                 layout[whichRow + 1].push(verseArray[word]);
                 letterTotal = verseArray[word].length + 1;
@@ -871,6 +904,7 @@ class Game extends Component {
                     if (onWord + 1 == this.state.wordsArray[onLine].length){//at the end of a line
                         addSpace = false;
                         if (onLine == 7 || this.state.wordsArray[onLine + 1].length == 0){//finished verse
+                            clearInterval(this.hintAnimation);
                             this.setState({doneWithVerse: true, showHintButton: false});
                             setTimeout(() => {
                                 this.giveQuotedQuiz();
@@ -1171,6 +1205,8 @@ class Game extends Component {
         }
     }
     giveHint(frag){
+//        this.setState({openQuoteX: -30});
+//        return;
         let hints = this.state.numHints;
         let hasInfinite = this.state.hasInfiniteHints;
         let hasPaid = this.state.hasPaidForHints;
@@ -1427,27 +1463,27 @@ class Game extends Component {
         }, 1000);
         setTimeout(() => {
             if(this.state.useSounds == true){swish.play();}
-            this.setState({ shouldShowGuesses: true, name1: 'Shakespeare', name2: 'Milton', name3: 'Voltaire' });
+            this.setState({ shouldShowGuesses: true });
         }, 2000);
 
     }
     guessQuoted(whichCell, guess){
-        if (guess == 'Shakespeare'){
+        if (guess == this.state.quoted){
             switch (whichCell){
                 case 'top':
-                    this.setState({bg1Color: 'green', name2: 'That\'s right!', name3: 'Double Solved Points'});
+                    this.setState({bg1Color: 'green', name2: 'That\'s right!', name3: ''});
                     break;
                 case 'middle':
-                    this.setState({bg2Color: 'green', name1: 'That\'s right!', name3: 'Double Solved Points'});
+                    this.setState({bg2Color: 'green', name1: 'That\'s right!', name3: ''});
                     break;
                 case 'bottom':
-                    this.setState({bg3Color: 'green', name1: 'That\'s right!', name2: 'Double Solved Points'});
+                    this.setState({bg3Color: 'green', name1: 'That\'s right!', name2: ''});
             }
         }else{
             switch (whichCell){
                 case 'top':
                     this.setState({bg1Color: 'red'});
-                    if (this.state.name2 == 'Shakespeare'){
+                    if (this.state.name2 == this.state.quoted){
                         this.setState({bg2Color: 'green'});
                     }else{
                         this.setState({bg3Color: 'green'});
@@ -1455,7 +1491,7 @@ class Game extends Component {
                     break;
                 case 'middle':
                     this.setState({bg2Color: 'red'});
-                    if (this.state.name1 == 'Shakespeare'){
+                    if (this.state.name1 == this.state.quoted){
                         this.setState({bg1Color: 'green'});
                     }else{
                         this.setState({bg3Color: 'green'});
@@ -1463,7 +1499,7 @@ class Game extends Component {
                     break;
                 case 'bottom':
                     this.setState({bg3Color: 'red'});
-                    if (this.state.name1 == 'Shakespeare'){
+                    if (this.state.name1 == this.state.quoted){
                         this.setState({bg1Color: 'green'});
                     }else{
                         this.setState({bg2Color: 'green'});
@@ -1489,7 +1525,7 @@ class Game extends Component {
         let xOffset = dims.width + height*.15;
             console.log('xOffset = ' + xOffset + ' rows = ' + this.state.numLines);
 //        this.refs.entireScreen.measure( (fx, fy, width, screenHeight, px, py) => {
-            xOffset = (this.state.numLines < 4)? xOffset + scrHeight*.11:xOffset;
+            xOffset = (this.state.numLines < 3)? xOffset + scrHeight*.11:xOffset + scrHeight*.01;
             this.setState({
                 closeQuoteX: xOffset//, showCloseQuote: true
             });
@@ -1498,7 +1534,7 @@ class Game extends Component {
     }
     setCloseQuoteY(event){
         let d = {x, y, width, height} = event.nativeEvent.layout;
-        let yOffset = (this.state.numLines - 1) * d.height + height*.25;
+        let yOffset = (this.state.numLines - 1) * d.height;
         this.setState({closeQuoteY: yOffset});
         console.log('yOffset = ' + yOffset);
     }
@@ -1542,7 +1578,15 @@ class Game extends Component {
                         </View>
                         <View style={game_styles.tablet}>
                             <Image style={game_styles.parchment} source={require('../images/parchment.png')} resizeMode='stretch' />
-                            <Image style={game_styles.letter} source={this.state.letterImage} />
+                            <Animatable.Image
+                                style={game_styles.letter}
+                                resizeMode='stretch'
+                                source={this.state.letterImage}
+                                ref='openquote'
+                                animation={'rubberBand'}
+                                duration={1500}
+                                delay={1000}
+                            />
                             <View style={game_styles.verse_container}>
                                 <View style={game_styles.first_line}>
                                     <Text style={game_styles.verse_text} >{ this.state.line0Text }</Text>
@@ -1550,7 +1594,7 @@ class Game extends Component {
                                 <View style={game_styles.first_line}>
                                     <Text style={game_styles.verse_text} >{ this.state.line1Text }</Text>
                                 </View>
-                                <View style={game_styles.first_line}>
+                                <View style={game_styles.line}>
                                     <Text style={game_styles.verse_text} >{ this.state.line2Text }</Text>
                                 </View>
                                 <View style={game_styles.line} onLayout={(event) => this.setCloseQuoteY(event)}>
@@ -1565,18 +1609,7 @@ class Game extends Component {
                                 <View style={game_styles.line}>
                                     <Text style={game_styles.verse_text} >{ this.state.line6Text }</Text>
                                 </View>
-                                <View style={game_styles.line}>
-                                    <Text style={game_styles.verse_text} >{ this.state.line7Text }</Text>
-                                </View>
-                                <View style={[game_styles.open_quote_container,{left: this.state.openQuoteX}]}>
-                                    <Animatable.Image
-                                        style={game_styles.open_quote}
-                                        resizeMode='stretch'
-                                        source={require('../images/openquote.png')}
-                                        ref='openquote'
-                                        animation={'tada'}
-                                        duration={900}
-                                    />
+                                <View style={{flex: .75}}>
                                 </View>
                                 {this.state.showCloseQuote &&
                                 <View style={[game_styles.close_quote_container,{top: this.state.closeQuoteY, left: this.state.closeQuoteX}]}>
@@ -1658,11 +1691,15 @@ class Game extends Component {
                             <View style={{flexDirection: 'row', justifyContent: 'space-between', width: scrWidth}}>
                                 <View style={game_styles.hint_container}>
                                 </View>
-                                <View style={game_styles.hint_container} onStartShouldSetResponder={() => { this.giveHint(this.state.nextFrag) }}>
+                                <Animatable.View
+                                        ref='hintbutton'
+                                        duration={1500}
+                                        iterationCount={2}
+                                        style={game_styles.hint_container} onStartShouldSetResponder={() => { this.giveHint(this.state.nextFrag) }}>
                                     <View style={game_styles.hint_button} >
                                         <Text style={game_styles.hint_text}>hint</Text>
                                     </View>
-                                </View>
+                                </Animatable.View>
                                 <View style={game_styles.hint_container}>
                                     <Text style={[game_styles.hint_text, {opacity: this.state.hintNumOpacity}]}>{ this.state.numHints }</Text>
                                 </View>
@@ -1716,7 +1753,7 @@ class Game extends Component {
                                 duration={700}
                                 onStartShouldSetResponder={() => {this.guessQuoted('top', this.state.name1);}}
                             >
-                              <Text style={game_styles.name}>{this.state.name1}</Text>
+                                <Text style={game_styles.name}>{this.state.name1}</Text>
                             </Animatable.View>
                             <Animatable.View
                                 style={[game_styles.guess_cell, {top: scrHeight*.1, backgroundColor: this.state.bg2Color}]}
@@ -1725,7 +1762,7 @@ class Game extends Component {
                                 duration={800}
                                 onStartShouldSetResponder={() => {this.guessQuoted('middle', this.state.name2);}}
                             >
-                              <Text style={game_styles.name}>{this.state.name2}</Text>
+                                <Text style={game_styles.name}>{this.state.name2}</Text>
                             </Animatable.View>
                             <Animatable.View
                                 style={[game_styles.guess_cell, {top: scrHeight*.2, backgroundColor: this.state.bg3Color}]}
@@ -1734,7 +1771,7 @@ class Game extends Component {
                                 duration={600}
                                 onStartShouldSetResponder={() => {this.guessQuoted('bottom', this.state.name3);}}
                             >
-                              <Text style={game_styles.name}>{this.state.name3}</Text>
+                                <Text style={game_styles.name}>{this.state.name3}</Text>
                             </Animatable.View>
                         </View>
                         }
@@ -1789,10 +1826,10 @@ const game_styles = StyleSheet.create({
     },
     letter: {
         position: 'absolute',
-        top: height*.06,
+        top: height*.05,
         left: (width-(height*.478))/2 + height*.05,
         width: height*.11,
-        height: height*.075
+        height: height*.07
     },
     open_quote_container: {
         position: 'absolute',
@@ -1800,18 +1837,18 @@ const game_styles = StyleSheet.create({
         width: height*.046,
         height: height*.026
     },
-    close_quote_container: {
-        position: 'absolute',
-        width: height*.046,
-        height: height*.026
-    },
     open_quote: {
         width: height*.045,
         height: height*.025,
     },
-    close_quote: {
+    close_quote_container: {
+        position: 'absolute',
         width: height*.045,
-        height: height*.025,
+        height: height*.025
+    },
+    close_quote: {
+        width: height*.044,
+        height: height*.024,
     },
     verse_container: {
         flex: 1,
@@ -1823,10 +1860,17 @@ const game_styles = StyleSheet.create({
     },
     first_line: {
         flex: 1,
-        paddingLeft: height*.11
+        flexDirection: 'column',
+        paddingLeft: height*.11,
+        alignItems: 'flex-start',
+        justifyContent: 'center'
     },
     line: {
         flex: 1,
+        paddingLeft: height*.015,
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center'
     },
     verse_text: {
         fontSize: normalizeFont(configs.LETTER_SIZE*0.085),
@@ -1951,11 +1995,7 @@ const game_styles = StyleSheet.create({
         height: 26,
         fontSize: normalizeFont(configs.LETTER_SIZE*0.085),
         fontFamily: 'Segoe Print',//'Book Antiqua',
-                        borderColor: 'red',
-                        borderWidth: 2,
-                        alignSelf: 'flex-start'
-
-
+        alignSelf: 'flex-start'
     },
     dummy_text_container: {
         alignSelf: 'flex-start',
@@ -1963,7 +2003,6 @@ const game_styles = StyleSheet.create({
         top: height*2,
         left: height*2,
         backgroundColor: 'transparent'
-
     }
 });
 
