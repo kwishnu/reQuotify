@@ -88,16 +88,7 @@ class Intro2 extends Component {
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackButton);
     }
     handleHardwareBackButton() {
-        this.props.navigator.pop({
-            id: 'intro3',
-            passProps: {
-                homeData: this.props.homeData,
-                isPremium: this.props.isPremium,
-                seenIntro: this.props.seenStart,
-                connectionBool: this.props.connectionBool,
-                destination: this.props.destination
-            }
-       });
+        this.goSomewhere();
         return true;
     }
     start(){

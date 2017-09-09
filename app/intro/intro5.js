@@ -40,7 +40,7 @@ class Intro5 extends Component {
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackButton);
     }
     handleHardwareBackButton() {
-        this.props.navigator.pop({});
+        this.done();
         return true;
     }
     start(){
@@ -180,7 +180,7 @@ class Intro5 extends Component {
                 }
                 { this.state.showBible &&
                 <View style={styles.bible}>
-                    <Animated.Image style={bibleStyle} source={require('../images/bible.png')}/>
+                    <Animated.Image style={bibleStyle} source={require('../images/book.png')}/>
                     <Text style={styles.text}>or, if the quote was from an Author Collection, see it in context in the Reader...</Text>
                 </View>
                 }

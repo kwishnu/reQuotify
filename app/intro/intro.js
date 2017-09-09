@@ -47,6 +47,7 @@ class Intro extends Component {
     }
     handleHardwareBackButton=() => {
         this.goSomewhere();
+        return true;
     }
     goSomewhere(){
         if (this.props.seenIntro != 'true'){

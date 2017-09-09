@@ -67,7 +67,7 @@ class Intro1 extends Component {
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackButton);
     }
     handleHardwareBackButton() {
-        this.props.navigator.pop({});
+        this.goSomewhere();
         return true;
     }
     start(){
