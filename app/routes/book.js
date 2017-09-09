@@ -158,7 +158,7 @@ class Book extends Component{
                     myPackArray.push(homeData[key].title);
                 }
             }
-            var levels = [5, 5, 6, 7];
+            var levels = [5, 5, 6, 6];
             var taken = -1;
             for(var i=0; i<4; i++){
                 var titleIndex = -1;
@@ -444,7 +444,7 @@ class Book extends Component{
                             </Button>
                             <Text style={{fontSize: configs.LETTER_SIZE * 0.7, color: this.state.titleColor}} >{this.props.title}</Text>
                             <Button style={[book_styles.button, {marginRight: getMargin()}]} onPress={ () => this.launchReader()}>
-                                <Image source={ require('../images/bible.png') } style={{height: getImageSize(), width: getImageSize()}} />
+                                <Image source={ require('../images/book.png') } style={{height: getImageSize(), width: getImageSize()}} />
                             </Button>
                         </View>
                         <View style={ [book_styles.tiles_container, {backgroundColor: this.state.bgColor}, this.darkBorder(this.state.bgColor)] }>

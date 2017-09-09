@@ -140,7 +140,7 @@ class Collection extends Component{
                     myPackArray.push(homeData[key].title);
                 }
             }
-            var levels = [5, 5, 6, 7];
+            var levels = [5, 5, 6, 6];
             var taken = -1;
             for(var i=0; i<4; i++){
                 var titleIndex = -1;
