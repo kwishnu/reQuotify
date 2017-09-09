@@ -810,7 +810,7 @@ class Game extends Component {
                 myPackArray.push(homeData[key].title);
             }
         }
-        var levels = [5, 5, 6, 7];
+        var levels = [5, 5, 6, 6];
         var taken = -1;
         for(var i=0; i<4; i++){
             var titleIndex = -1;
@@ -941,7 +941,7 @@ class Game extends Component {
             this.setState({playedFirst: true});
         }
     }
-    endOfGame(){
+    endOfGame(solvedPoints){
         var newNumSolved = '';
         let onLastVerseInPack=(this.props.fromWhere == 'home' || parseInt(this.state.index, 10) + 1 == parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10))?true:false;
         if (onLastVerseInPack){
@@ -969,7 +969,8 @@ class Game extends Component {
             dsArray[this.state.index + 1] = '1';
             this.setState({daily_solvedArray: dsArray});
         }
-        var numSolved = this.state.numSolved + 1;
+        var shouldAskToRate = ((this.state.numSolved + 1) % 15 == 0 && this.state.numSolved + 1 < 50)?true:false;
+        var numSolved = this.state.numSolved + solvedPoints;
         var bonusLevel = this.state.nextBonus;
         if (numSolved == bonusLevel){
             var nextBonusLevel = null;
@@ -1024,7 +1025,7 @@ class Game extends Component {
                 window.alert('AsyncStorage error: ' + error.message);
             }
         }
-        if (numSolved % 15 == 0 && numSolved < 50 && !this.state.hasRated){//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ move this... ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        if (shouldAskToRate && !this.state.hasRated){//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ move this... ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             let dismissText = (numSolved < 46)?'Maybe later...':'Never';
             Alert.alert( 'Enjoying reQuotify?',  `It seems you're enjoying the app, which makes us very happy! Would you care to take a moment to rate us in the App Store?'`,
                 [
@@ -1468,16 +1469,18 @@ class Game extends Component {
 
     }
     guessQuoted(whichCell, guess){
+        let sp = 1;
         if (guess == this.state.quoted){
+            sp++;
             switch (whichCell){
                 case 'top':
-                    this.setState({bg1Color: 'green', name2: 'That\'s right!', name3: ''});
+                    this.setState({bg1Color: 'green', name2: 'That\'s right!', name3: 'Double Solved Points!'});
                     break;
                 case 'middle':
-                    this.setState({bg2Color: 'green', name1: 'That\'s right!', name3: ''});
+                    this.setState({bg2Color: 'green', name1: 'That\'s right!', name3: 'Double Solved Points!'});
                     break;
                 case 'bottom':
-                    this.setState({bg3Color: 'green', name1: 'That\'s right!', name2: ''});
+                    this.setState({bg3Color: 'green', name1: 'That\'s right!', name2: 'Double Solved Points!'});
             }
         }else{
             switch (whichCell){
@@ -1516,7 +1519,7 @@ class Game extends Component {
             if (this.props.fromWhere != 'book' && !this.state.showingVerse)this.flipPanel();
         }, 2000);
         setTimeout(() => {
-            this.endOfGame();
+            this.endOfGame(sp);
         }, 3500);
 
     }
@@ -1718,7 +1721,7 @@ class Game extends Component {
                             <Animated.Image style={[ {width: 65, height: 65, margin: 1}, buttonsStyle ]} source={require('../images/favorites.png')} onStartShouldSetResponder={() => { this.addToFavorites() }}/>
                             }
                             { this.state.showBible &&
-                            <Animated.Image style={[ {width: 65, height: 65, margin: 1}, buttonsStyle ]} source={require('../images/bible.png')} onStartShouldSetResponder={() => { this.seeVerseInReader() }}/>
+                            <Animated.Image style={[ {width: 65, height: 65, margin: 1}, buttonsStyle ]} source={require('../images/book.png')} onStartShouldSetResponder={() => { this.seeVerseInReader() }}/>
                             }
                         </View>
                         }
