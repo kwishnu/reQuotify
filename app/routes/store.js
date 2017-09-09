@@ -63,7 +63,7 @@ module.exports = class Store extends Component {
             isLoading: true,
             questionOpacity: 1,
             questionImage: require('../images/infoquestion.png'),
-            infoText: `All Bible Books are priced $0.99USD and may be read in their entirety in the app. A portion of the proceeds raised by the app will be donated to the WEB project of World Outreach Ministries.`
+            infoText: `All Author Collections are priced $0.99USD and include extensive works of the author which may be read in the app.`
         };
         this.handleHardwareBackButton = this.handleHardwareBackButton.bind(this);
     }
@@ -95,8 +95,8 @@ module.exports = class Store extends Component {
             this.setState({expand: false, questionOpacity: 0, questionImage: require('../images/noimage.png')})
             return;
         }
-        if (this.props.dataIndex == 5){
-            this.setState({ infoText: `All Verse Collections contain 50 Verse Puzzles and are priced $0.99USD. A portion of the proceeds raised by the app will be donated to the WEB project of World Outreach Ministries.` });
+        if (this.props.dataIndex == 6){
+            this.setState({ infoText: `All Quote Collections contain 50 reQuotify Puzzles and are priced $0.99USD.` });
         }
     }
     componentWillUnmount () {
@@ -144,14 +144,14 @@ module.exports = class Store extends Component {
     }
     renderStoreRow = (data) => {
         let productIDArray = data.product_id.split('.');
-        if (productIDArray[0] == 'rv'){
+        if (productIDArray[0] == 'rq'){
             return (//single Collection or Book
                 <View style={ store_styles.purchase_row }>
                     <View style={[store_styles.purchase_text_container, {backgroundColor: data.color}]}>
                         <Text style={[store_styles.launcher_text, {color: invertColor(data.color, true)}]}>{data.name}</Text>
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_quotes + ' Verse Puzzles'}</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_quotes + ' Quote Puzzles'}</Text>
                         {productIDArray[2] == 'book' &&
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Complete Text</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Extended Text</Text>
                         }
                     </View>
                     <View style={ store_styles.purchase_button_container } onStartShouldSetResponder={ ()=> {this.startPurchase(data.product_id)}}>
@@ -166,21 +166,21 @@ module.exports = class Store extends Component {
                 <View style={ store_styles.purchase_row }>
                     <View style={[store_styles.purchase_text_container, {backgroundColor: data.color}]}>
                         <Text style={[store_styles.launcher_text, {color: invertColor(data.color, true)}]}>{data.name[0]}</Text>
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_quotes[0] + ' Verse Puzzles'}</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_quotes[0] + ' Quote Puzzles'}</Text>
                         {productIDArray[0] == 'b' &&
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Complete Text</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Extended Text</Text>
                         }
                             <View style={store_styles.divider}/>
                         <Text style={[store_styles.launcher_text, {color: invertColor(data.color, true)}]}>{data.name[1]}</Text>
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_quotes[1] + ' Verse Puzzles'}</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{data.num_quotes[1] + ' Quote Puzzles'}</Text>
                         {productIDArray[2] == 'b' &&
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Complete Text</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Extended Text</Text>
                         }
                             <View style={store_styles.divider}/>
                         <Text style={[store_styles.launcher_text, {color: invertColor(data.color, true)}]}>{data.name[2]}</Text>
                         <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>{this.getRowThreeText(data.product_id, data.num_quotes[2])}</Text>
                         {productIDArray[4] == 'b' &&
-                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Complete Text</Text>
+                        <Text style={[store_styles.launcher_text_small, {color: invertColor(data.color, true)}]}>Extended Text</Text>
                         }
                             <View style={store_styles.spacer}/>
                         <Text style={[store_styles.launcher_text, {color: invertColor(data.color, true)}]}>{data.price}</Text>
@@ -271,7 +271,7 @@ module.exports = class Store extends Component {
                             </Button>
                         </View>
                         <View style={store_styles.listview_container}>
-                            <View style={[ store_styles.infoBox, {flex: 5} ]}>
+                            <View style={[ store_styles.infoBox, {flex: 3} ]}>
                                 <View style={ store_styles.text_container }>
                                     <Text style={store_styles.info_text} >{this.state.infoText}</Text>
                                 </View>
