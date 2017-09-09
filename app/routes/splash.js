@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Image, StyleSheet, NetInfo, AsyncStorage, ActivityIndicator, StatusBar } from 'react-native';
+import { View, Image, StyleSheet, NetInfo, AsyncStorage, ActivityIndicator, StatusBar, Text } from 'react-native';
 import Meteor from 'react-native-meteor';
 import moment from 'moment';
 import PushNotification from 'react-native-push-notification';
@@ -35,6 +35,7 @@ var METEOR_URL = 'ws://52.52.205.96:80/websocket';
 class SplashScreen extends Component {
     constructor(props) {
         super(props);
+        Text.defaultProps.allowFontScaling = false; // Disallow dynamic type on iOS
         this.state = {
             id: 'splash',
             seenStart: 'false',
@@ -51,7 +52,7 @@ class SplashScreen extends Component {
         StatusBar.setHidden(true);
         Meteor.connect(METEOR_URL);
         var homeData = [];
-        nowISO = moment().valueOf();//determine offset # of days for daily verses...
+        nowISO = moment().valueOf();//determine offset # of days for daily quotes...
         tonightMidnight = moment().endOf('day').valueOf();
         var launchDay = moment('2017 07', 'YYYY-MM');//July 1, 2017
         var dayDiff = -launchDay.diff(nowISO, 'days');//# of days since 7/1/2017
@@ -163,7 +164,7 @@ class SplashScreen extends Component {
                 }
             }).then((verseArray) => {
                 if(verseArray){
-                    verseArray[16].num_solved = homeData[16].num_solved;//set 'In The Beginning...' to its current state
+                    verseArray[16].num_solved = homeData[16].num_solved;//set 'Worth Repeating' to its current state
                     verseArray[16].type = homeData[16].type;
                     verseArray[16].solved = homeData[16].solved;
                     verseArray[16].show = homeData[16].show;
@@ -437,7 +438,7 @@ class SplashScreen extends Component {
                 myPackArray.push(appData[key].title);
             }
         }
-        var levels = [5, 5, 6, 7];
+        var levels = [5, 5, 6, 6];
         var taken = -1;
         for(var i=0; i<4; i++){
             var titleIndex = -1;
