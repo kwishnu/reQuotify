@@ -270,7 +270,7 @@ class Home extends Component{
                     if (this.state.isPremium){
                         Alert.alert('Thanks', `Thank you for the feedback, we hope you are enjoying the app!`);
                     }else{
-                        Alert.alert('Thank You!', `You now have a new feature--the first tile will already be played in each Verse. You can change this in 'Settings' if you wish`);
+                        Alert.alert('Thank You!', `You now have a new feature--the first tile will already be played in each Quote puzzle. You can change this in 'Settings' if you wish`);
                     }
                     this.props.navigator.pop({});
                 }
@@ -282,7 +282,7 @@ class Home extends Component{
                     } catch (error) {
                         window.alert('AsyncStorage error: 252' + error.message);
                     }
-                    Alert.alert('Thank You!', `You now have a new feature: the first tile will already be played in each Verse. You can change this in 'Settings' if you wish`);
+                    Alert.alert('Thank You!', `You now have a new feature: the first tile will already be played in each Quote puzzle. You can change this in 'Settings' if you wish`);
                 }
             }
         }).catch(function(error) {
@@ -513,13 +513,13 @@ class Home extends Component{
             }
             switch(theIndex){
                 case '5':
-                    theTitle = 'Verse Collections';
+                    theTitle = 'Authors';
                     break;
                 case '6':
-                    theTitle = 'Old Testament';
+                    theTitle = 'Themes';
                     break;
                 case '7':
-                    theTitle = 'New Testament';
+                    theTitle = '';
                     break;
             }
 
@@ -746,6 +746,7 @@ class Home extends Component{
                  <Animatable.View
                      animation={'tada'}
                      duration={1200}
+                     ref={'quoteoftheday'}
                      delay={500}
                      iterationCount={2}
                  >
@@ -887,7 +888,7 @@ const container_styles = StyleSheet.create({
         padding: width*.05
     },
     launcher_text: {
-        fontSize: normalizeFont(configs.LETTER_SIZE * 0.1),
+        fontSize: normalizeFont(configs.LETTER_SIZE * 0.08),
         textAlign: 'center'
     }
 });
