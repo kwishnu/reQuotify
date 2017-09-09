@@ -1,6 +1,6 @@
 'use strict';
 import React, {Component} from 'react';
-//import { Navigator } from 'react-native';
+import { Text } from 'react-native';
 import NavigationExperimental from 'react-native-deprecated-custom-components';
 const Splash = require('../routes/splash');
 const Home = require('../routes/home');
@@ -28,6 +28,7 @@ const SwipeNavigator = require('../nav/swiper');
 class AppNavigator extends React.Component {
     constructor(props) {
         super(props);
+        Text.defaultProps.allowFontScaling = false; // Disallow dynamic type
     }
     navigatorRenderScene(routeID) {
         switch (routeID) {
