@@ -17,7 +17,6 @@ const KEY_show_score = 'showScoreKey';
 const KEY_showFB = 'showFBKey';
 const KEY_showTwitter = 'showTwitterKey';
 const KEY_reverse = 'reverseFragments';
-const KEY_HideVerse = 'hideVerseKey';
 const KEY_Premium = 'premiumOrNot';
 const KEY_ratedTheApp = 'ratedApp';
 var nowISO = moment().valueOf();
@@ -32,20 +31,18 @@ module.exports = class Settings extends Component {
             sounds_state: true,
             sounds_text: 'Game sounds on',
             reverse_state: true,
-            reverse_text: 'Reverse some Verse tiles',
+            reverse_text: 'Reverse some Quote puzzle tiles',
             show_fb_state: true,
             show_fb_text: 'Show Facebook button on completion',
             show_twitter_state: true,
             show_twitter_text: 'Show Twitter button on completion',
-            hide_verse_state: true,
-            hide_verse_text: 'Hide Chapter and Verse in puzzles',
             color_state: true,
-            use_colors: 'Use Verse Collection colors',
+            use_colors: 'Use Quote Collection colors',
             notifs_state: true,
             notif_time: '7',
             notif_text: 'Yes, at',
             play_first_state: true,
-            play_first_text: 'Play first Verse tile',
+            play_first_text: 'Play first Quote puzzle tile',
             showPlayFirst: false,
             score_state: true,
             score_text: 'Show # solved on Contents',
@@ -82,7 +79,7 @@ module.exports = class Settings extends Component {
         }).then((colors) => {
             if (colors !== null) {
                 var stateToUse = (colors == 'true')?true:false;
-                var strToUse = (colors == 'true')?'Use Verse Collection colors':'Using default colors';
+                var strToUse = (colors == 'true')?'Use Quote Collection colors':'Using default colors';
                 this.setState({
                     color_state: stateToUse,
                     use_colors: strToUse
@@ -115,7 +112,7 @@ module.exports = class Settings extends Component {
         }).then((playOrNot) => {
             if (playOrNot !== null) {
                 var stateToUse = (playOrNot == 'true')?true:false;
-                var strToUse = (playOrNot == 'true')?'Play first Verse tile':'Not playing first tile';
+                var strToUse = (playOrNot == 'true')?'Play first Quote puzzle tile':'Not playing first tile';
                 this.setState({
                     play_first_state: stateToUse,
                     play_first_text: strToUse
@@ -146,7 +143,7 @@ module.exports = class Settings extends Component {
             return AsyncStorage.getItem(KEY_reverse);
         }).then((revBool) => {
             var stateToUse = (revBool == 'true')?true:false;
-            var strToUse = (revBool == 'true')?'Reverse some Verse tiles':'Not reversing any Verse tiles';
+            var strToUse = (revBool == 'true')?'Reverse some Quote puzzle tiles':'Not reversing any Quote puzzle tiles';
             this.setState({
                 reverse_state: stateToUse,
                 reverse_text: strToUse
@@ -166,14 +163,6 @@ module.exports = class Settings extends Component {
             this.setState({
                 show_twitter_state: stateToUse,
                 show_twitter_text: strToUse
-            });
-            return AsyncStorage.getItem(KEY_HideVerse);
-        }).then((hide) => {
-            var stateToUse = (hide == 'true')?true:false;
-            var strToUse = (hide == 'true')?'Hide Chapter and Verse in puzzles':'Showing Chapter and Verse';
-            this.setState({
-                hide_verse_state: stateToUse,
-                hide_verse_text: strToUse
             });
             return true;
         }).then((done) => {
@@ -215,7 +204,7 @@ module.exports = class Settings extends Component {
         }
     }
     toggleColor(state){
-        var strToUse = (state)?'Use Verse Collection colors':'Using default colors';
+        var strToUse = (state)?'Use Quote Collection colors':'Using default colors';
         this.setState({use_colors: strToUse});
         try {
             AsyncStorage.setItem(KEY_Color, state.toString());
@@ -224,7 +213,7 @@ module.exports = class Settings extends Component {
         }
     }
     togglePlayFirst(state){
-        var strToUse = (state)?'Play first Verse tile':'Not playing first tile';
+        var strToUse = (state)?'Play first Quote puzzle tile':'Not playing first tile';
         this.setState({play_first_text: strToUse});
         try {
             AsyncStorage.setItem(KEY_PlayFirst, state.toString());
@@ -243,7 +232,7 @@ module.exports = class Settings extends Component {
         }
     }
     toggleReverse(state){
-        var strToUse = (state)?'Reverse some Verse tiles':'Not reversing any Verse tiles';
+        var strToUse = (state)?'Reverse some Quote puzzle tiles':'Not reversing any Quote puzzle tiles';
         var reverseBool = (state)?'true':'false';
         this.setState({reverse_text: strToUse});
         try {
@@ -268,16 +257,6 @@ module.exports = class Settings extends Component {
         this.setState({show_twitter_text: strToUse});
         try {
             AsyncStorage.setItem(KEY_showTwitter, twBool);
-        } catch (error) {
-            window.alert('AsyncStorage error: ' + error.message);
-        }
-    }
-    toggleHideVerse(state){
-        var strToUse = (state)?'Hide Chapter and Verse in puzzles':'Showing Chapter and Verse';
-        var flipBool = (state)?'true':'false';
-        this.setState({hide_verse_text: strToUse});
-        try {
-            AsyncStorage.setItem(KEY_HideVerse, flipBool);
         } catch (error) {
             window.alert('AsyncStorage error: ' + error.message);
         }
@@ -375,14 +354,6 @@ module.exports = class Settings extends Component {
                                 </View>
                                 <View style={settings_styles.switch_container}>
                                     <Switch value={this.state.reverse_state} onValueChange={(state)=>{this.toggleReverse(state)}}/>
-                                </View>
-                            </View>
-                            <View style={[settings_styles.parameter_container, {marginTop: height*0.02}]}>
-                                <View style={[settings_styles.text_container, {alignItems: 'flex-end'}]}>
-                                    <Text style={settings_styles.text}>{this.state.hide_verse_text}</Text>
-                                </View>
-                                <View style={settings_styles.switch_container}>
-                                    <Switch value={this.state.hide_verse_state} onValueChange={(state)=>{this.toggleHideVerse(state)}}/>
                                 </View>
                             </View>
                             <View style={settings_styles.parameter_container}><View style={settings_styles.divider}></View></View>
