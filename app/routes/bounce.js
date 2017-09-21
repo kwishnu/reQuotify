@@ -25,7 +25,8 @@ class Bounce extends Component {
                     title: this.props.title,
                     myTitle: this.props.senderTitle,
                     index: this.props.index,
-                    fromWhere: this.props.fromWhere
+                    fromWhere: this.props.fromWhere,
+                    reverse: this.props.reverse
                 }
            });
         }else{
@@ -35,6 +36,7 @@ class Bounce extends Component {
                     homeData: this.props.homeData,
                     dataElement: this.props.dataElement,
                     chapterIndex: this.props.chapterIndex,
+                    reverse: this.props.reverse
                 }
            });
         }
