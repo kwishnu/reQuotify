@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, BackHandler, AsyncStorage, Animated, ActivityIndicator, Alert, Platform, Linking, AppState, NetInfo, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, BackHandler, AsyncStorage, Animated, ActivityIndicator, Alert, Platform, Linking, AppState, NetInfo, TextInput, ToastAndroid } from 'react-native';
 import moment from 'moment';
 import FabricTwitterKit from 'react-native-fabric-twitterkit';
 import Button from '../components/Button';
@@ -169,7 +169,7 @@ class Game extends Component {
             wordsArray: [[], [], [], [], [], [], [], []],
             wordArrayPosition: [0, 0, 0],
             verseKey: '',
-            chapterVerse: '',
+            quotedPerson: '',
             initialLetter: '',
             addSpace: false,
             showNextArrow: false,
@@ -178,14 +178,15 @@ class Game extends Component {
             showFB: true,
             showTwitter: true,
             showFavorites: true,
-            showBible: false,
+            showBook: false,
+            chapterNum: 0,
             numFavorites: 0,
             letterImage: require('../images/letters/i.png'),
             arrowImage: require('../images/arrowforward.png'),
             scaleXY: new Animated.Value(0),
             soundString: 'Mute Sounds',
             useSounds: true,
-            doneWithVerse: false,
+            doneWithQuote: false,
             playedFirst: false,
             isPremium: false,
             numHints: 0,
@@ -195,7 +196,7 @@ class Game extends Component {
             hasPaidForHints: false,
             hintNumOpacity: 1,
             hasInfiniteHints: false,
-            entireVerse: '',
+            entireQuote: '',
             openedAll: false,
             shouldShowOverlay: false,
             shouldShowGuesses: false,
@@ -217,24 +218,22 @@ class Game extends Component {
     }
     componentDidMount() {
         if (this.props.dataElement == 17)this.setState({showFavorites: false});
-        if (this.props.fromWhere == 'book')this.setState({showBible: true});
         let reverseTiles = this.props.reverse;
         this.setPanelColors();
-        let titleText=(this.props.fromWhere == 'book')?'':this.props.title;
-        this.setState({title: titleText});
+//        let titleText=(this.props.fromWhere == 'book')?'':this.props.title;
+//        this.setState({title: titleText});
         BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBackButton);
         AppState.addEventListener('change', this.handleAppStateChange);
         homeData = this.props.homeData;
         if (homeData[this.props.dataElement].num_solved == homeData[this.props.dataElement].num_quotes)this.setState({openedAll: true});
-        let verseArray = `2**Shakespeare**To be, or not to be...that really is what it all boils down to**Byron**Keats`.split('**');
-//        let verseArray = this.props.homeData[this.props.dataElement].verses[this.props.index].split('**');
+        let quoteArray = this.props.homeData[this.props.dataElement].quotes[this.props.index].split('**');
         dsArray = this.props.daily_solvedArray;
-        let numHints = parseInt(verseArray[0], 10);
-        let chapterVerse = verseArray[1];
-        let verseStr = verseArray[2];
-        let saveVerse = verseStr;
-        let initial = verseStr.substr(0, 1);
-        verseStr = verseStr.substring(1);
+        let numHints = parseInt(quoteArray[0], 10);
+        let quotedPerson = quoteArray[1];
+        let quoteStr = quoteArray[2].replace(/  +/g, ' ');
+        let saveQuote = quoteStr;
+        let initial = quoteStr.substr(0, 1);
+        quoteStr = quoteStr.substring(1);
         switch(initial){
             case 'A': case 'a':
                 this.setState({ letterImage: require('../images/letters/a.png') });
@@ -317,39 +316,48 @@ class Game extends Component {
             default:
                 this.setState({ letterImage: require('../images/letters/i.png') });
         }
-        let rndNum = randomBetween(1, 3);
-        let topName = '';
-        let middleName = '';
-        let bottomName = '';
-        switch (rndNum){
-            case 1:
-                topName = verseArray[1];
-                middleName = verseArray[3];
-                bottomName = verseArray[4];
-                break;
-            case 2:
-                topName = verseArray[3];
-                middleName = verseArray[1];
-                bottomName = verseArray[4];
-                break;
-            case 3:
-                topName = verseArray[4];
-                middleName = verseArray[3];
-                bottomName = verseArray[1];
-                break;
-            default:
-                topName = verseArray[1];
-                middleName = verseArray[3];
-                bottomName = verseArray[4];
-                break;
+        if (this.props.fromWhere == 'book'){
+            var showBookOrNot = false;
+            var chapIndex = 0;
+            if (quoteArray[3] == 'show'){
+                showBookOrNot = true;
+                chapIndex = parseInt(quoteArray[4], 10);
+            }
+        }else{
+            var rndNum = randomBetween(1, 3);
+            var topName = '';
+            var middleName = '';
+            var bottomName = '';
+            switch (rndNum){
+                case 1:
+                    topName = quoteArray[1];
+                    middleName = quoteArray[3];
+                    bottomName = quoteArray[4];
+                    break;
+                case 2:
+                    topName = quoteArray[3];
+                    middleName = quoteArray[1];
+                    bottomName = quoteArray[4];
+                    break;
+                case 3:
+                    topName = quoteArray[4];
+                    middleName = quoteArray[3];
+                    bottomName = quoteArray[1];
+                    break;
+                default:
+                    topName = quoteArray[1];
+                    middleName = quoteArray[3];
+                    bottomName = quoteArray[4];
+                    break;
+            }
         }
-        this.populateArrays(verseStr, numHints, reverseTiles).then((values) => {
+        this.populateArrays(quoteStr, numHints, reverseTiles).then((values) => {
             if(values){
                 this.setState({ numHints: values.hints, fragmentOrder: values.fragmentOrder, nextFrag: values.nextFrag, frag0: values.frag0, frag1: values.frag1, frag2: values.frag2, frag3: values.frag3, frag4: values.frag4, frag5: values.frag5, frag6: values.frag6, frag7: values.frag7, frag8: values.frag8, frag9: values.frag9, frag10: values.frag10,
                                 frag11: values.frag11, frag12: values.frag12,  frag13: values.frag13, frag14: values.frag14, frag15: values.frag15, frag16: values.frag16, frag17: values.frag17, frag18: values.frag18, frag19: values.frag19, frag20: values.frag20, frag21: values.frag21, frag22: values.frag22, frag23: values.frag23,
-                                chapterVerse: chapterVerse, entireVerse: saveVerse, quoted: verseArray[1], name1: topName, name2: middleName, name3: bottomName
+                                quotedPerson: quotedPerson, entireQuote: saveQuote, quoted: quoteArray[1], name1: topName, name2: middleName, name3: bottomName, showBook: showBookOrNot, chapterNum: chapIndex
                 })
-                this.assignWordsToRows(verseStr);
+                this.assignWordsToRows(quoteStr);
             }
             return this.getRowBools(values.length);
         }).then((bools) => {
@@ -383,8 +391,8 @@ class Game extends Component {
             }
             return AsyncStorage.getItem(KEY_HideVerse);
         }).then((hide) => {
-            if (hide == 'false' || this.props.fromWhere == 'favorites'){
-                this.setState({panelText:  chapterVerse,
+            if (hide == 'false'){
+                this.setState({panelText:  quotedPerson,
                                            panelBgColor: '#555555',
                                            panelBorderColor: '#000000',
                                            showingVerse: true
@@ -411,18 +419,18 @@ class Game extends Component {
                     this.setState({hasPaidForHints: false, hintNumOpacity: 0});
                 }
             }
-                return AsyncStorage.getItem(KEY_NextBonus);
-            }).then((nb) => {
-                if (nb !== null){
-                    this.setState({nextBonus: parseInt(nb, 10)});
-                }else{
-                    this.setState({nextBonus: '10'});
-                    try {
-                        AsyncStorage.setItem(KEY_NextBonus, '10');
-                    } catch (error) {
-                        window.alert('AsyncStorage error: ' + error.message);
-                    }
+            return AsyncStorage.getItem(KEY_NextBonus);
+        }).then((nb) => {
+            if (nb !== null){
+                this.setState({nextBonus: parseInt(nb, 10)});
+            }else{
+                this.setState({nextBonus: '10'});
+                try {
+                    AsyncStorage.setItem(KEY_NextBonus, '20');
+                } catch (error) {
+                    window.alert('AsyncStorage error: ' + error.message);
                 }
+            }
             return AsyncStorage.getItem(KEY_Solved);
         }).then((solved) => {
             let ns = parseInt(solved, 10);
@@ -454,7 +462,7 @@ class Game extends Component {
             {
             setTimeout(()=>{
                 this.setState({ isLoading: false });
-                if (this.props.fromWhere == 'book')this.flipPanel(true);
+//                if (this.props.fromWhere == 'book')this.flipPanel(true);
             }, 250);
             setTimeout(()=>{
                 this.refs.openquote.rubberBand(2000);
@@ -511,30 +519,29 @@ class Game extends Component {
     assignWordsToRows(verse){
         let layout = [[], [], [], [], [], [], [], []];
         let leadingSpace = (verse.substring(0, 1) == ' ')?true:false;
-        if (leadingSpace)verse = verse.substring(1);
-        let verseArray = verse.split(' ');
+        let leadingApostrophe = (verse.substring(0, 1) == '\'' || verse.substring(0, 1) == '’')?'’':'';
+        if (leadingSpace || leadingApostrophe)verse = verse.substring(1);
+        let quoteArray = verse.split(' ');
         let whichRow = 0;
         let letterTotal = 0;
         let lineLength = 0;
         let rows = 0;
-        for (let word=0; word<verseArray.length; word++){
-            letterTotal += (verseArray[word].length + 1);
+        for (let word=0; word<quoteArray.length; word++){
+            letterTotal += (quoteArray[word].length + 1);
             lineLength = (whichRow < 2)?22:28;
             if (letterTotal > lineLength){
-                layout[whichRow + 1].push(verseArray[word]);
-                letterTotal = verseArray[word].length + 1;
+                layout[whichRow + 1].push(quoteArray[word]);
+                letterTotal = quoteArray[word].length + 1;
                 whichRow += 1;
             }else{
-                layout[whichRow].push(verseArray[word]);
+                layout[whichRow].push(quoteArray[word]);
             }
         }
         for (let check = 0; check < layout.length; check++){
-        console.log(layout[check].length);
             if (layout[check].length > 0)rows += 1;
         }
-        console.log('last line length: ' + layout[whichRow].join(' ').length);
         let lastLine = layout[whichRow].join(' ');
-        this.setState({wordsArray: layout, dummyText: lastLine, numLines: rows});
+        this.setState({wordsArray: layout, dummyText: lastLine, numLines: rows, line0Text: leadingApostrophe});
     }
     getRowBools(length){
         return new Promise(
@@ -599,10 +606,10 @@ class Game extends Component {
                 }
         });
     }
-    populateArrays(theVerse, num, reverseTiles){
+    populateArrays(theQuote, num, reverseTiles){
         return new Promise(
             function (resolve, reject) {
-                let verseKeyString = cleanup(theVerse);
+                let verseKeyString = cleanup(theQuote);
                 let fragments = [];
                 let remainingStr = verseKeyString;
                 let haveFinished = false;
@@ -673,8 +680,8 @@ class Game extends Component {
                 let f2 = owl.deepCopy(fragments);
                 if (reverseTiles){
                     for (let j=0; j<f2.length; j++){
-                        let rnd = randomBetween(1, 3);
-                        if (rnd == 1){
+                        let rnd = randomBetween(1, 10);
+                        if (rnd < 5){
                             f2[j] = reverse(f2[j]);
                         }
                     }
@@ -696,48 +703,35 @@ class Game extends Component {
         });
     }
     getText(verse){
-        let verseArray = verse.split('**');
+        let quoteArray = verse.split('**');
         let bookName = this.props.title.substring(0, this.props.title.indexOf(' ', -1));
-        return verseArray[1];
+        return quoteArray[1];
 
     }
-    seeVerseInReader(){
-        let chV = this.state.panelText;
-        chV = chV.substring(chV.indexOf(' ', -1) + 1);
-        let chvArray = chV.split(':');
-        let chapterNum = parseInt(chvArray[0], 10) - 1;
-        let startPoint = '';
-        let endPoint = '';
-        if (chvArray[1].indexOf('-') > -1){
-            let splitOnHyphen = chvArray[1].split('-');
-            startPoint = splitOnHyphen[0];
-            let nextNum = parseInt(splitOnHyphen[1], 10) + 1;
-            endPoint = String(nextNum);
-        }else{
-            startPoint = chvArray[1];
-            let nextNum = parseInt(chvArray[1], 10) + 1;
-            endPoint = String(nextNum);
-        }
+    seeInReader(){
+        let quoted = this.state.panelText;
+        quoted = quoted.substring(quoted.indexOf(' ', -1) + 1);
+        let chvArray = quoted.split(':');
         this.props.navigator.push({
             id: 'reader',
             passProps: {
                 homeData: this.props.homeData,
                 dataElement: this.props.dataElement,
-                chapterIndex: chapterNum,
+                chapterIndex: this.state.chapterNum,
                 fromWhere: 'game',
-                startPoint: startPoint,
-                endPoint: endPoint
+                theQuote: this.state.entireQuote,
+                reverse: this.props.reverse
             }
         });
     }
-    nextVerse(){
-        if(this.props.fromWhere == 'favorites'){
-            this.closeGame('favorites');
-            return;
-        }
-        let newIndex = String(parseInt(this.state.index, 10) + 1);
-        let onLastVerse = (this.props.fromWhere == 'home' || newIndex == parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10))?true:false;
-        if(this.props.fromWhere == 'home' || onLastVerse){
+    nextGame(){
+//        if(this.props.fromWhere == 'favorites'){
+//            this.closeGame('favorites');
+//            return;
+//        }
+        let newIndex = String(+this.state.index + +1);
+        let onLastVerse = (this.props.fromWhere == 'home' || newIndex == this.props.homeData[this.props.dataElement].num_quotes)?true:false;
+        if(onLastVerse){
             this.closeGame('home');
             return;
         }
@@ -745,8 +739,8 @@ class Game extends Component {
         if(this.props.fromWhere == 'daily'){
             let today = moment(this.props.title, 'MMMM D, YYYY');
             nextTitle = today.subtract(1, 'days').format('MMMM D, YYYY');
-        }else if(this.props.fromWhere == 'book'){
-            nextTitle = this.getText(this.props.homeData[this.props.dataElement].verses[newIndex]);
+        }else if(this.props.fromWhere == 'book' || this.props.fromWhere == 'favorites'){
+            nextTitle = this.getText(this.props.homeData[this.props.dataElement].quotes[newIndex]);
         }else{
             nextTitle = (parseInt(this.props.title, 10) + 1).toString();
         }
@@ -762,7 +756,8 @@ class Game extends Component {
                 senderTitle: this.props.myTitle,
                 fromWhere: this.props.fromWhere,
                 title: nextTitle,
-                index: newIndex
+                index: newIndex,
+                reverse: this.props.reverse
             }
        });
     }
@@ -779,15 +774,16 @@ class Game extends Component {
                 senderTitle: this.props.myTitle,
                 fromWhere: this.props.fromWhere,
                 title: this.props.title,
-                index: this.props.index
+                index: this.props.index,
+                reverse: this.props.reverse
             }
        });
     }
     closeGame(where){
         if (where == 'favorites'){
-            let verseArray = [];
-            for (let v=0; v< this.state.homeData[17].verses.length; v++){
-                verseArray.push(v + '**' + this.state.homeData[17].verses[v]);
+            let quoteArray = [];
+            for (let v=0; v< this.state.homeData[17].quotes.length; v++){
+                quoteArray.push(v + '**' + this.state.homeData[17].quotes[v]);
             }
             this.props.navigator.replace({
                 id: 'favorites',
@@ -795,10 +791,11 @@ class Game extends Component {
                     homeData: this.state.homeData,
                     daily_solvedArray: dsArray,
                     title: 'My Favorites',
-                    dataSource: verseArray,
+                    dataSource: quoteArray,
                     dataElement: '17',
                     isPremium: this.state.isPremium,
-                    bgColor: colors.pale_bg
+                    bgColor: colors.pale_green,
+                    reverse: this.props.reverse
                 },
             });
             return;
@@ -847,6 +844,7 @@ class Game extends Component {
                 textColor: this.props.textColor,
                 bgColor: this.props.bgColor,
                 title: this.props.myTitle,
+                reverse: this.props.reverse
             }
        });
     }
@@ -865,6 +863,7 @@ class Game extends Component {
         let letters = 'abcdefghijklmnopqrstuvwxyz';
         let fragArray = text.split('');
         let addSpace = this.state.addSpace;
+//        line0String = (this.state.leadingApostrophe)?'’':'';
         for (let fragLoop=0; fragLoop<fragArray.length; fragLoop++){
             let loopAgain = true;
             do {
@@ -905,10 +904,15 @@ class Game extends Component {
                         addSpace = false;
                         if (onLine == 7 || this.state.wordsArray[onLine + 1].length == 0){//finished verse
                             clearInterval(this.hintAnimation);
-                            this.setState({doneWithVerse: true, showHintButton: false});
-                            setTimeout(() => {
-                                this.giveQuotedQuiz();
-                            }, 500);
+                            this.setState({doneWithQuote: true, showCloseQuote: true, showHintButton: false});
+                            if (this.props.fromWhere == 'book' || this.props.fromWhere == 'favorites'){
+                                if(this.state.useSounds == true){fanfare.play();}
+                                this.endOfGame(1);
+                            }else{
+                                setTimeout(() => {
+                                    this.giveQuotedQuiz();
+                                }, 500);
+                            }
                             break;
                         }
                         onWord = 0;
@@ -943,21 +947,21 @@ class Game extends Component {
     }
     endOfGame(solvedPoints){
         var newNumSolved = '';
-        let onLastVerseInPack=(this.props.fromWhere == 'home' || parseInt(this.state.index, 10) + 1 == parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10))?true:false;
+        let indexToUse = (this.props.fromWhere == 'daily')?+this.state.index + +1:this.state.index;
+        let onLastVerseInPack=(this.props.fromWhere == 'home' || indexToUse == parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10))?true:false;
         if (onLastVerseInPack){
-            this.setState({ arrowImage: require('../images/arrowbackward.png') });
+            this.setState({ showNextArrow: true, arrowImage: require('../images/arrowbackward.png') });
         }else{
-            this.setState({ arrowImage: require('../images/arrowforward.png') });
+            this.setState({ showNextArrow: true, arrowImage: require('../images/arrowforward.png') });
         }
-        this.setState({showNextArrow: true});
         this.showButtonPanel();
         if(this.props.fromWhere == 'collection' || this.props.fromWhere == 'book'){
             newNumSolved = (parseInt(homeData[this.props.dataElement].num_solved, 10) + 1).toString();
             if(!this.state.openedAll)homeData[this.props.dataElement].num_solved = newNumSolved;
             homeData[this.props.dataElement].solved[this.state.index] = 1;
-            let onLastVerse=(parseInt(this.state.index, 10) + 1 == parseInt(homeData[this.props.dataElement].num_quotes, 10))?true:false;
+            let onLastVerse=+this.state.index + +1 == parseInt(homeData[this.props.dataElement].num_quotes, 10)?true:false;
             let notSolvedYet = homeData[this.props.dataElement].solved.some(hasAZero);
-            if(onLastVerse && !notSolvedYet && !this.state.openedAll)homeData[this.props.dataElement].type = 'solved';
+            if((onLastVerse && !this.state.openedAll) || !notSolvedYet)homeData[this.props.dataElement].type = 'solved';
             try {
                 AsyncStorage.setItem(KEY_Verses, JSON.stringify(homeData));
             } catch (error) {
@@ -966,17 +970,17 @@ class Game extends Component {
         }else if(this.props.fromWhere == 'home'){
             dsArray[this.state.index] = '1';
         }else if(this.props.fromWhere == 'daily'){
-            dsArray[this.state.index + 1] = '1';
+            dsArray[+this.state.index + +1] = '1';
             this.setState({daily_solvedArray: dsArray});
         }
         var shouldAskToRate = ((this.state.numSolved + 1) % 15 == 0 && this.state.numSolved + 1 < 50)?true:false;
         var numSolved = this.state.numSolved + solvedPoints;
         var bonusLevel = this.state.nextBonus;
-        if (numSolved == bonusLevel){
-            var nextBonusLevel = null;
-            var bonusIndex = null;
+        var nextBonusLevel = null;
+        var bonusIndex = null;
+        if (numSolved >= bonusLevel){
             switch (bonusLevel){
-                case 10:
+                case 20:
                     bonusIndex = 0;
                     nextBonusLevel = '50';
                     break;
@@ -1002,7 +1006,7 @@ class Game extends Component {
                     break;
             }
             let objToPush = bonuses[bonusIndex];
-            objToPush.index = homeData.length;
+            objToPush.index = String(homeData.length);
             homeData.push(objToPush);
             try {
                 AsyncStorage.setItem(KEY_Verses, JSON.stringify(homeData));
@@ -1057,30 +1061,30 @@ class Game extends Component {
         });
     }
     playDropSound(){
-        if(!this.state.doneWithVerse && this.state.useSounds == true){plink1.play();}
+        if(!this.state.doneWithQuote && this.state.useSounds == true){plink1.play();}
 
     }
     footerBorder(color) {
         let bgC = this.props.bgColor;
-        let darkerColor = (bgC == colors.pale_bg)?shadeColor(colors.blue_bg, 5):shadeColor(color, -40);
+        let darkerColor = (bgC == colors.pale_green)?shadeColor(colors.blue_bg, 5):shadeColor(color, -40);
 //        let darkerColor = shadeColor(color, 5);
         return {borderColor: darkerColor};
     }
     headerBorder(color) {
         let bgC = this.props.bgColor;
-        let darkerColor = (bgC == colors.pale_bg)?shadeColor(colors.blue_bg, 5):shadeColor(color, -40);
+        let darkerColor = (bgC == colors.pale_green)?shadeColor(colors.blue_bg, 5):shadeColor(color, -40);
 //        let darkerColor = shadeColor(color, 5);
         return {borderColor: darkerColor};
     }
     headerFooterColor(color) {
         let bgC = this.props.bgColor;
-        let darkerColor = (bgC == colors.pale_bg)?colors.blue_bg:shadeColor(color, -40);
+        let darkerColor = (bgC == colors.pale_green)?colors.blue_bg:shadeColor(color, -40);
 //        let darkerColor = shadeColor(color, -40);
         return {backgroundColor: darkerColor};
     }
     playFirst(){
-        let verseArray = this.props.homeData[this.props.dataElement].verses[this.props.index].split('**');
-        let vStr = cleanup(verseArray[2]);
+        let quoteArray = this.props.homeData[this.props.dataElement].quotes[this.props.index].split('**');
+        let vStr = cleanup(quoteArray[2]);
         let str = '';
         switch (true){
             case ((this.state.frag0 == this.state.nextFrag) || (reverse(this.state.frag0) == this.state.nextFrag)):
@@ -1214,8 +1218,8 @@ class Game extends Component {
         if (hints > 0 && !hasInfinite){
             let newHintNum = hints - 1;
             this.setState({numHints: newHintNum});
-            let newVerseStr = newHintNum + '**' + this.state.chapterVerse + '**' + this.state.entireVerse;
-            homeData[this.props.dataElement].verses[this.props.index] = newVerseStr;
+            let newquoteStr = newHintNum + '**' + this.state.quotedPerson + '**' + this.state.entireQuote;
+            homeData[this.props.dataElement].quotes[this.props.index] = newquoteStr;
             if (hasPaid){
                 try {
                     AsyncStorage.setItem(KEY_MyHints, String(newHintNum));
@@ -1281,7 +1285,8 @@ class Game extends Component {
                     title: this.props.title,
                     dataSource: this.state.dataSource,
                     dataElement: this.props.dataElement,
-                    bgColor: this.props.bgColor
+                    bgColor: this.props.bgColor,
+                    reverse: this.props.reverse
                 }
             });
         } catch(err)  {
@@ -1313,16 +1318,16 @@ class Game extends Component {
     }
     flipPanel(){
         this.flip.setValue(0);
-        let chapterVerseStr = '';
+        let quotedPersonStr = '';
         let pBgC ='';
         let pBC = '';
         let bool = false;
-//        let pText = (fromBook == true)?this.props.title:this.state.chapterVerse;
+//        let pText = (fromBook == true)?this.props.title:this.state.quotedPerson;
         if(!this.state.showingVerse){
             pBgC = '#555555';
             pBC = '#000000';
             bool = true;
-            this.setState({panelText:  this.state.chapterVerse,
+            this.setState({panelText:  this.state.quotedPerson,
                                        panelBgColor: pBgC,
                                        panelBorderColor: pBC,
                                        showingVerse: bool
@@ -1394,12 +1399,13 @@ class Game extends Component {
             this.setState({numFavorites: newNumFavorites});
             let num = (parseInt(homeData[17].num_quotes, 10) + 1) + '';
             homeData[17].num_quotes = num;
-            homeData[17].verses.push(this.props.homeData[this.props.dataElement].verses[this.props.index]);
+            homeData[17].quotes.push(this.props.homeData[this.props.dataElement].quotes[this.props.index]);
             homeData[17].show = 'true';
             try {
                 AsyncStorage.setItem(KEY_Verses, JSON.stringify(homeData));
                 AsyncStorage.setItem(KEY_Favorites, newNumFavorites + '');
-                Alert.alert('Verse Added', this.state.chapterVerse + ' added to Favorites' );
+                ToastAndroid.show('Added to Favorites', ToastAndroid.SHORT);
+//                Alert.alert('Quote Added', this.state.quotedPerson + ' added to Favorites' );
             } catch (error) {
                 window.alert('AsyncStorage error: ' + error.message);
             }
@@ -1442,8 +1448,8 @@ class Game extends Component {
             });
         }
     }
-    sendTweet(chapterVerse, verse){
-        let bodyStr = 'Just solved ' + chapterVerse + ' in the reVersify app: \"' + verse + '\"';
+    sendTweet(quotedPerson, verse){
+        let bodyStr = 'Just solved quote of ' + quotedPerson + ' in the reQuotify app: \"' + verse + '\"';
         bodyStr = bodyStr.substr(0, 139);
         FabricTwitterKit.composeTweet({
             body: bodyStr
@@ -1457,7 +1463,6 @@ class Game extends Component {
     }
     giveQuotedQuiz(){
         if(this.state.useSounds == true){fanfare.play();}
-        this.setState({ showCloseQuote: true });
         setTimeout(() => {
             if(this.state.useSounds == true){swish.play();}
             this.setState({ shouldShowGuessHeader: true });
@@ -1526,20 +1531,15 @@ class Game extends Component {
     setCloseQuoteX(event){
         let dims = {x, y, width, height} = event.nativeEvent.layout;
         let xOffset = dims.width + height*.15;
-            console.log('xOffset = ' + xOffset + ' rows = ' + this.state.numLines);
-//        this.refs.entireScreen.measure( (fx, fy, width, screenHeight, px, py) => {
             xOffset = (this.state.numLines < 3)? xOffset + scrHeight*.11:xOffset + scrHeight*.01;
             this.setState({
                 closeQuoteX: xOffset//, showCloseQuote: true
             });
-            console.log('xOffset = ' + xOffset);
-//        });
     }
     setCloseQuoteY(event){
         let d = {x, y, width, height} = event.nativeEvent.layout;
         let yOffset = (this.state.numLines - 1) * d.height;
         this.setState({closeQuoteY: yOffset});
-        console.log('yOffset = ' + yOffset);
     }
 
 
@@ -1565,7 +1565,7 @@ class Game extends Component {
             );
         }else{
             return (
-                <View ref='entireScreen' style={{flex: 1}}>
+                <View style={{flex: 1}}>
                     <Text style={game_styles.dummy_text_container} onLayout={(event) => this.setCloseQuoteX(event)} >
                         <Text style={game_styles.dummy_text}>{this.state.dummyText}</Text>
                     </Text>
@@ -1630,7 +1630,7 @@ class Game extends Component {
                         </View>
                         <View style={game_styles.verse_panel_container}>
                             <Animated.View style={[imageStyle, game_styles.verse_panel, {backgroundColor: this.state.panelBgColor, borderColor: this.state.panelBorderColor}]}>
-                                        <Text style={game_styles.panel_text} >{this.state.panelText}</Text>
+                                        <Text numberOfLines={1} style={game_styles.panel_text} >{this.state.panelText}</Text>
                             </Animated.View>
                         </View>
                         <View style={game_styles.game}>
@@ -1715,18 +1715,18 @@ class Game extends Component {
                             <Animated.Image style={[ game_styles.button_image, buttonsStyle ]} source={require('../images/buttonfb.png')} onStartShouldSetResponder={() => { this.linkToUrl('FB') }}/>
                             }
                             { this.state.showTwitter &&
-                            <Animated.Image style={[ game_styles.button_image, buttonsStyle ]} source={require('../images/buttontwitter.png')} onStartShouldSetResponder={() => { this.sendTweet(this.state.chapterVerse, this.state.entireVerse) }}/>
+                            <Animated.Image style={[ game_styles.button_image, buttonsStyle ]} source={require('../images/buttontwitter.png')} onStartShouldSetResponder={() => { this.sendTweet(this.state.quotedPerson, this.state.entireQuote) }}/>
                             }
                             { this.state.showFavorites &&
                             <Animated.Image style={[ {width: 65, height: 65, margin: 1}, buttonsStyle ]} source={require('../images/favorites.png')} onStartShouldSetResponder={() => { this.addToFavorites() }}/>
                             }
-                            { this.state.showBible &&
-                            <Animated.Image style={[ {width: 65, height: 65, margin: 1}, buttonsStyle ]} source={require('../images/book.png')} onStartShouldSetResponder={() => { this.seeVerseInReader() }}/>
+                            { this.state.showBook &&
+                            <Animated.Image style={[ {width: 65, height: 65, margin: 1}, buttonsStyle ]} source={require('../images/book.png')} onStartShouldSetResponder={() => { this.seeInReader() }}/>
                             }
                         </View>
                         }
                         { this.state.showNextArrow &&
-                        <View style={game_styles.next_arrow} onStartShouldSetResponder={() => { this.nextVerse() }} >
+                        <View style={game_styles.next_arrow} onStartShouldSetResponder={() => { this.nextGame() }} >
                             <Image source={this.state.arrowImage}/>
                         </View>
                         }
@@ -1850,8 +1850,8 @@ const game_styles = StyleSheet.create({
         height: height*.025
     },
     close_quote: {
-        width: height*.044,
-        height: height*.024,
+        width: height*.042,
+        height: height*.022,
     },
     verse_container: {
         flex: 1,
