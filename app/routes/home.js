@@ -4,7 +4,7 @@ import moment from 'moment';
 import * as Animatable from 'react-native-animatable';
 import { createAnimatableComponent } from 'react-native-animatable';
 const AnimatableListView = createAnimatableComponent(ListView);
-//import PushNotification from 'react-native-push-notification';
+import PushNotification from 'react-native-push-notification';
 import SectionHeader from '../components/SectionHeader';
 import Button from '../components/Button';
 import Dialog from '../components/Dialog';
@@ -154,6 +154,7 @@ class Home extends Component{
             solved_opacity: 1,
             nextBonus: 0,
             reverse: true,
+            useColors: true,
             homeData: this.props.homeData,
             dataSource: ds.cloneWithRowsAndSections(dataBlob, sectionIds, rowIds)
         };
@@ -202,6 +203,19 @@ class Home extends Component{
                     AsyncStorage.setItem(KEY_solvedTP, 'false');
                 } catch (error) {
                     window.alert('AsyncStorage error: 188' + error.message);
+                }
+            }
+            return AsyncStorage.getItem(KEY_Color);
+        }).then((colors) => {
+            if (colors !== null) {
+                let use = (colors == 'true')?true:false;
+                this.setState({useColors: use});
+            }else{
+                let useColors = 'true';
+                try {
+                    AsyncStorage.setItem(KEY_Color, useColors);//
+                } catch (error) {
+                    window.alert('AsyncStorage error: ' + error.message);
                 }
             }
             return AsyncStorage.getItem(KEY_show_score);
@@ -478,6 +492,36 @@ class Home extends Component{
                 fontWeight: 'bold'
             };
         }
+        if(index == '14'){
+            let oneUnsolved = false;
+            for (let loopDaily=1; loopDaily<4; loopDaily++){
+                if (dsArray[loopDaily] == '0'){
+                    oneUnsolved = true;
+                    break;
+                }
+            }
+            strToReturn = oneUnsolved?'#ffffff':'#999999';
+            weightToReturn = oneUnsolved?'regular':'bold';
+            return {
+                color: strToReturn,
+                fontWeight: 'bold'
+            };
+        }
+        if(index == '15'){
+            let oneUnsolved = false;
+            for (let loopDaily=1; loopDaily<31; loopDaily++){
+                if (dsArray[loopDaily] == '0'){
+                    oneUnsolved = true;
+                    break;
+                }
+            }
+            strToReturn = oneUnsolved?'#ffffff':'#999999';
+            weightToReturn = oneUnsolved?'regular':'bold';
+            return {
+                color: strToReturn,
+                fontWeight: 'bold'
+            };
+        }
         return {
             color: strToReturn,
         };
@@ -489,7 +533,7 @@ class Home extends Component{
         return titleToReturn;
     }
     onSelect(index, title, bg, productID) {
-        if (title.indexOf('*') > -1){
+        if (title.indexOf('*') > -1){//go to store to purchase this item, put it at top of listview
             let theName = title.substring(1);
             let myPackArray = [];
             let keepInList = [];
@@ -522,7 +566,6 @@ class Home extends Component{
                     theTitle = '';
                     break;
             }
-
             for (var i=this.state.homeData[parseInt(theIndex, 10)].data.length - 1; i>=0; i--){
                 if(myPackArray.indexOf(this.state.homeData[parseInt(theIndex, 10)].data[i].name) < 0){
                     keepInList.unshift(this.state.homeData[parseInt(theIndex, 10)].data[i]);
@@ -535,7 +578,7 @@ class Home extends Component{
                     continue;
                 }
             }
-            if (theTitle == 'Verse Collections')keepInList = shuffleArray(keepInList);
+            keepInList = shuffleArray(keepInList);
             keepInList.unshift(putMeBack[0]);
             this.props.navigator.push({
                 id: 'store',
@@ -553,8 +596,8 @@ class Home extends Component{
 
         if (index == '17'){//favorites
             let verseArray = [];
-            for (let v=0; v< this.state.homeData[17].verses.length; v++){
-                verseArray.push(v + '**' + this.state.homeData[17].verses[v]);
+            for (let v=0; v< this.state.homeData[17].quotes.length; v++){
+                verseArray.push(v + '**' + this.state.homeData[17].quotes[v]);
             }
             this.props.navigator.replace({
                 id: 'favorites',
@@ -566,7 +609,7 @@ class Home extends Component{
                     dataSource: verseArray,
                     dataElement: index,
                     isPremium: this.state.isPremium,
-                    bgColor: colors.pale_bg
+                    bgColor: colors.pale_green
                 },
             });
             return;
@@ -575,7 +618,7 @@ class Home extends Component{
         let theDestination = pIDarr[2];
         let gripeText = '';
         let useColors = '';
-        let bgColorToSend = '';
+        let bgColorToSend = (this.state.useColors)?bg:colors.pale_green;
 
         switch(title){
             case 'Quote of the Day':
@@ -587,7 +630,7 @@ class Home extends Component{
                         daily_solvedArray: dsArray,
                         title: this.state.todayFull,
                         index: '0',
-                        bgColor: bg,
+                        bgColor: bgColorToSend,
                         reverse: this.state.reverse,
                         fromWhere: 'home',
                         dataElement: index
@@ -610,23 +653,23 @@ class Home extends Component{
                         reverse: this.state.reverse,
                         dataElement: index,
                         isPremium: this.state.isPremium,
-                        bgColor: colors.pale_bg//'#795959'
+                        bgColor: colors.pale_green
                     },
                 });
                 return;
         }
-        AsyncStorage.getItem(KEY_Color).then((colors) => {//a verse collection or book launcher:
-            if (colors !== null) {
-                useColors = colors;
-            }else{
-                useColors = 'true';
-                try {
-                    AsyncStorage.setItem(KEY_Color, useColors);//
-                } catch (error) {
-                    window.alert('AsyncStorage error: ' + error.message);
-                }
-            }
-            bgColorToSend = (useColors == 'true')?bg:colors.pale_bg;
+//        AsyncStorage.getItem(KEY_Color).then((colors) => {//a quote collection or book launcher:
+//            if (colors !== null) {
+//                useColors = colors;
+//            }else{
+//                useColors = 'true';
+//                try {
+//                    AsyncStorage.setItem(KEY_Color, useColors);//
+//                } catch (error) {
+//                    window.alert('AsyncStorage error: ' + error.message);
+//                }
+//            }
+//            bgColorToSend = (useColors == 'true')?bg:'#cfe7c2';
             this.props.navigator.replace({
                 id: theDestination,
                 passProps: {
@@ -640,7 +683,7 @@ class Home extends Component{
                     bgColor: bgColorToSend
                 },
             });
-        });
+//        });
     }
     showDialog(index, type, id){
         if(index < 16)return;
@@ -716,12 +759,12 @@ class Home extends Component{
                             dataSource: ds.cloneWithRowsAndSections(dataBlob, sectionIds, rowIds)
             });
     }
-    setNotifTime(key: value){
-//        PushNotification.cancelLocalNotifications({id: '777'});
-        this.startNotifications(key.selectedValue);
-        this.setState({ notif_time: key.selectedValue });
+    setNotifTime(hour){
+        PushNotification.cancelLocalNotifications({id: '777'});
+        this.startNotifications(hour);
+        this.setState({ notif_time: hour });
         try {
-            AsyncStorage.setItem(KEY_Notifs, key.selectedValue);
+            AsyncStorage.setItem(KEY_Notifs, hour);
         } catch (error) {
             window.alert('AsyncStorage error: ' + error.message);
         }
@@ -730,15 +773,15 @@ class Home extends Component{
         const nowISO = moment().valueOf();
         const tonightMidnight = moment().endOf('day').valueOf();
         var tomorrowAM = new Date(Date.now() + (moment(tonightMidnight).add(parseInt(time, 10), 'hours').valueOf()) - nowISO);
-//        PushNotification.localNotificationSchedule({
-//            message: "A new Daily Verse is in!",
-//            vibrate: true,
-//            soundName: 'plink.mp3',
-//            //repeatType: 'day',//can be 'time', if so use following:
-//            repeatTime: 86400000,//daily
-//            date: tomorrowAM,
-//            id: '777',
-//        });
+        PushNotification.localNotificationSchedule({
+            message: "Your Quote of the Day is here...",
+            vibrate: true,
+            soundName: 'plink.mp3',
+            //repeatType: 'day',//can be 'time', if so use following:
+            repeatTime: 86400000,//daily
+            date: tomorrowAM,
+            id: '777',
+        });
     }
     renderRow = (rowData) => {
         if (rowData.index == '13' && !solvedTodayOrNot){
@@ -754,7 +797,7 @@ class Home extends Component{
                                          onLongPress={()=> this.showDialog(rowData.index, rowData.type, rowData.product_id)}
                                          style={[container_styles.launcher, this.bg(rowData.bg_color), this.lightBorder(rowData.bg_color, rowData.type)]}
                                          underlayColor={rowData.bg_color} >
-                         <Text style={[container_styles.launcher_text, this.getTextColor(rowData.bg_color, rowData.index)]}>{this.getTitle(rowData.title)}</Text>
+                         <Text numberOfLines={3} style={[container_styles.launcher_text, this.getTextColor(rowData.bg_color, rowData.index)]}>{this.getTitle(rowData.title)}</Text>
                      </TouchableHighlight>
                  </Animatable.View>
             )
@@ -765,7 +808,7 @@ class Home extends Component{
                                          onLongPress={()=> this.showDialog(rowData.index, rowData.type, rowData.product_id)}
                                          style={[container_styles.launcher, this.bg(rowData.bg_color), this.lightBorder(rowData.bg_color, rowData.type)]}
                                          underlayColor={rowData.bg_color} >
-                         <Text style={[container_styles.launcher_text, this.getTextColor(rowData.bg_color, rowData.index)]}>{this.getTitle(rowData.title)}</Text>
+                         <Text numberOfLines={3} style={[container_styles.launcher_text, this.getTextColor(rowData.bg_color, rowData.index)]}>{this.getTitle(rowData.title)}</Text>
                      </TouchableHighlight>
                  </View>
 
@@ -804,7 +847,7 @@ class Home extends Component{
                                 showsVerticalScrollIndicator ={false}
                                 contentContainerStyle={ container_styles.listview }
                                 dataSource={this.state.dataSource}
-                                renderSectionHeader={(sectionData) => <SectionHeader {...sectionData} hasConnection={this.props.connectionBool} nav={this.props.navigator} />}
+                                renderSectionHeader={(sectionData) => <SectionHeader {...sectionData} hasConnection={Meteor.status().connected} nav={this.props.navigator} />}
                                 renderRow={this.renderRow}
                             />
                         </View>
