@@ -1,6 +1,6 @@
 module.exports = [
 	{
-		title: 'Welcome +10',
+		title: 'Welcome!',
 		index: '',
 		type: 'mypack',
 		show: 'true',
@@ -9,16 +9,16 @@ module.exports = [
 		solved: [0, 0, 0, 0, 0],
         product_id: 'bonus.0.collection.0',
 		bg_color: '#620887',
-		verses:[
-            `2**Isaiah 42:1**Behold, my servant, whom I uphold, my chosen, in whom my soul delights: I have put my Spirit on him. He will bring justice to the nations.`,
-            `2**2 Corinthians 8:9**For you know the grace of our Lord Jesus Christ, that though he was rich, yet for your sakes he became poor, that you through his poverty might become rich.`,
-            `2**Isaiah 14:12**How you have fallen from heaven, shining one, son of the dawn! How you are cut down to the ground, who laid the nations low!`,
-            `2**Ecclesiastes 2:22**For what does a man have of all his labor and of the striving of his heart, in which he labors under the sun?`,
-            `2**Daniel 9:19**Lord, hear. Lord, forgive. Lord, listen and do. Don’t defer, for your own sake, my God, because your city and your people are called by your name.`
-            ]
+		quotes:[
+            `2**Henry Ford**Whether you think you can or think you can’t–you are right.**Sam Rodia**George Stephanopoulos`,
+            `2**Winston Churchill**If you are going through hell, keep going.**Hank Azaria**Boris Pasternak`,
+            `2**Martin Luther King Jr**Darkness cannot drive out darkness: only light can do that. Hate cannot drive out hate: only love can do that.**Adrienne Barbeau**Jennifer Capriati`,
+            `2**Mark Twain**The fear of death follows from the fear of life. A man who lives fully is prepared to die at any time.**Stanley Kunitz**Iggy Pop`,
+            `2**Albert Einstein**There are only two ways to live your life. One is as though nothing is a miracle. The other is as though everything is a miracle.**Matt Dillon**Tom Petty`
+        ]
     },
 	{
-		title: 'Dedicated +50',
+		title: 'Dedicated!',
 		index: '',
 		type: 'mypack',
 		show: 'true',
@@ -27,21 +27,21 @@ module.exports = [
 		solved: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         product_id: 'bonus.0.collection.0',
 		bg_color: '#f4ce57',
-		verses:[
-            `2**Proverbs 22:6**Train up a child in the way he should go, and when he is old he will not depart from it.`,
-            `2**Luke 12:26**If then you aren’t able to do even the least things, why are you anxious about the rest?`,
-            `2**2 Peter 1:6**And in knowledge, self-control; and in self-control perseverance; and in perseverance godliness`,
-            `2**2 Timothy 4:2**Preach the word; be urgent in season and out of season; reprove, rebuke, and exhort with all patience and teaching.`,
-            `2**Revelation 2:3**You have perseverance and have endured for my name’s sake, and have not grown weary.`,
-            `2**John 14:16**I will pray to the Father, and he will give you another Counselor, that he may be with you forever`,
-            `2**Isaiah 41:10**Don’t you be afraid, for I am with you. Don’t be dismayed, for I am your God. I will strengthen you. Yes, I will help you. Yes, I will uphold you with the right hand of my righteousness`,
-            `2**Mark 9:24**Immediately the father of the child cried out with tears, “I believe. Help my unbelief!”`,
-            `2**Proverbs 4:23**Keep your heart with all diligence, for out of it is the wellspring of life.`,
-            `2**Matthew 6:28**Why are you anxious about clothing? Consider the lilies of the field, how they grow. They don’t toil, neither do they spin`
-            ]
+		quotes:[
+            `2**W. C. Fields**Don't say you can't give up drinking. It's easy. I've done it a thousand times.**Kurt Vonnegut**ZaSu Pitts`,
+            `2**W. C. Fields**I cook with wine, and sometimes I even add it to the food.**Robert Deniro**Beau Bridges`,
+            `2**W. C. Fields**I was in love with a beautiful blonde once, dear. She drove me to drink. That's the one thing I'm so indebted to her for.**Louis Armstrong**Alex Baldwin`,
+            `2**W. C. Fields**Back in my rummy days, I would tremble and shake for hours upon arising. It was the only exercise I got.**Sade**Del Shannon`,
+            `2**W. C. Fields**If a thing is worth having, it's worth cheating for.**Robert Fulton**Rudolph Valentino`,
+            `2**W. C. Fields**Some contemptible scoundrel stole the cork from my lunch**Marisa Tomei**Tori Amos`,
+            `2**W. C. Fields**I never voted for anybody. I always voted against.**Mother Teresa**Darth Vader`,
+            `2**W. C. Fields**I didn't squawk about the steak, dear. I merely said I didn't see that old horse that used to be tethered outside here.**George Gobel**Jaden Smith`,
+            `2**W. C. Fields**She's all dressed up like a well-kept grave.**Marilu Henner**Jon Cryer`,
+            `2**W. C. Fields**All things considered, I'd rather be in Philadelphia.**Claude Monet**Jay Silverheels`
+        ]
     },
 	{
-		title: 'Talented +100',
+		title: 'Talented!',
 		index: '',
 		type: 'mypack',
 		show: 'true',
@@ -50,21 +50,21 @@ module.exports = [
 		solved: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         product_id: 'bonus.0.collection.0',
 		bg_color: '#f2404c',
-		verses:[
-            `2**Acts 4:12**There is salvation in no one else, for there is no other name under heaven that is given among men, by which we must be saved!`,
-            `2**Matthew 5:7**Blessed are the merciful, for they shall obtain mercy.`,
-            `2**Exodus 34:6**The Lord passed by before him, and proclaimed, “the Lord! the Lord, a merciful and gracious God, slow to anger, and abundant in loving kindness and truth`,
-            `2**Ephesians 1:3**Blessed be the God and Father of our Lord Jesus Christ, who has blessed us with every spiritual blessing in the heavenly places in Christ`,
-            `2**Matthew 5:16**Even so, let your light shine before men; that they may see your good works, and glorify your Father who is in heaven.`,
-            `2**2 Timothy 3:16**Every Scripture is God-breathed and profitable for teaching, for reproof, for correction, and for instruction in righteousness`,
-            `2**2 Corinthians 11:17**That which I speak, I don’t speak according to the Lord, but as in foolishness, in this confidence of boasting.`,
-            `2**Galatians 2:20**I have been crucified with Christ, and it is no longer I that live, but Christ lives in me.`,
-            `2**Ephesians 4:1**I therefore, the prisoner in the Lord, beg you to walk worthily of the calling with which you were called`,
-            `2**Ephesians 2:10**For we are his workmanship, created in Christ Jesus for good works, which God prepared before that we would walk in them.`
-            ]
+		quotes:[
+            `2**Mae West**I only like two kinds of men, domestic and imported.**Augustus Caesar**Dean Stockwell`,
+            `2**Mae West**When I'm good, I'm very good. When I'm bad, I'm better.**Percy Bysshe Shelley**Michael Michele`,
+            `2**Mae West**I used to be Snow White, but I drifted.**Kate Mulgrew**Deepak Chopra`,
+            `2**Mae West**It's not the men in your life that matters, it's the life in your men.**Jack Kemp**Toni Tennille`,
+            `2**Mae West**Between two evils, I generally like to pick the one I never tried before.**Chris Squire**Jim Backus`,
+            `2**Mae West**A man in the house is worth two in the street.**Rod Serling**Del Shannon`,
+            `2**Mae West**I feel like a million tonight. But one at a time.**Meatloaf**Vivien Leigh`,
+            `2**Mae West**Is that a gun in your pocket, or are you just glad to see me?**LeAnn Womack**George Segal`,
+            `2**Mae West**Marriage is a fine institution, but I'm not ready for an institution.**Meredith Vieira**Roger Ebert`,
+            `2**Mae West**I've been in more laps than a napkin.**Don Mattingly**E T`
+        ]
     },
 	{
-		title: 'Skilled +250',
+		title: 'Skilled!',
 		index: '',
 		type: 'mypack',
 		show: 'true',
@@ -73,88 +73,63 @@ module.exports = [
 		solved: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         product_id: 'bonus.0.collection.0',
 		bg_color: '#0817a2',
-		verses:[
-            `2**1 Thessalonians 3:7**For this cause, brothers, we were comforted over you in all our distress and affliction through your faith.`,
-            `2**Matthew 10:34**Don’t think that I came to send peace on the earth. I didn’t come to send peace, but a sword.`,
-            `2**Acts 11:18**When they heard these things, they held their peace, and glorified God, saying, “Then God has also granted to the Gentiles repentance to life!”`,
-            `2**Titus 2:11**For the grace of God has appeared, bringing salvation to all men`,
-            `2**1 Corinthians 15:50**Now I say this, brothers, that flesh and blood can’t inherit God’s Kingdom; neither does the perishable inherit imperishable.`,
-            `2**Matthew 5:9**Blessed are the peacemakers, for they shall be called children of God.`,
-            `2**Mark 10:17**As he was going out into the way, one ran to him, knelt before him, and asked him, “Good Teacher, what shall I do that I may inherit eternal life?”`,
-            `2**Psalms 1:1**Blessed is the man who doesn’t walk in the counsel of the wicked, nor stand on the path of sinners, nor sit in the seat of scoffers`,
-            `2**Lamentations 3:22**It is because of the Lord’s loving kindnesses that we are not consumed, because his compassion doesn’t fail.`,
-            `2**Luke 1:30**The angel said to her, “Don’t be afraid, Mary, for you have found favor with God.`
-            ]
+		quotes:[
+            `2**Buddhist Proverb**A good horse runs even at the shadow of the whip.**Claudia Schiffer**Shawn Stockman`,
+            `2**Buddhist Proverb**When you can give the right answer, even though your past road was one of death, you open up a new road of life.**Duane Allman**Denzel Washington`,
+            `2**Buddhist Koan**When the question is sand in a bowl of boiled rice, the answer is a stick in the soft mud.**Mickey Rourke**Jayne Meadows`,
+            `2**Buddhist Proverb**Cognition is a delusion and noncognition is senseless.**John Larroquette**Dionne Warwick`,
+            `2**Buddhist Proverb**If you want to reach the true path beyond doubt, place yourself in the same freedom as sky. You name it neither good nor not-good.**John Davidson**Ross Perot`,
+            `2**Buddhist Koan**Has a dog Buddha-nature? This is the most serious question of all. If you say yes or no, you lose your own Buddha-nature.**Robe Lowe**Hedda Hopper`,
+            `2**Buddhist Koan**Not the wind, not the flag; mind is moving.**Adam Sandler**Sharon Stone`,
+            `2**Buddhist Proverb**Out of nowhere, the mind comes forth.**Cesar Chavez**Patrick Duffy`,
+            `2**Buddhist Koan**listen to the sound of one hand clapping.**Catherine Deneuve**Flip Wilson`,
+            `2**Buddhist Proverb**Maybe you are searching among the branches for what only appears in the roots.**Rene Russo**Patti Smith`
+        ]
     },
 	{
-		title: 'Seasoned +500',
+		title: 'Seasoned!',
 		index: '',
 		type: 'mypack',
 		show: 'true',
-		num_quotes: '20',
+		num_quotes: '10',
 		num_solved: '0',
-		solved: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		solved: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         product_id: 'bonus.0.collection.0',
 		bg_color: '#6e097d',
-		verses:[
-            `2**John 5:39**You search the Scriptures, because you think that in them you have eternal life; and these are they which testify about me.`,
-            `2**Matthew 1:21**She shall give birth to a son. You shall call his name Jesus, for it is he who shall save his people from their sins.”`,
-            `2**Colossians 4:2**Continue steadfastly in prayer, watching in it with thanksgiving`,
-            `2**Job 6:10**Let still be my consolation, yes, let me exult in pain that doesn’t spare, that I have not denied the words of the Holy One.`,
-            `2**Luke 2:14**Glory to God in the highest, on earth peace, good will toward men.”`,
-            `2**Philippians 4:7**And the peace of God, which surpasses all understanding, will guard your hearts and your thoughts in Christ Jesus.`,
-            `2**Acts 16:17**Following Paul and us, she cried out, “These men are servants of the Most High God, who proclaim to us a way of salvation!”`,
-            `2**Matthew 5:6**Blessed are those who hunger and thirst after righteousness, for they shall be filled.`,
-            `2**Genesis 2:3**God blessed the seventh day, and made it holy, because he rested in it from all his work of creation which he had done.`,
-            `2**Psalms 138:2**I will bow down toward your holy temple, and give thanks to your Name for your loving kindness and for your truth; for you have exalted your Name and your Word above all.`,
-            `2**James 5:13**Is any among you suffering? Let him pray. Is any cheerful? Let him sing praises.`,
-            `2**Colossians 3:17**Whatever you do, in word or in deed, do all in the name of the Lord Jesus, giving thanks to God the Father, through him.`,
-            `2**1 Samuel 10:10**When they came there to the hill, behold, a band of prophets met him; and the Spirit of God came mightily on him, and he prophesied among them.`,
-            `2**John 6:51**I am the living bread which came down out of heaven. If anyone eats of this bread, he will live forever. Yes, the bread which I will give for the life of the world is my flesh.”`,
-            `2**Job 21:34**So how can you comfort me with nonsense, because in your answers there remains only falsehood?”`,
-            `2**Hebrews 13:6**So that with good courage we say, “The Lord is my helper. I will not fear. What can man do to me?”`,
-            `2**Ephesians 4:3**Being eager to keep the unity of the Spirit in the bond of peace.`,
-            `2**Matthew 25:34**Then the King will tell those on his right hand, ‘Come, blessed of my Father, inherit the Kingdom prepared for you from the foundation of the world`,
-            `2**Joel 2:13**Tear your heart, and not your garments, and turn to the Lord, your God; for he is gracious and merciful, slow to anger, and abundant in loving kindness, and relents from sending calamity.`,
-            `2**1 Peter 3:11**Let him turn away from evil and do good. Let him seek peace and pursue it.`
-            ]
+		quotes:[
+            `2**Gloria Steinem**Dying seems less sad than having lived too little.**Louise Lasser**Yma Sumac`,
+            `2**Thuli Madonsela**I need to listen well so that I hear what is not said.**Judy Blume**Chesley 'Sully' Sullenberger`,
+            `2**Martha Stewart**When you’re through changing, you’re through.**Glen Campbell**Sam Waterston`,
+            `2**Diana Nyad**This journey has always been about reaching your own other shore no matter what it is, and that dream continues.**Howard Rollins**Wild Bill Hickok`,
+            `2**Indira Gandhi**There are two kinds of people, those who do the work and those who take the credit. Try to be in the first group; there is less competition there.**Roger Maris**Tom Hulce`,
+            `2**Bethenny Frankel**When you embrace your difference, your DNA, your look or heritage or religion or your unusual name, that’s when you start to shine.**Ivana Trump**LeAnn Womack`,
+            `2**Margaret Thatcher**If you just set out to be liked, you would be prepared to compromise on anything at any time, and you would achieve nothing.**Ivana Trump**Imogene Coca`,
+            `2**Susan Cain**Everyone shines, given the right lighting.**Kenneth**Henry Morgan`,
+            `2**Brene Brown**Owning our story can be hard but not nearly as difficult as spending our lives running from it.**Wade Dominguez**Vidal Sassoon`,
+            `2**Mia Hamm**I learned a long time ago that there is something worse than missing the goal, and that’s not pulling the trigger.**Antonio Vivaldi**Morrissey`
+        ]
     },
 	{
-		title: 'Expert +1000',
+		title: 'Expert!',
 		index: '',
 		type: 'mypack',
 		show: 'true',
-		num_quotes: '25',
+		num_quotes: '10',
 		num_solved: '0',
-		solved: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		solved: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         product_id: 'bonus.0.collection.0',
 		bg_color: '#f5eaf6',
-		verses:[
-            `2**James 1:5**But if any of you lacks wisdom, let him ask of God, who gives to all liberally and without reproach, and it will be given to him.`,
-            `2**Acts 2:4**They were all filled with the Holy Spirit, and began to speak with other languages, as the Spirit gave them the ability to speak.`,
-            `2**Hebrews 11:6**Without faith it is impossible to be well pleasing to him, for he who comes to God must believe that he exists, and that he is a rewarder of those who seek him.`,
-            `2**Revelation 21:1**I saw a new heaven and a new earth: for the first heaven and the first earth have passed away, and the sea is no more.`,
-            `2**Matthew 5:3**Blessed are the poor in spirit, for theirs is the Kingdom of Heaven.`,
-            `2**Hebrews 4:14**Having then a great high priest who has passed through the heavens, Jesus, the Son of God, let’s hold tightly to our confession.`,
-            `2**Daniel 7:13**I saw in the night visions, and behold, there came with the clouds of the sky one like a son of man`,
-            `2**Genesis 1:8**God called the expanse “sky”. There was evening and there was morning, a second day.`,
-            `2**John 3:13**No one has ascended into heaven but he who descended out of heaven, the Son of Man, who is in heaven.`,
-            `2**Isaiah 66:13**As one whom his mother comforts, so I will comfort you. You will be comforted in Jerusalem.”`,
-            `2**Romans 10:15**And how will they preach unless they are sent? As it is written: “How beautiful are the feet of those who preach the Good News of peace, who bring glad tidings of good things!”`,
-            `2**1 Peter 1:9**Receiving the result of your faith: the salvation of your souls.`,
-            `2**Psalms 34:8**Oh taste and see that the Lord is good. Blessed is the man who takes refuge in him.`,
-            `2**2 Samuel 16:17**Absalom said to Hushai, “Is this your kindness to your friend? Why didn’t you go with your friend?”`,
-            `2**Isaiah 30:18**Therefore the Lord will wait, that he may be gracious to you; and therefore he will be exalted, that he may have mercy on you, for the Lord is a God of justice.`,
-            `2**Psalms 107:1**Give thanks to the Lord, for he is good, for his loving kindness endures forever.`,
-            `2**2 Corinthians 1:3**Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort`,
-            `2**Hebrews 13:15**Through him, then, let’s offer up a sacrifice of praise to God continually, that is, the fruit of lips which proclaim allegiance to his name.`,
-            `2**Acts 16:25**But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them.`,
-            `2**Job 32:8**But there is a spirit in man, and the Spirit of the Almighty gives them understanding.`,
-            `2**Romans 8:11**But if the Spirit of him who raised up Jesus from the dead dwells in you, he who raised up Christ Jesus from the dead will also give life to your mortal bodies through his Spirit who dwells in you.`,
-            `2**John 6:47**Most certainly, I tell you, he who believes in me has eternal life.`,
-            `2**Exodus 20:12**Honor your father and your mother, that your days may be long in the land which the Lord your God gives you.`,
-            `2**James 2:14**What good is it, my brothers, if a man says he has faith, but has no works? Can faith save him?`,
-            `2**Galatians 3:26**For you are all children of God, through faith in Christ Jesus.`
-            ]
+		quotes:[
+            `2**Joe Namath**If you aren't going all the way, why go at all?**Steven Tyler**Jim Morrison`,
+            `2**Michael Jordan**Obstacles don’t have to stop you. If you run into a wall, don’t turn around and give up. Figure out how to climb it, go through it, or work around it.**Eva Marie Saint**Stephen Hendry`,
+            `2**Tommy Lasorda**In baseball and in business, there are three types of people. Those who make it happen, those who watch it happen, and those who wonder what happened.**Steve Burns**Emerson Fittipaldi`,
+            `2**Derek Jeter**There may be people that have more talent than you, but there's no excuse for anyone to work harder than you do.**Mel Brooks**Tony Hawk`,
+            `2**Billie Jean King**Champions keep playing until they get it right.**Jack Benny**Ted Cassidy`,
+            `2**Wayne Gretzky**A good hockey player plays where the puck is. A great hockey player plays where the puck is going to be.**Dick Van Patten**Hank Williams`,
+            `2**Mario Andretti**If you have everything under control, you're not moving fast enough.**Wassily Kandinsky**James Earl Jones`,
+            `2**Arnold Palmer**Always make a total effort, even when the odds are against you.**Tiny Tim**JP McCarthy`,
+            `2**Jackie Joyner-Kersee**Age is no barrier. It's a limitation you put on your mind.**Greg LeMond**Bob Guccione`,
+            `2**Muhammad Ali**It isn't the mountains ahead to climb that wear you out; it's the pebble in your shoe.**John Chapman**Peter Gallagher`
+        ]
     }
 ];
