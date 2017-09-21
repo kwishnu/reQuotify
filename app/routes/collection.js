@@ -57,6 +57,7 @@ const TILE_WIDTH = (CELL_WIDTH - CELL_PADDING * 2) - 7;
 const BORDER_RADIUS = CELL_PADDING * .2 + 3;
 const KEY_daily_solved_array = 'solved_array';
 const KEY_Time = 'timeKey';
+const KEY_reverse = 'reverseFragments';
 
 class Collection extends Component{
     constructor(props) {
@@ -66,6 +67,7 @@ class Collection extends Component{
             id: 'collection',
             homeData: this.props.homeData,
             title: this.props.title,
+            reverse: this.props.reverse,
             isOpen: false,
             dataSource: ds.cloneWithRows(Array.from(new Array(parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10)), (x,i) => i)),
             bgColor: this.props.bgColor,
@@ -119,9 +121,9 @@ class Collection extends Component{
     }
     setColors(){
         let bgC = this.props.bgColor;
-        let fieldColor = (bgC == colors.pale_bg)? colors.pale_bg:shadeColor(bgC, 10);
-        let headColor = (bgC == colors.pale_bg)? colors.blue_bg:shadeColor(bgC, -20);
-        let titletextColor = (bgC == colors.pale_bg)? '#9eacda':invertColor(headColor, true);
+        let fieldColor = (bgC == colors.pale_green)? colors.pale_green:shadeColor(bgC, 10);
+        let headColor = (bgC == colors.pale_green)? colors.blue_bg:shadeColor(bgC, -20);
+        let titletextColor = (bgC == colors.pale_green)? '#9eacda':invertColor(headColor, true);
         this.setState({
             bgColor: fieldColor,
             headerColor: headColor,
@@ -183,6 +185,16 @@ class Collection extends Component{
     }
     updateMenuState(isOpen) {
         this.setState({ isOpen: isOpen });
+        if (!isOpen){
+            setTimeout(()=>{
+                AsyncStorage.getItem(KEY_reverse).then((rev) => {
+                    let reverseBool = (rev == 'true')?true:false;
+                    this.setState({reverse: reverseBool});
+                }).catch((error) => {
+                    window.alert('daily 145: ' + error.message);
+                });
+            }, 800);
+        }
     }
     onMenuItemSelected = (item) => {
         var index = parseInt(item.index, 10);
@@ -350,7 +362,7 @@ class Collection extends Component{
                     homeData: this.props.homeData,
                     daily_solvedArray: sArray,
                     title: 'Daily Verses',
-                    reverse: this.props.reverse,
+                    reverse: this.state.reverse,
                     todayFull: this.props.todayFull,
                     gripeText: gripeText,
                     dataElement: index,
@@ -362,7 +374,7 @@ class Collection extends Component{
     onSelect(strIndex) {
         let index = parseInt(strIndex, 10);
         let bgC = this.props.bgColor;
-        let newColor = (bgC == '#000000')? colors.pale_bg:this.props.bgColor;
+        let newColor = (bgC == '#000000')? colors.pale_green:this.props.bgColor;
         if(index>parseInt(this.props.homeData[this.props.dataElement].num_solved, 10))return;
         this.props.navigator.replace({
             id: 'game',
@@ -372,7 +384,7 @@ class Collection extends Component{
                 index: index,
                 fromWhere: 'collection',
                 daily_solvedArray: this.props.daily_solvedArray,
-                reverse: this.props.reverse,
+                reverse: this.state.reverse,
                 dataElement: this.props.dataElement,
                 bgColor: newColor,
                 myTitle: this.props.title

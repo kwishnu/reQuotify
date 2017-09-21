@@ -62,6 +62,7 @@ const KEY_Verses = 'versesKey';
 const KEY_expandInfo = 'expandInfoKey';
 const KEY_Favorites = 'numFavoritesKey';
 const KEY_Premium = 'premiumOrNot';
+const KEY_reverse = 'reverseFragments';
 
 
 class Favorites extends Component{
@@ -75,6 +76,7 @@ class Favorites extends Component{
             homeData: this.props.homeData,
             dataElement: this.props.dataElement,
             title: this.props.title,
+            reverse: this.props.reverse,
             isOpen: false,
             dataSource: this.props.dataSource,
 //            dataSource: ds.cloneWithRows(Array.from(new Array(parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10)), (x,i) => i)),
@@ -99,7 +101,7 @@ class Favorites extends Component{
                         let expandArr = strExpand.split('.');
                         let tf = 0;
                         tf = (expandArr[2] == '1')?1:0;
-                        this.setState({expand: tf, infoString: `Storage of Favorites is limited to 3 Verses unless any item has been purchased in the app. A portion of the proceeds raised by the app will be donated to the WEB project of World Outreach Ministries.`});
+                        this.setState({expand: tf, infoString: `Storage of Favorites is limited to 3 Quotations unless any item has been purchased in the app.`});
                     }
                 });
             }
@@ -214,6 +216,16 @@ class Favorites extends Component{
     }
     updateMenuState(isOpen) {
         this.setState({ isOpen: isOpen });
+        if (!isOpen){
+            setTimeout(()=>{
+                AsyncStorage.getItem(KEY_reverse).then((rev) => {
+                    let reverseBool = (rev == 'true')?true:false;
+                    this.setState({reverse: reverseBool});
+                }).catch((error) => {
+                    window.alert('daily 145: ' + error.message);
+                });
+            }, 800);
+        }
     }
     onMenuItemSelected = (item) => {
         var index = parseInt(item.index, 10);
@@ -366,13 +378,13 @@ class Favorites extends Component{
              }
          return {borderColor: strToReturn};
     }
-    getText(verseStr){
-        let arr = verseStr.split('**');
-        return arr[2];
+    getText(quoteStr){
+        let arr = quoteStr.split('**');
+        return arr[2] + ' - \"' + arr[3];
     }
     goToDaily(index){
         let sArray = [];
-        let gripeText = (this.props.isPremium == 'true')?'':'Purchase any item in the app and always have access here to the previous 30 Daily Verses!';
+        let gripeText = (this.props.isPremium == 'true')?'':'Purchase any item in the app and always have access here to the previous 30 Daily Quotes!';
 
         AsyncStorage.getItem(KEY_daily_solved_array).then((theArray) => {
             if (theArray !== null) {
@@ -383,9 +395,9 @@ class Favorites extends Component{
                 passProps: {
                     homeData: this.props.homeData,
                     daily_solvedArray: sArray,
-                    title: 'Daily Verses',
+                    title: 'Daily Quotations',
                     todayFull: this.props.todayFull,
-                    reverse: this.props.reverse,
+                    reverse: this.state.reverse,
                     gripeText: gripeText,
                     dataElement: index,
                     isPremium: this.props.isPremium,
@@ -397,19 +409,17 @@ class Favorites extends Component{
     onSelect(verseStr) {
         let arr = verseStr.split('**');
         let index = parseInt(arr[0], 10);
-        let bgC = this.props.bgColor;
-        let newColor = (bgC == '#000000')? colors.pale_bg:this.props.bgColor;
         this.props.navigator.replace({
             id: 'game',
             passProps: {
                 homeData: this.state.homeData,
-                title: '',
+                title: arr[2],
                 index: index,
                 fromWhere: 'favorites',
                 daily_solvedArray: this.props.daily_solvedArray,
-                reverse: this.props.reverse,
+                reverse: this.state.reverse,
                 dataElement: '17',
-                bgColor: newColor,
+                bgColor: this.props.bgColor,
                 myTitle: this.props.title,
                 fromWhere: 'favorites',
                 expand: true
@@ -434,20 +444,20 @@ class Favorites extends Component{
     removeItem(item){
         let num = parseInt(item, 10);
         let dataArray = this.state.homeData;
-        let bool = (this.state.homeData[17].verses.length > 1)?'true':'false';
+        let bool = (this.state.homeData[17].quotes.length > 1)?'true':'false';
         dataArray[17].show = bool;
-        dataArray[17].verses.length = 0;
+        dataArray[17].quotes.length = 0;
         dataArray[17].num_quotes = (parseInt(dataArray[17].num_quotes, 10) - 1) + '';
         let newArray = [];
         for (let a=0; a<this.state.dataSource.length; a++){
             if (this.state.dataSource[a].substr(0, 1) != item){
-                dataArray[17].verses.push(this.state.dataSource[a].substring(this.state.dataSource[a].indexOf('*') + 2));
+                dataArray[17].quotes.push(this.state.dataSource[a].substring(this.state.dataSource[a].indexOf('*') + 2));
                 newArray.push(this.state.dataSource[a]);
             }
         }
         try {
             AsyncStorage.setItem(KEY_Verses, JSON.stringify(dataArray));
-            AsyncStorage.setItem(KEY_Favorites, String(dataArray[17].verses.length));
+            AsyncStorage.setItem(KEY_Favorites, String(dataArray[17].quotes.length));
         } catch (error) {
             window.alert('AsyncStorage error: ' + error.message);
         }
@@ -494,8 +504,8 @@ class Favorites extends Component{
                     menu={ menu }
                     isOpen={ this.state.isOpen }
                     onChange={ (isOpen) => this.updateMenuState(isOpen) }>
-                    <View style={[collection_styles.container, {backgroundColor: this.state.bgColor}, this.darkBorder(this.state.bgColor)]}>
-                        <View style={ [collection_styles.header, {backgroundColor: this.state.headerColor}]}>
+                    <View style={[collection_styles.container, this.darkBorder(this.state.bgColor)]}>
+                        <View style={ collection_styles.header }>
                             <Button style={[collection_styles.button, {marginLeft: getArrowMargin()}]} onPress={ () => this.handleHardwareBackButton() }>
                                 <Image source={ require('../images/arrowback.png') } style={{ width: getArrowSize(), height: getArrowSize()}} />
                             </Button>
@@ -504,8 +514,8 @@ class Favorites extends Component{
                                 <Image source={ require('../images/noimage.png') } style={{ width: getArrowSize(), height: getArrowSize()}} />
                             </Button>
                         </View>
-                        <View style={ [collection_styles.tiles_container, {backgroundColor: this.state.bgColor}, this.darkBorder(this.state.bgColor)] }>
-                            <View style={[ collection_styles.infoBox, {flex: 5} ]}>
+                        <View style={ [collection_styles.tiles_container, this.darkBorder(this.state.bgColor)] }>
+                            <View style={[ collection_styles.infoBox, {flex: 3} ]}>
                                 <View style={ collection_styles.text_container }>
                                     <Text style={collection_styles.info_text} >{this.state.infoString}</Text>
                                 </View>
@@ -529,7 +539,7 @@ class Favorites extends Component{
                                                              onLongPress={()=> this.showDialog(rowData)}
                                                              underlayColor={() => this.getUnderlay(rowData)}
                                                              style={collection_styles.launcher} >
-                                             <Text style={ styles.verse_text_large }>{this.getText(rowData)}</Text>
+                                             <Text numberOfLines={1} style={ collection_styles.text }>{this.getText(rowData)}</Text>
                                          </TouchableHighlight>
                                      </View>}
                                 />
@@ -542,23 +552,24 @@ class Favorites extends Component{
                 </SideMenu>
             );
         }else{
+            const imageSource = (this.state.questionOpacity == 1)?require('../images/infoquestion.png') : require('../images/noimage.png');
             return (
                 <SideMenu
                     menu={ menu }
                     isOpen={ this.state.isOpen }
                     onChange={ (isOpen) => this.updateMenuState(isOpen) }>
 
-                    <View style={ [collection_styles.container, {backgroundColor: this.state.bgColor}, this.darkBorder(this.state.bgColor)] }>
-                        <View style={ [collection_styles.header, {backgroundColor: this.state.headerColor}]}>
+                    <View style={ [collection_styles.container, this.darkBorder(this.state.bgColor)] }>
+                        <View style={ collection_styles.header }>
                             <Button style={[collection_styles.button, {marginLeft: getArrowMargin()}]} onPress={ () => this.handleHardwareBackButton() }>
                                 <Image source={ require('../images/arrowback.png') } style={{ width: getArrowSize(), height: getArrowSize()}} />
                             </Button>
                             <Text style={{fontSize: configs.LETTER_SIZE * 0.7, color: this.state.titleColor}} >{this.props.title}</Text>
                             <Button style={[collection_styles.button, {marginRight: getArrowMargin(), opacity: this.state.questionOpacity}]} onPress={ () => this.toggleInfoBox() }>
-                                <Image source={ require('../images/infoquestion.png') } style={{ width: getArrowSize(), height: getArrowSize()}} />
+                                <Image source={imageSource} style={{ width: getArrowSize(), height: getArrowSize()}} />
                             </Button>
                         </View>
-                        <View style={ [collection_styles.tiles_container, {backgroundColor: this.state.bgColor}, this.darkBorder(this.state.bgColor)] }>
+                        <View style={ [collection_styles.tiles_container, this.darkBorder(this.state.bgColor)] }>
                                 <ListView  showsVerticalScrollIndicator ={false}
                                     initialListSize ={100}
                                     contentContainerStyle={ collection_styles.listview }
@@ -568,8 +579,9 @@ class Favorites extends Component{
                                          <TouchableHighlight onPress={() => this.onSelect(rowData)}
                                                              onLongPress={()=> this.showDialog(rowData)}
                                                              underlayColor={() => this.getUnderlay(rowData)}
-                                                             style={collection_styles.launcher} >
-                                             <Text style={ styles.verse_text_large }>{this.getText(rowData)}</Text>
+                                                             style={collection_styles.launcher}
+                                         >
+                                             <Text numberOfLines={1} style={ collection_styles.text }>{this.getText(rowData)}</Text>
                                          </TouchableHighlight>
                                      </View>}
                                 />
@@ -589,6 +601,7 @@ class Favorites extends Component{
 const collection_styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: colors.pale_green
     },
     loading: {
         flex: 1,
@@ -602,6 +615,7 @@ const collection_styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: window.width,
         marginBottom: 6,
+        backgroundColor: colors.blue_bg
     },
     gotit_button: {
         flexDirection: 'row',
@@ -664,6 +678,7 @@ const collection_styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 6,
+        backgroundColor: colors.pale_green
     },
     launcher: {
         width: width*.96,
@@ -673,8 +688,13 @@ const collection_styles = StyleSheet.create({
         margin: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#e0ffff'
+        backgroundColor: '#e0ffff',
+        paddingHorizontal: height*.04
     },
+    text: {
+        color: '#000000',
+        fontSize: normalizeFont(configs.LETTER_SIZE * 0.095)
+    }
 });
 
 module.exports = Favorites;

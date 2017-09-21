@@ -25,17 +25,18 @@ const CELL_PADDING = Math.floor(CELL_WIDTH * .05); // 5% of the cell width...+
 const TILE_WIDTH = (CELL_WIDTH - CELL_PADDING * 2);
 const BORDER_RADIUS = CELL_PADDING * .2 + 3;
 const KEY_Time = 'timeKey';
-
+const KEY_reverse = 'reverseFragments';
 
 class Daily extends Component{
     constructor(props) {
         super(props);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            daily_solvedArray: this.props.daily_solvedArray,
             id: 'daily',
-            dataElement: this.props.dataElement,
             title: this.props.title,
+            daily_solvedArray: this.props.daily_solvedArray,
+            dataElement: this.props.dataElement,
+            reverse: this.props.reverse,
             isOpen: false,
             isLoading: true,
             dataSource: ds.cloneWithRows(Array.from(new Array(parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10)), (x,i) => i))//[0,1,2...]
@@ -135,7 +136,16 @@ class Daily extends Component{
     }
     updateMenuState(isOpen) {
         this.setState({ isOpen: isOpen });
-
+        if (!isOpen){
+            setTimeout(()=>{
+                AsyncStorage.getItem(KEY_reverse).then((rev) => {
+                    let reverseBool = (rev == 'true')?true:false;
+                    this.setState({reverse: reverseBool});
+                }).catch((error) => {
+                    window.alert('daily 145: ' + error.message);
+                });
+            }, 800);
+        }
     }
     onMenuItemSelected = (item) => {
         var index = parseInt(item.index, 10);
@@ -231,7 +241,7 @@ class Daily extends Component{
     bg(num){
          var strToReturn='';
          if (this.props.daily_solvedArray[num + 1]==0){
-             strToReturn='#54165e';//green
+             strToReturn='#54165e';
              }else{
              strToReturn='#999ba0';//grey
              }
@@ -279,7 +289,7 @@ class Daily extends Component{
                 index: index,
                 fromWhere: 'daily',
                 daily_solvedArray: this.props.daily_solvedArray,
-                reverse: this.props.reverse,
+                reverse: this.state.reverse,
                 dataElement: this.props.dataElement,
                 isPremium: this.state.isPremium,
                 bgColor: this.props.bgColor,
@@ -340,7 +350,7 @@ class Daily extends Component{
 const daily_styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.pale_bg,
+        backgroundColor: colors.pale_green
     },
     loading: {
         flex: 1,
@@ -353,7 +363,7 @@ const daily_styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         width: width,
-        backgroundColor: '#000000',
+        backgroundColor: colors.blue_bg
     },
     button: {
         alignItems: 'center',
@@ -385,7 +395,7 @@ const daily_styles = StyleSheet.create({
     },
     tiles_container: {
         flex: 11,
-        backgroundColor: colors.pale_bg,
+        backgroundColor: colors.pale_green,
         paddingHorizontal: 6,
         paddingTop: 15,
     },
