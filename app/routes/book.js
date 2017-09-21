@@ -59,6 +59,7 @@ const TILE_WIDTH = (CELL_WIDTH - CELL_PADDING * 2) - 7;
 const BORDER_RADIUS = CELL_PADDING * .2 + 3;
 const KEY_daily_solved_array = 'solved_array';
 const KEY_Time = 'timeKey';
+const KEY_reverse = 'reverseFragments';
 const KEY_ShowedOverlay = 'showOverlay';
 
 class Book extends Component{
@@ -72,8 +73,9 @@ class Book extends Component{
             id: 'book',
             homeData: this.props.homeData,
             title: this.props.title,
+            reverse: this.props.reverse,
             isOpen: false,
-            dataSource: this.props.homeData[this.props.dataElement].verses,
+            dataSource: this.props.homeData[this.props.dataElement].quotes,
 //            dataSource: ds.cloneWithRows(Array.from(new Array(parseInt(this.props.homeData[this.props.dataElement].num_quotes, 10)), (x,i) => i)),
             bgColor: this.props.bgColor,
             headerColor: '',
@@ -137,9 +139,9 @@ class Book extends Component{
     }
     setColors(){
         let bgC = this.props.bgColor;
-        let fieldColor = (bgC == colors.pale_bg)? colors.pale_bg:shadeColor(bgC, 10);
-        let headColor = (bgC == colors.pale_bg)? colors.blue_bg:shadeColor(bgC, -20);
-        let titletextColor = (bgC == colors.pale_bg)? '#9eacda':invertColor(headColor, true);
+        let fieldColor = (bgC == colors.pale_green)? colors.pale_green:shadeColor(bgC, 10);
+        let headColor = (bgC == colors.pale_green)? colors.blue_bg:shadeColor(bgC, -20);
+        let titletextColor = (bgC == colors.pale_green)? '#9eacda':invertColor(headColor, true);
         this.setState({
             bgColor: fieldColor,
             headerColor: headColor,
@@ -201,6 +203,16 @@ class Book extends Component{
     }
     updateMenuState(isOpen) {
         this.setState({ isOpen: isOpen });
+        if (!isOpen){
+            setTimeout(()=>{
+                AsyncStorage.getItem(KEY_reverse).then((rev) => {
+                    let reverseBool = (rev == 'true')?true:false;
+                    this.setState({reverse: reverseBool});
+                }).catch((error) => {
+                    window.alert('daily 145: ' + error.message);
+                });
+            }, 800);
+        }
     }
     onMenuItemSelected = (item) => {
         var index = parseInt(item.index, 10);
@@ -298,7 +310,7 @@ class Book extends Component{
             return {borderColor: darkerColor};
     }
     bg(num){
-        let strToReturn = (this.props.homeData[this.props.dataElement].solved[num] == 0)?'#ffffff':'#cae6ef';
+        let strToReturn = (this.props.homeData[this.props.dataElement].solved[num] == 0)?'#ffffff':'#a6b4b9';
             return {
                 backgroundColor: strToReturn
             };
@@ -338,13 +350,9 @@ class Book extends Component{
              }
          return {borderColor: strToReturn};
     }
-    getText(verse){
-        let verseArray = verse.split('**');
-        return verseArray[1].substring(verseArray[1].indexOf(' ', -1) + 1);
-    }
     goToDaily(index){
         let sArray = [];
-        let gripeText = (this.props.isPremium == 'true')?'':'Purchase any item in the app and always have access here to the previous 30 Daily Verses!';
+        let gripeText = (this.props.isPremium == 'true')?'':'Purchase any item in the app and always have access here to the previous 30 Daily Quotations!';
 
         AsyncStorage.getItem(KEY_daily_solved_array).then((theArray) => {
             if (theArray !== null) {
@@ -355,8 +363,8 @@ class Book extends Component{
                 passProps: {
                     homeData: this.props.homeData,
                     daily_solvedArray: sArray,
-                    title: 'Daily Verses',
-                    reverse: this.props.reverse,
+                    title: 'Daily Quotations',
+                    reverse: this.state.reverse,
                     todayFull: this.props.todayFull,
                     gripeText: gripeText,
                     dataElement: index,
@@ -377,22 +385,22 @@ class Book extends Component{
             }
         });
     }
-    onSelect(verseStr, index) {
-        let bgC = this.props.bgColor;
-        let newColor = (bgC == '#000000')? colors.pale_bg:this.props.bgColor;
-        let fullVerse = this.props.title + ' ' + this.getText(verseStr);
+    onSelect(quoteStr, index) {
+//        let bgC = this.props.bgColor;
+//        let newColor = (bgC == '#000000')? colors.pale_green:this.props.bgColor;
+        let arr = quoteStr.split('**');
         this.props.navigator.replace({
             id: 'game',
             passProps: {
                 homeData: this.props.homeData,
-                title: fullVerse,
+                title: arr[1],
                 index: index,
                 fromWhere: 'book',
                 daily_solvedArray: this.props.daily_solvedArray,
                 isPremium: this.props.isPremium,
-                reverse: this.props.reverse,
+                reverse: this.state.reverse,
                 dataElement: this.props.dataElement,
-                bgColor: newColor,
+                bgColor: this.props.bgColor,
                 myTitle: this.props.title
             },
        });
@@ -423,7 +431,7 @@ class Book extends Component{
 
     render() {
         const menu = <Menu onItemSelected={ this.onMenuItemSelected } data = {this.props.homeData} />;
-        const ds = this.dataSource.cloneWithRows(this.props.homeData[this.props.dataElement].verses);
+        const ds = this.dataSource.cloneWithRows(this.props.homeData[this.props.dataElement].quotes);
         if(this.state.isLoading == true){
             return(
                 <View style={[book_styles.loading, {backgroundColor: '#222222'}]}>
@@ -457,13 +465,13 @@ class Book extends Component{
                                          <View>
                                              <TouchableHighlight onPress={() => this.onSelect(rowData, rowID)}
                                                                  style={[book_styles.launcher, this.bg(rowID)]} >
-                                                 <Text style={ book_styles.launcher_text }>{this.getText(rowData)}</Text>
+                                                 <Text style={ book_styles.launcher_text }>{parseInt(rowID, 10) + 1}</Text>
                                              </TouchableHighlight>
                                          </View>}
                              />
                         </View>
                         {this.state.shouldShowOverlay &&
-                        <Overlay onPress={()=>{ this.dismissOverlay(); }} margin={0.12} text={`Read the actual text of this Book of the Bible by tapping the icon in the upper right`} />
+                        <Overlay onPress={()=>{ this.dismissOverlay(); }} margin={0.12} text={`Read any included extended texts by tapping the icon in the upper right`} />
                         }
                      </View>
                 </SideMenu>
