@@ -16,7 +16,6 @@ function shuffleArray(array) {
 const seedData = require('../config/data');
 const nowISO = 0;
 const tonightMidnight = 0;
-const bonuses = [['10', 'Welcome +10', '5', '#620887'], ['50', 'Dedicated +50', '10', '#f4ce57'], ['100', 'Talented +100', '10', '#f2404c'], ['250', 'Skilled +250', '10', '#0817a2'], ['500', 'Seasoned +500', '20', '#6e097d'], ['1000', 'Expert +1000', '25', '#f5eaf6'], ['100000000000', 'TooMuch', '1', '#000000']];
 const KEY_MyHints = 'myHintsKey';
 const KEY_Premium = 'premiumOrNot';
 const KEY_PlayFirst = 'playFirstKey';
@@ -54,7 +53,7 @@ class SplashScreen extends Component {
         var homeData = [];
         nowISO = moment().valueOf();//determine offset # of days for daily quotes...
         tonightMidnight = moment().endOf('day').valueOf();
-        var launchDay = moment('2017 07', 'YYYY-MM');//July 1, 2017
+        var launchDay = moment('2017 08', 'YYYY-MM');//July 1, 2017
         var dayDiff = -launchDay.diff(nowISO, 'days');//# of days since 7/1/2017
         var startNum = dayDiff - 28;
         if(this.props.motive == 'initialize'){
@@ -88,9 +87,9 @@ class SplashScreen extends Component {
 //                return InAppBilling.close();
 //            }).then(()=> {
 //                return AsyncStorage.getItem(KEY_Verses);
-                AsyncStorage.getItem(KEY_Verses).then((verses)=> {
-                if (verses !== null) {//get current data:
-                    homeData = JSON.parse(verses);
+                AsyncStorage.getItem(KEY_Verses).then((quotes)=> {
+                if (quotes !== null) {//get current data:
+                    homeData = JSON.parse(quotes);
                 }else{//store seed data, as this is the first time using the app:
                     homeData = seedData;
                     try {
@@ -102,7 +101,7 @@ class SplashScreen extends Component {
                 if (homeData.length > 22){//screen for bonus packs vs. purchased packs
                     for (let chk=22; chk<homeData.length; chk++){
                         if (typeof homeData[chk].product_id != 'undefined' && homeData[chk].product_id.indexOf('bonus') < 0){
-                            homeData[14].show = 'false';//purchased something, gets access to last 30 daily verses rather than last 3 days
+                            homeData[14].show = 'false';//purchased something, gets access to last 30 daily quotes rather than last 3 days
                             homeData[15].show = 'true';
                             premiumBool = true;
                             getPurchasedBool = false;//a purchased pack is here, we don't need to retrieve them which would erase progress stats
@@ -144,7 +143,7 @@ class SplashScreen extends Component {
                     }
                 }
                     return NetInfo.isConnected.fetch();
-            }).then((isConnected) => {//if has internet connection, get daily verses and current app object
+            }).then((isConnected) => {//if has internet connection, get daily quotes and current app object
                 if(Meteor.status().status == 'connected'){//isConnected && ...
                     return this.getData(this.state.pData, startNum);//load daily puzzles
                 }else{//still let have access to 30 days already on device even if no internet connection
@@ -260,8 +259,8 @@ class SplashScreen extends Component {
             } catch (error) {
                 window.alert('AsyncStorage error: ' + error.message);
             }
-            AsyncStorage.getItem(KEY_Verses).then((verses) => {
-                homeData = JSON.parse(verses);
+            AsyncStorage.getItem(KEY_Verses).then((quotes) => {
+                homeData = JSON.parse(quotes);
                 homeData[14].show = 'false';
                 homeData[15].show = 'true';
                 this.setState({isPremium: true, pData: homeData});
@@ -281,10 +280,10 @@ class SplashScreen extends Component {
                         pTitle = this.makeTitle(idSplit[gg + 1]);
                         switch (idSplit[gg]){
                             case 'b':
-                                packID = 'rv.verse.book.' + idSplit[gg + 1];
+                                packID = 'rq.quotes.book.' + idSplit[gg + 1];
                                 break;
                             case 'c':
-                                packID = 'rv.verse.collection.' + idSplit[gg + 1];
+                                packID = 'rq.quotes.collection.' + idSplit[gg + 1];
                                 break;
                             case 'h':
                                 flag = false;
@@ -326,12 +325,12 @@ class SplashScreen extends Component {
             });
         }
 	}
-    getData(dataArray, sNum){//retrieve server data here, sNum is offset number for daily verses;
+    getData(dataArray, sNum){//retrieve server data here, sNum is offset number for daily quotes;
         return new Promise(
             function (resolve, reject) {
                 const handle = Meteor.subscribe('AllData', {
                     onReady: function () {
-                        const d_quotes = Meteor.collection('dataQ').find();//dataQ => daily quotes and homeData object
+                        const d_quotes = Meteor.collection('dataQ').find({"qnum":{$gt:-1}});//dataQ => daily quotes and homeData object
                         var qData = [];
                         var quoteStringArray = [];
                         d_quotes.forEach(function (row) {
@@ -343,18 +342,18 @@ class SplashScreen extends Component {
                             }
                         });
                         qData.length = 22;//truncate extra elements, which shouldn't be necessary but is...
-                        qData[13].verses[0] = quoteStringArray[0];//load today's verse
+                        qData[13].quotes[0] = quoteStringArray[0];//load today's verse
                         quoteStringArray.shift();
                         for(var jj=0; jj<quoteStringArray.length; jj++){
-                            qData[15].verses[jj] = quoteStringArray[jj];//load last 30 days
-                            if(jj < 3){qData[14].verses[jj] = quoteStringArray[jj];}//load last 3 days
+                            qData[15].quotes[jj] = quoteStringArray[jj];//load last 30 days
+                            if(jj < 3){qData[14].quotes[jj] = quoteStringArray[jj];}//load last 3 days
                         }
                         for (let addExtra=22; addExtra<dataArray.length; addExtra++){//add any extra packs onto data array
                             qData.push(dataArray[addExtra]);
                         }
                         qData[17].num_quotes = dataArray[17].num_quotes;//update Favorites and premium status...
                         qData[17].show = dataArray[17].show;
-                        qData[17].verses = dataArray[17].verses;
+                        qData[17].quotes = dataArray[17].quotes;
                         qData[14].show = dataArray[14].show;
                         qData[15].show = dataArray[15].show;
                         resolve(qData);
@@ -366,7 +365,7 @@ class SplashScreen extends Component {
                 });
         });
     }
-    getCollection(name, ID, theData){//retrieve from server set(s) of verses...combo pack if name is string array, single if string, bonus if number
+    getCollection(name, ID, theData){//retrieve from server set(s) of quotes...combo pack if name is string array, single if string, bonus if number
         return new Promise(
             function (resolve, reject) {
                 var returnArray = [];
@@ -496,8 +495,8 @@ class SplashScreen extends Component {
             case 1:
                 pT = packNameArray[0].charAt(0).toUpperCase() + packNameArray[0].slice(1);
                 break;
-            case 2://e.g. 1_corinthians
-                pT = packNameArray[0] + ' ' + packNameArray[1].charAt(0).toUpperCase() + packNameArray[1].slice(1);
+            case 2:
+                pT = packNameArray[0].charAt(0).toUpperCase() + packNameArray[0].slice(1) + ' ' + packNameArray[1].charAt(0).toUpperCase() + packNameArray[1].slice(1);
                 break;
             case 3://_and_ in product ID, ' & ' in title
                 pT = packNameArray[0].charAt(0).toUpperCase() + packNameArray[0].slice(1) + ' & ' + packNameArray[2].charAt(0).toUpperCase() + packNameArray[2].slice(1);
