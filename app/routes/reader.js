@@ -7,7 +7,7 @@ import moment from 'moment';
 const styles = require('../styles/styles');
 const {width, height} = require('Dimensions').get('window');
 const KEY_Verses = 'versesKey';
-
+const KEY_Time = 'timeKey';
 
 module.exports = class Reader extends Component {
     constructor(props) {
@@ -16,7 +16,7 @@ module.exports = class Reader extends Component {
             id: 'reader',
             isLoading: true,
             title: '',
-            chapterNumber: '',
+            theHeading: '',
             section1: '',
             section2: '',
             section3: '',
@@ -32,36 +32,34 @@ module.exports = class Reader extends Component {
     }
     componentDidMount(){
         if (this.state.homeData[this.props.dataElement].on_chapter == String(this.props.chapterIndex)){
-            this.setState({bookmarkImage: require('../images/bookmarkred.png'), bookmarkSet: true});
+            this.setState({bookmarkImage: require('../images/bookmarkblue.png'), bookmarkSet: true});
         }
         let chapterText = this.props.homeData[this.props.dataElement].chapters[this.props.chapterIndex];
         let s1 = '';
         let s2 = '';
         let s3 = '';
         if (this.props.fromWhere == 'game'){
-            let startIndex = (this.props.startPoint == '1')?0:chapterText.indexOf(this.props.startPoint + ' ');
-            let endIndex = (chapterText.indexOf(this.props.endPoint) > -1)?chapterText.indexOf(this.props.endPoint, startIndex + 1):chapterText.length;
-            if (startIndex > -1 && endIndex > -1){
-                s1 = chapterText.substring(0, startIndex - 1);
-                s2 = chapterText.substring(startIndex, endIndex - 2);
-                s3 = chapterText.substring(endIndex - 2);
+            let startIndex = chapterText.indexOf(this.props.theQuote);
+            console.log('reader 43:' + chapterText.substr(44, 1));
+            let endIndex = startIndex + this.props.theQuote.length;
+            if (startIndex > -1){
+                s1 = chapterText.substring(0, startIndex);
+                s2 = this.props.theQuote;
+                s3 = chapterText.substring(endIndex);
             }else{
                 s1 = chapterText
             }
         }else{
              s1 = chapterText
         }
-        let title = this.props.homeData[this.props.dataElement].title;
+        let title = this.props.quotedOne;
         let bg = this.props.homeData[this.props.dataElement].bg_color;
-        let chapNum = s1.substr(0, s1.indexOf('\n'));
+        let heading = s1.substr(0, s1.indexOf('\n'));
         s1 = s1.substring(s1.indexOf('\n') + 1);
-//        let initialLetter = s1.substr(0, 1);
-//        s1 = s1.substring(1);
         let backOpac = (this.props.chapterIndex > 0)?1:0;
         let forwardOpac = (this.props.chapterIndex < this.props.homeData[this.props.dataElement].chapters.length - 1)?1:0;
         this.setState({ title: title,
-                        chapterNumber: chapNum,
-//                        initial: initialLetter,
+                        theHeading: heading,
                         section1: s1,
                         section2: s2,
                         section3: s3,
@@ -79,10 +77,28 @@ module.exports = class Reader extends Component {
     }
     handleAppStateChange=(appState)=>{
         if(appState == 'active'){
-            this.props.navigator.replace({
-                id: 'splash',
-                passProps: {
-                    motive: 'initialize'
+            var timeNow = moment().valueOf();
+            AsyncStorage.getItem(KEY_Time).then((storedTime) => {
+                var sT = JSON.parse(storedTime);
+                var diff = (timeNow - sT)/1000;
+                if(diff>7200){
+                    try {
+                        AsyncStorage.setItem(KEY_Time, JSON.stringify(timeNow));
+                    } catch (error) {
+                        window.alert('AsyncStorage error: ' + error.message);
+                    }
+                    this.props.navigator.replace({
+                        id: 'splash',
+                        passProps: {
+                            motive: 'initialize'
+                        }
+                    });
+                }else{
+                    try {
+                        AsyncStorage.setItem(KEY_Time, JSON.stringify(timeNow));
+                    } catch (error) {
+                        window.alert('AsyncStorage error: ' + error.message);
+                    }
                 }
             });
         }
@@ -111,12 +127,13 @@ module.exports = class Reader extends Component {
                 homeData: this.props.homeData,
                 dataElement: this.props.dataElement,
                 chapterIndex: newIndex,
+                reverse: this.props.reverse
             }
        });
     }
     setBookmark(set){
         if(!set){
-            this.setState({bookmarkImage: require('../images/bookmarkred.png')});
+            this.setState({bookmarkImage: require('../images/bookmarkblue.png')});
             this.state.homeData[this.props.dataElement].on_chapter = String(this.props.chapterIndex);
         }else{
             this.setState({bookmarkImage: require('../images/bookmarkgray.png')});
@@ -157,10 +174,10 @@ module.exports = class Reader extends Component {
                     <View style={[reader_styles.reader_container, {backgroundColor: this.state.bgColor}]}>
                         <ScrollView contentContainerStyle={reader_styles.scrollview}>
                             <Text style={reader_styles.bold_text}>{'\r\n'}</Text>
-                            <Text style={reader_styles.initial_text}>{this.state.chapterNumber + '\r\n'}</Text>
+                            <Text style={reader_styles.initial_text}>{this.state.theHeading + '\r\n'}</Text>
                             <Text style={reader_styles.text}>
                                 {this.state.section1}
-                                <Text style={reader_styles.bold_text}> {this.state.section2} </Text>
+                                <Text style={reader_styles.bold_text}>{this.state.section2}</Text>
                                 {this.state.section3}
                             </Text>
                         </ScrollView>
@@ -209,7 +226,7 @@ const reader_styles = StyleSheet.create({
         borderColor: '#333333',
         backgroundColor: '#fffff0',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
     },
     text: {
         fontSize: normalizeFont(configs.LETTER_SIZE*0.09),
@@ -224,8 +241,10 @@ const reader_styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     initial_text: {
-        fontSize: normalizeFont(configs.LETTER_SIZE*0.14),
+        fontSize: normalizeFont(configs.LETTER_SIZE*0.12),
         color: '#000000',
         fontFamily: 'Book Antiqua',
+        textAlign: 'center',
+        marginHorizontal: height*.03
     },
 });
