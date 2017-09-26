@@ -71,6 +71,7 @@ class Intro1 extends Component {
         return true;
     }
     start(){
+        this.props.toggleVisible(false);
         setTimeout(()=>{
             Alert.alert('Solving Puzzles', 'Solve reQuotify puzzles by dropping tiles onto the paper in the correct order. \r\n\r\nThe first letter is already given...\r\ngive it a try!',
             [{text: 'OK', onPress: () => this.giveDirections()}], { onDismiss: () => {this.giveDirections()} }
@@ -131,7 +132,8 @@ class Intro1 extends Component {
         if (this.state.line0Text == 'journe' && text == 'yofathou'){
             this.setState({nextFrag: 'sandmil', line0Text: 'journey of a thou'});
             setTimeout(() => {this.setState({ showText1: false, showText2: false, showTiles: false, showFooter: false })}, 800);
-            setTimeout(() => {this.setState({ showNextArrow: true, showFooter: true, showText1: true,text1text: 'Next learn about reversing tiles...'})}, 802);
+            setTimeout(() => {this.setState({ showNextArrow: true, showFooter: true, showText1: true,text1text: 'Next learn about\r\nreversing tiles...'})}, 802);
+            setTimeout(() => {this.props.toggleVisible(true)}, 802);
         }
     }
     footerBorder(color) {
@@ -188,11 +190,13 @@ class Intro1 extends Component {
                         <Text style={intro_styles.footer_text}>Skip</Text>
                     </View>
                 </View>
+                {/*
                 { this.state.showNextArrow &&
                 <View style={intro_styles.next_arrow}>
                     <Image source={this.state.arrowImage}/>
                 </View>
                 }
+                */}
                 { this.state.showText1 &&
                 <View style={intro_styles.text1}>
                     <Text style={intro_styles.instructions_text}>{this.state.text1text}</Text>
@@ -291,7 +295,7 @@ const intro_styles = StyleSheet.create({
         width: width,
         height: height*.15,
         top: height*.47,
-        paddingHorizontal: height*.06
+        paddingHorizontal: height*.09
     },
     text2: {
         position: 'absolute',

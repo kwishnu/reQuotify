@@ -28,7 +28,7 @@ class Intro5 extends Component {
             arrowImage: require('../images/arrowforward.png'),
             showSocialText: false,
             showFavorites: false,
-            showBible: false,
+            showBook: false,
             showText: false
         };
         this.handleHardwareBackButton = this.handleHardwareBackButton.bind(this);
@@ -44,17 +44,19 @@ class Intro5 extends Component {
         return true;
     }
     start(){
+        this.props.toggleVisible(false);
         this.animate_image_delay();
         setTimeout(()=> {this.setState({showSocialText: true})}, 1000);
         setTimeout(()=> {this.showFavoritesImage()}, 3200);
-        setTimeout(()=> {this.showBibleImage()}, 5300);
+        setTimeout(()=> {this.showBookImage()}, 5300);
         setTimeout(()=> {this.setState({showText: true})}, 8500);
+        setTimeout(() => {this.props.toggleVisible(true)}, 8500);
     }
     reset(){
         setTimeout(()=>{
             this.setState({ showSocialText: false,
                             showFavorites: false,
-                            showBible: false,
+                            showBook: false,
                             showText: false
             });
         }, 500);
@@ -124,10 +126,10 @@ class Intro5 extends Component {
             ).start()
         });
     }
-    showBibleImage(){
+    showBookImage(){
         this.grow2.setValue(0);
         this.opac2.setValue(0);
-        this.setState({showBible: true});
+        this.setState({showBook: true});
         Animated.parallel([
             Animated.timing(this.opac2, {
                 toValue: 1,
@@ -157,7 +159,7 @@ class Intro5 extends Component {
                                     inputRange: [0, 1],
                                     outputRange: [0, 1],
                                   }), transform: [{scale}]};
-        let bibleStyle = {opacity: this.opac2.interpolate({
+        let bookStyle = {opacity: this.opac2.interpolate({
                                     inputRange: [0, 1],
                                     outputRange: [0, 1],
                                   }), transform: [{scale}]};
@@ -178,9 +180,9 @@ class Intro5 extends Component {
                     <Text style={[styles.text, {marginTop: 15}]}>save it to your Favorites,</Text>
                 </View>
                 }
-                { this.state.showBible &&
-                <View style={styles.bible}>
-                    <Animated.Image style={bibleStyle} source={require('../images/book.png')}/>
+                { this.state.showBook &&
+                <View style={styles.book}>
+                    <Animated.Image style={bookStyle} source={require('../images/book.png')}/>
                     <Text style={styles.text}>or, if the quote was from an Author Collection, see it in context in the Reader...</Text>
                 </View>
                 }
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
         height: height*.18,
         top: height*.35
     },
-    bible: {
+    book: {
         position: 'absolute',
         alignItems: 'center',
         justifyContent: 'center',

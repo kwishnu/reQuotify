@@ -92,6 +92,7 @@ class Intro2 extends Component {
         return true;
     }
     start(){
+        this.props.toggleVisible(false);
         setTimeout(()=>{
             Alert.alert('Who said it?', `After you've solved the quote, take a quiz about who is being quoted...`,
             [{text: 'OK', onPress: () => this.giveQuotedQuiz()}], { onDismiss: () => {this.giveDirections()} }
@@ -196,6 +197,7 @@ class Intro2 extends Component {
     }
     giveDirections(){
         setTimeout(()=>{this.setState({showText1: true, showText2: true, showNextArrow: true})}, 1200);
+        setTimeout(() => {this.props.toggleVisible(true)}, 1200);
     }
     footerBorder(color) {
         let bgC = colors.pale_bg;
@@ -313,11 +315,6 @@ class Intro2 extends Component {
                                     <Text style={intro_styles.panel_text} >{this.state.panelText}</Text>
                         </Animated.View>
                     </View>
-                    { this.state.showNextArrow &&
-                    <View style={intro_styles.next_arrow}>
-                        <Image source={this.state.arrowImage}/>
-                    </View>
-                    }
                     { this.state.showText1 &&
                     <View style={intro_styles.text1}>
                         <Text style={intro_styles.instructions_text}>{this.state.text1text}</Text>

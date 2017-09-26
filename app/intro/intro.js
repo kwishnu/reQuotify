@@ -65,10 +65,11 @@ class Intro extends Component {
             this.props.navigator.pop({});
         }
     }
+    reset(){
+        this.props.toggleVisible(true);
+    }
     animate_image_delay(){
         this.moveValue.setValue(0);
-//        Animated.sequence([
-//            Animated.delay(1000),
             Animated.spring(
             this.moveValue,
                 {
@@ -78,7 +79,7 @@ class Intro extends Component {
                     useNativeDriver: true
                 }
             ).start()
-//        ]).start()
+            this.props.toggleVisible(true);
     }
     showArrowImage(){
         this.grow.setValue(0);
@@ -134,11 +135,6 @@ class Intro extends Component {
                     <Text style={styles.text}>Learn to Play</Text>
                 </View>
                 }
-                { this.state.showNextArrow &&
-                <View style={styles.next_arrow}>
-                    <Animated.Image style={arrowStyle} source={this.state.arrowImage}/>
-                </View>
-                }
                 { this.state.showSkip &&
                 <View style={styles.skip} onStartShouldSetResponder={()=>this.handleHardwareBackButton()}>
                     <Text style={styles.skip_text}>Skip</Text>
@@ -176,7 +172,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: width*.65,
         height: height*.18,
-        top: height*.5
+        top: height*.45
     },
     next_arrow: {
         position: 'absolute',

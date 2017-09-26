@@ -75,6 +75,7 @@ class Intro2 extends Component {
         return true;
     }
     start(){
+        this.props.toggleVisible(false);
         setTimeout(()=>{
             Alert.alert('Hints', 'If you get stumped, try using the hint button...',
             [{text: 'OK', onPress: () => this.giveDirections()}], { onDismiss: () => {this.giveDirections()} }
@@ -127,7 +128,8 @@ class Intro2 extends Component {
         if (text == 'esmustb'){
             this.setState({line1Text: 'miles must b', played: true});
             setTimeout(() => {this.setState({ text1text: 'Two hints per quote unless you\'ve purchased a hint package', showText2: false, showTiles: false, showFooter: false })}, 800);
-            setTimeout(() => {this.setState({ showNextArrow: true, showFooter: true, showText2: true, text2text: 'Next...' })}, 802);
+            setTimeout(() => {this.setState({ showFooter: true, showText2: true, text2text: 'Next...' })}, 802);
+            setTimeout(() => {this.props.toggleVisible(true)}, 802);
         }
     }
     footerBorder(color) {
@@ -198,11 +200,6 @@ class Intro2 extends Component {
                     <View style={[intro_styles.verse_panel, {backgroundColor: this.state.panelBgColor, borderColor: this.state.panelBorderColor}]}>
                     </View>
                 </View>
-                { this.state.showNextArrow &&
-                <View style={intro_styles.next_arrow}>
-                    <Image source={this.state.arrowImage}/>
-                </View>
-                }
                 { this.state.showText1 &&
                 <View style={intro_styles.text1}>
                     <Text style={intro_styles.instructions_text}>{this.state.text1text}</Text>
@@ -322,7 +319,7 @@ const intro_styles = StyleSheet.create({
         width: width,
         height: height*.15,
         top: height*.47,
-        paddingHorizontal: height*.06
+        paddingHorizontal: height*.09
     },
     text2: {
         position: 'absolute',
