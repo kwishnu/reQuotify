@@ -62,9 +62,9 @@ const styles = StyleSheet.create({
     text_container: {
         flexDirection: 'row',
         position: 'absolute',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'flex-start',
-        top: normalize(height*.11),
+        top: normalize(height*.1),
         left: normalize(height*.03),
         width: normalize(height*.3),
         height: normalize(height*.12),
