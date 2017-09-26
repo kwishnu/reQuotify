@@ -528,7 +528,7 @@ class Game extends Component {
         let rows = 0;
         for (let word=0; word<quoteArray.length; word++){
             letterTotal += (quoteArray[word].length + 1);
-            lineLength = (whichRow < 2)?22:28;
+            lineLength = (whichRow < 2)?21:28;
             if (letterTotal > lineLength){
                 layout[whichRow + 1].push(quoteArray[word]);
                 letterTotal = quoteArray[word].length + 1;
@@ -709,16 +709,13 @@ class Game extends Component {
 
     }
     seeInReader(){
-        let quoted = this.state.panelText;
-        quoted = quoted.substring(quoted.indexOf(' ', -1) + 1);
-        let chvArray = quoted.split(':');
         this.props.navigator.push({
             id: 'reader',
             passProps: {
+                fromWhere: 'game',
                 homeData: this.props.homeData,
                 dataElement: this.props.dataElement,
                 chapterIndex: this.state.chapterNum,
-                fromWhere: 'game',
                 theQuote: this.state.entireQuote,
                 reverse: this.props.reverse
             }
