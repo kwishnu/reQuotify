@@ -132,7 +132,7 @@ class Tile extends Component {
         let [translateX, translateY] = [pan.x, pan.y];
         let imageStyle = {transform: [{translateX}, {translateY}, {rotateY}, {scale}]};
         return (
-            <View onStartShouldSetResponder={() => {console.log('uhh');}}>
+            <View>
                 <Animated.View
                   style={[imageStyle, tile_styles.draggable, {zIndex: this.state.zIndex, opacity: this.state.opacity}]}
                   {...this._panResponder.panHandlers}>
