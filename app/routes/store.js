@@ -63,7 +63,7 @@ module.exports = class Store extends Component {
             isLoading: true,
             questionOpacity: 1,
             questionImage: require('../images/infoquestion.png'),
-            infoText: `All Author Collections are priced $0.99USD and include extensive works of the author which may be read in the app.`
+            infoText: `All Author Collections are priced $0.99USD and include extended works of the author which may be read in the app.`
         };
         this.handleHardwareBackButton = this.handleHardwareBackButton.bind(this);
     }
@@ -75,11 +75,11 @@ module.exports = class Store extends Component {
                 let expandArr = strExpand.split('.');
                 let tf = false;
                 switch(this.props.dataIndex){
-                    case '5'://Verse Collections
+                    case '5'://Authors
                         tf = (expandArr[0] == '1')?true:false;
                         this.setState({expand: tf});
-                        break;
-                    case '6': case '7'://Old and New Testaments
+                        break;//Themes
+                    case '6': //case '7':
                         tf = (expandArr[1] == '1')?true:false;
                         this.setState({expand: tf});
                         break;
@@ -203,12 +203,12 @@ module.exports = class Store extends Component {
     startPurchase(itemID){
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected && Meteor.status().status == 'connected'){
-                InAppBilling.open()
-                .then(() => InAppBilling.purchase(itemID))
-                .then((details) => {
-                    if (details.purchaseState == 'PurchasedSuccessfully'){
-                        console.log('You purchased: ', details)
-
+//                InAppBilling.open()
+//                .then(() => InAppBilling.purchase(itemID))
+//                .then((details) => {
+//                    if (details.purchaseState == 'PurchasedSuccessfully'){
+//                        console.log('You purchased: ', details)
+console.log(itemID);
                         let idArray = itemID.split('.');
                         let lastItem = idArray[idArray.length - 1];
                         if (lastItem.indexOf('0') > -1){// == '100' || lastItem == '500' || lastItem == '1000'){//hints
@@ -232,15 +232,15 @@ module.exports = class Store extends Component {
                             });
                         }, 800);
                         this.props.navigator.pop({});
-                    }else{
-                        console.log('Purchase Error: ', details)
-                        Alert.alert('Purchase Error', 'Sorry, your purchase did not succeed, please try again later!');
-                    }
-                    return InAppBilling.close();
-                }).catch((err) => {
-                    console.log(err);
-                    return InAppBilling.close()
-                });
+//                    }else{
+//                        console.log('Purchase Error: ', details)
+//                        Alert.alert('Purchase Error', 'Sorry, your purchase did not succeed, please try again later!');
+//                    }
+//                    return InAppBilling.close();
+//                }).catch((err) => {
+//                    console.log(err);
+//                    return InAppBilling.close()
+//                });
             }else{
                 Alert.alert('Not Connected', `Sorry, we can't reach our servers right now. Please try again later!`);
             }
@@ -271,7 +271,7 @@ module.exports = class Store extends Component {
                             </Button>
                         </View>
                         <View style={store_styles.listview_container}>
-                            <View style={[ store_styles.infoBox, {flex: 3} ]}>
+                            <View style={[ store_styles.infoBox, {flex: 2} ]}>
                                 <View style={ store_styles.text_container }>
                                     <Text style={store_styles.info_text} >{this.state.infoText}</Text>
                                 </View>
@@ -282,7 +282,7 @@ module.exports = class Store extends Component {
                                     </Button>
                                 </View>
                             </View>
-                            <View style={{flex: 8}}>
+                            <View style={{flex: 6}}>
                                 <ListView  showsVerticalScrollIndicator ={false}
                                         contentContainerStyle={ store_styles.listview }
                                         enableEmptySections ={true}
@@ -371,7 +371,7 @@ const store_styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 6,
+        padding: height*.02,
         width: width * .9,
         backgroundColor: '#ffffff',
         borderWidth: 2,
@@ -379,12 +379,12 @@ const store_styles = StyleSheet.create({
         marginTop: 16
     },
     text_container: {
-        flex: 3,
+        flex: 2,
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
         width: width * 0.7,
-        backgroundColor: 'transparent',
+        backgroundColor: 'transparent'
     },
     button_container: {
         flex: 1,
@@ -392,7 +392,7 @@ const store_styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-end',
         width: width * 0.75,
-        backgroundColor: 'transparent',
+        backgroundColor: 'transparent'
     },
     listview: {
         marginTop: height * .02,
