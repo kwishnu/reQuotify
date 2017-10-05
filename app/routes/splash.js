@@ -53,8 +53,8 @@ class SplashScreen extends Component {
         var homeData = [];
         nowISO = moment().valueOf();//determine offset # of days for daily quotes...
         tonightMidnight = moment().endOf('day').valueOf();
-        var launchDay = moment('2017 08', 'YYYY-MM');//July 1, 2017
-        var dayDiff = -launchDay.diff(nowISO, 'days');//# of days since 7/1/2017
+        var launchDay = moment('2017 09', 'YYYY-MM');//September 1, 2017
+        var dayDiff = -launchDay.diff(nowISO, 'days');//# of days since 9/1/2017
         var startNum = dayDiff - 28;
         if(this.props.motive == 'initialize'){
             var ownedPacks = [];
@@ -498,8 +498,8 @@ class SplashScreen extends Component {
             case 2:
                 pT = packNameArray[0].charAt(0).toUpperCase() + packNameArray[0].slice(1) + ' ' + packNameArray[1].charAt(0).toUpperCase() + packNameArray[1].slice(1);
                 break;
-            case 3://_and_ in product ID, ' & ' in title
-                pT = packNameArray[0].charAt(0).toUpperCase() + packNameArray[0].slice(1) + ' & ' + packNameArray[2].charAt(0).toUpperCase() + packNameArray[2].slice(1);
+            case 3:
+                pT = packNameArray[0].charAt(0).toUpperCase() + packNameArray[0].slice(1) + ' ' + packNameArray[1].charAt(0).toUpperCase() + packNameArray[1].slice(1) + ' ' + packNameArray[2].charAt(0).toUpperCase() + packNameArray[2].slice(1);
         }
         return pT;
     }
