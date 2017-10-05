@@ -196,19 +196,17 @@ module.exports = class Store extends Component {
     }
     getRowThreeText(id, numQuotes){
         let splitID = id.split('.');
-        console.log(id);
         let returnText = (splitID[4] == 'h')?'reQuotify Hints':numQuotes + ' Quote Puzzles';
         return returnText;
     }
     startPurchase(itemID){
         NetInfo.isConnected.fetch().then(isConnected => {
             if (isConnected && Meteor.status().status == 'connected'){
-//                InAppBilling.open()
-//                .then(() => InAppBilling.purchase(itemID))
-//                .then((details) => {
-//                    if (details.purchaseState == 'PurchasedSuccessfully'){
+                InAppBilling.open()
+                .then(() => InAppBilling.purchase(itemID))
+                .then((details) => {
+                    if (details.purchaseState == 'PurchasedSuccessfully'){
 //                        console.log('You purchased: ', details)
-console.log(itemID);
                         let idArray = itemID.split('.');
                         let lastItem = idArray[idArray.length - 1];
                         if (lastItem.indexOf('0') > -1){// == '100' || lastItem == '500' || lastItem == '1000'){//hints
@@ -232,15 +230,15 @@ console.log(itemID);
                             });
                         }, 800);
                         this.props.navigator.pop({});
-//                    }else{
-//                        console.log('Purchase Error: ', details)
-//                        Alert.alert('Purchase Error', 'Sorry, your purchase did not succeed, please try again later!');
-//                    }
-//                    return InAppBilling.close();
-//                }).catch((err) => {
-//                    console.log(err);
-//                    return InAppBilling.close()
-//                });
+                    }else{
+                        console.log('Purchase Error: ', details)
+                        Alert.alert('Purchase Error', 'Sorry, your purchase did not succeed, please try again later!');
+                    }
+                    return InAppBilling.close();
+                }).catch((err) => {
+                    console.log(err);
+                    return InAppBilling.close()
+                });
             }else{
                 Alert.alert('Not Connected', `Sorry, we can't reach our servers right now. Please try again later!`);
             }
@@ -325,7 +323,7 @@ console.log(itemID);
 const store_styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.pale_bg,
+        backgroundColor: colors.pale_green,
     },
     loading: {
         flex: 1,

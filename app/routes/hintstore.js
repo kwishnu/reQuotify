@@ -170,7 +170,7 @@ module.exports = class HintStore extends Component {
 const hints_styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.pale_bg,
+        backgroundColor: colors.pale_green,
     },
     header: {
         flex: 1,
